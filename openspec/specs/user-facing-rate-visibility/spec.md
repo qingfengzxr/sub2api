@@ -4,7 +4,7 @@
 TBD - created by archiving change hide-user-rate-multipliers. Update Purpose after archive.
 ## Requirements
 ### Requirement: C 端前端不展示倍率文案
-系统 MUST 在 C 端普通用户前端隐藏所有直接倍率展示，包括 `x倍`、`倍率`、`rate multiplier` 和等价内部计费系数文案。
+系统 MUST 在 C 端普通用户前端隐藏所有直接倍率展示，包括 `x倍`、`倍率`、`rate multiplier`、标准/实际双口径消费、原始/计费双口径消费和等价内部计费系数文案。
 
 #### Scenario: 用户查看 API Key 分组
 - **WHEN** 普通用户在 API Key 页面查看或切换分组
@@ -17,6 +17,14 @@ TBD - created by archiving change hide-user-rate-multipliers. Update Purpose aft
 #### Scenario: 用户查看用量或支付页面
 - **WHEN** 普通用户查看用量、支付套餐、订阅计划或当前订阅权益
 - **THEN** 前端不展示计费倍率字段或倍率文案
+
+#### Scenario: 用户查看使用记录总消费
+- **WHEN** 普通用户查看使用记录页总消费卡片
+- **THEN** 前端只展示最终总消费金额，不展示“实际”“标准”、删除线标准金额或等价双口径消费说明
+
+#### Scenario: 用户查看单条费用明细
+- **WHEN** 普通用户在使用记录表格查看单条费用 tooltip 或成本明细
+- **THEN** 前端不展示“原始”“计费”或等价标准/最终双口径费用字段，只展示用户需要理解的最终消费结果和非倍率用量信息
 
 ### Requirement: `/api/v1/keys` 不暴露嵌套分组倍率
 系统 MUST 在普通用户 `/api/v1/keys` 响应中隐藏 API Key 嵌套分组对象里的真实倍率字段。

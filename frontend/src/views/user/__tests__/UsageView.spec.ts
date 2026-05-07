@@ -16,20 +16,10 @@ const { query, getStatsByDateRange, list, showError, showWarning, showSuccess, s
 
 const messages: Record<string, string> = {
   'usage.costDetails': 'Cost Breakdown',
-  'admin.usage.inputCost': 'Input Cost',
-  'admin.usage.outputCost': 'Output Cost',
-  'admin.usage.cacheCreationCost': 'Cache Creation Cost',
-  'admin.usage.cacheReadCost': 'Cache Read Cost',
-  'usage.inputTokenPrice': 'Input price',
-  'usage.outputTokenPrice': 'Output price',
-  'usage.perMillionTokens': '/ 1M tokens',
   'usage.serviceTier': 'Service tier',
   'usage.serviceTierPriority': 'Fast',
   'usage.serviceTierFlex': 'Flex',
   'usage.serviceTierStandard': 'Standard',
-  'usage.rate': 'Rate',
-  'usage.original': 'Original',
-  'usage.billed': 'Billed',
   'usage.allApiKeys': 'All API Keys',
   'usage.apiKeyFilter': 'API Key',
   'usage.model': 'Model',
@@ -100,7 +90,7 @@ describe('user UsageView tooltip', () => {
     }
   })
 
-  it('shows fast service tier and unit prices in user tooltip', async () => {
+  it('shows final cost and service tier in user tooltip', async () => {
     query.mockResolvedValue({
       items: [
         {
@@ -175,12 +165,12 @@ describe('user UsageView tooltip', () => {
     const text = wrapper.text()
     expect(text).toContain('Service tier')
     expect(text).toContain('Fast')
-    expect(text).toContain('Rate')
-    expect(text).toContain('1.00x')
-    expect(text).toContain('Billed')
     expect(text).toContain('$0.092883')
-    expect(text).toContain('$5.0000 / 1M tokens')
-    expect(text).toContain('$30.0000 / 1M tokens')
+    expect(text).not.toContain('Rate')
+    expect(text).not.toContain('1.00x')
+    expect(text).not.toContain('Billed')
+    expect(text).not.toContain('$5.0000 / 1M tokens')
+    expect(text).not.toContain('$30.0000 / 1M tokens')
   })
 
   it('exports csv with input and output unit price columns', async () => {
