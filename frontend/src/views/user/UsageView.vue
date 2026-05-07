@@ -403,6 +403,29 @@
               <span class="font-medium text-white">{{ tokenTooltipData.cache_read_tokens.toLocaleString() }}</span>
             </div>
           </div>
+          <div v-if="tokenTooltipData && ((tokenTooltipData.billable_input_tokens || 0) + (tokenTooltipData.billable_output_tokens || 0) + (tokenTooltipData.billable_cache_creation_tokens || 0) + (tokenTooltipData.billable_cache_read_tokens || 0) + (tokenTooltipData.billable_image_output_tokens || 0)) > 0" class="border-t border-gray-700 pt-1.5">
+            <div class="text-xs font-semibold text-gray-300 mb-1">{{ t('usage.billableTokenDetails') }}</div>
+            <div v-if="tokenTooltipData.billable_input_tokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableInputTokens') }}</span>
+              <span class="font-medium text-white">{{ tokenTooltipData.billable_input_tokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="tokenTooltipData.billable_output_tokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableOutputTokens') }}</span>
+              <span class="font-medium text-white">{{ tokenTooltipData.billable_output_tokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="tokenTooltipData.billable_cache_creation_tokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableCacheCreationTokens') }}</span>
+              <span class="font-medium text-white">{{ tokenTooltipData.billable_cache_creation_tokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="tokenTooltipData.billable_cache_read_tokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableCacheReadTokens') }}</span>
+              <span class="font-medium text-white">{{ tokenTooltipData.billable_cache_read_tokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="tokenTooltipData.billable_image_output_tokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableImageOutputTokens') }}</span>
+              <span class="font-medium text-white">{{ tokenTooltipData.billable_image_output_tokens.toLocaleString() }}</span>
+            </div>
+          </div>
           <!-- Total -->
           <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
             <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
@@ -797,8 +820,14 @@ const exportToCSV = async () => {
       'Output Tokens',
       'Cache Read Tokens',
       'Cache Creation Tokens',
-      'Billed Cost',
-      'Original Cost',
+      'Billable Input Tokens',
+      'Billable Output Tokens',
+      'Billable Cache Read Tokens',
+      'Billable Cache Creation Tokens',
+      'Billable Image Output Tokens',
+      'Billing Token Multiplier',
+      'Final Cost',
+      'Billing Base Cost',
       'First Token (ms)',
       'Duration (ms)'
     ]
@@ -815,6 +844,12 @@ const exportToCSV = async () => {
         log.output_tokens,
         log.cache_read_tokens,
         log.cache_creation_tokens,
+        log.billable_input_tokens,
+        log.billable_output_tokens,
+        log.billable_cache_read_tokens,
+        log.billable_cache_creation_tokens,
+        log.billable_image_output_tokens,
+        log.billing_token_multiplier,
         log.actual_cost.toFixed(8),
         log.total_cost.toFixed(8),
         log.first_token_ms ?? '',

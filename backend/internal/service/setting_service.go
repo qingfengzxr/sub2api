@@ -1562,6 +1562,8 @@ func (s *SettingService) buildSystemSettingsUpdates(ctx context.Context, setting
 
 	// Available channels feature switch
 	updates[SettingKeyAvailableChannelsEnabled] = strconv.FormatBool(settings.AvailableChannelsEnabled)
+	updates[SettingKeyTokenMultiplierBillingEnabled] = strconv.FormatBool(settings.TokenMultiplierBillingEnabled)
+	updates[SettingKeyBillingTokenMultiplier] = strconv.FormatFloat(normalizeBillingTokenMultiplier(settings.BillingTokenMultiplier), 'f', 4, 64)
 
 	// Affiliate (邀请返利) feature switch
 	updates[SettingKeyAffiliateEnabled] = strconv.FormatBool(settings.AffiliateEnabled)
@@ -1946,6 +1948,20 @@ func (s *SettingService) IsAffiliateEnabled(ctx context.Context) bool {
 		return false // 默认关闭
 	}
 	return value == "true"
+}
+
+func (s *SettingService) GetBillingTokenPolicy(ctx context.Context) BillingTokenPolicy {
+	if s == nil {
+		return BillingTokenPolicy{Multiplier: 1}
+	}
+	settings, err := s.GetAllSettings(ctx)
+	if err != nil || settings == nil {
+		return BillingTokenPolicy{Multiplier: 1}
+	}
+	return BillingTokenPolicy{
+		Enabled:    settings.TokenMultiplierBillingEnabled,
+		Multiplier: normalizeBillingTokenMultiplier(settings.BillingTokenMultiplier),
+	}
 }
 
 // GetAffiliateRebateRatePercent 读取并 clamp 全局返利比例。
@@ -2345,6 +2361,10 @@ func (s *SettingService) InitializeDefaultSettings(ctx context.Context) error {
 		// Available channels feature (default disabled; opt-in)
 		SettingKeyAvailableChannelsEnabled: "false",
 
+		// Billable token multiplier billing (default disabled; 1x)
+		SettingKeyTokenMultiplierBillingEnabled: "false",
+		SettingKeyBillingTokenMultiplier:        "1.0000",
+
 		// Affiliate (邀请返利) feature (default disabled; opt-in)
 		SettingKeyAffiliateEnabled: "false",
 
@@ -2711,6 +2731,8 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 
 	// Available channels feature (default: disabled; strict true)
 	result.AvailableChannelsEnabled = settings[SettingKeyAvailableChannelsEnabled] == "true"
+	result.TokenMultiplierBillingEnabled = settings[SettingKeyTokenMultiplierBillingEnabled] == "true"
+	result.BillingTokenMultiplier = parseBillingTokenMultiplier(settings[SettingKeyBillingTokenMultiplier])
 
 	// Affiliate (邀请返利) feature (default: disabled; strict true)
 	result.AffiliateEnabled = settings[SettingKeyAffiliateEnabled] == "true"
@@ -2787,6 +2809,21 @@ func isFalseSettingValue(value string) bool {
 	default:
 		return false
 	}
+}
+
+func normalizeBillingTokenMultiplier(value float64) float64 {
+	if math.IsNaN(value) || math.IsInf(value, 0) || value <= 0 {
+		return 1
+	}
+	return value
+}
+
+func parseBillingTokenMultiplier(raw string) float64 {
+	v, err := strconv.ParseFloat(strings.TrimSpace(raw), 64)
+	if err != nil {
+		return 1
+	}
+	return normalizeBillingTokenMultiplier(v)
 }
 
 func normalizeVisibleMethodSettingSource(method, source string, enabled bool) (string, error) {

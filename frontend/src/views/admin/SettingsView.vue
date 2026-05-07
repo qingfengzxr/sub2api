@@ -4662,6 +4662,47 @@
         <div class="card">
           <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ t('admin.settings.features.billableToken.title') }}
+            </h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {{ t('admin.settings.features.billableToken.description') }}
+            </p>
+          </div>
+          <div class="space-y-5 p-6">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t('admin.settings.features.billableToken.enabled') }}
+                </label>
+                <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('admin.settings.features.billableToken.enabledHint') }}
+                </p>
+              </div>
+              <Toggle v-model="form.token_multiplier_billing_enabled" />
+            </div>
+
+            <div v-if="form.token_multiplier_billing_enabled">
+              <label class="input-label">
+                {{ t('admin.settings.features.billableToken.multiplier') }}
+                <span class="text-red-500">*</span>
+              </label>
+              <input
+                v-model.number="form.billing_token_multiplier"
+                type="number"
+                min="0.0001"
+                step="0.01"
+                class="input"
+              />
+              <p class="mt-1 text-xs text-gray-400">
+                {{ t('admin.settings.features.billableToken.multiplierHint') }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
               {{ t('admin.settings.features.availableChannels.title') }}
             </h2>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -6494,6 +6535,9 @@ const form = reactive<SettingsForm>({
   channel_monitor_default_interval_seconds: 60,
   // Available Channels feature switch
   available_channels_enabled: false,
+  // Billable token multiplier billing
+  token_multiplier_billing_enabled: false,
+  billing_token_multiplier: 1,
   // Affiliate (邀请返利) feature switch
   affiliate_enabled: false,
 });
@@ -7597,6 +7641,13 @@ async function saveSettings() {
         Number(form.channel_monitor_default_interval_seconds) || 60,
       // Available Channels feature switch
       available_channels_enabled: form.available_channels_enabled,
+      // Billable token multiplier billing
+      token_multiplier_billing_enabled:
+        form.token_multiplier_billing_enabled,
+      billing_token_multiplier: Math.max(
+        0.0001,
+        Number(form.billing_token_multiplier) || 1,
+      ),
       // Affiliate (邀请返利) feature switch
       affiliate_enabled: form.affiliate_enabled,
     };

@@ -58,6 +58,16 @@ func TestUsageLogRepositoryCreateSyncRequestTypeAndLegacyFields(t *testing.T) {
 			log.CacheCreation1hTokens,
 			log.ImageOutputTokens,
 			log.ImageOutputCost,
+			log.InputTokens,
+			log.OutputTokens,
+			log.BillableCacheCreationTokens,
+			log.BillableCacheReadTokens,
+			log.BillableImageOutputTokens,
+			log.BillableTextInputTokens,
+			log.BillableCachedTextInputTokens,
+			log.BillableImageInputTokens,
+			log.BillableCachedImageInputTokens,
+			float64(1),
 			log.InputCost,
 			log.OutputCost,
 			log.CacheCreationCost,
@@ -137,6 +147,16 @@ func TestUsageLogRepositoryCreate_PersistsServiceTier(t *testing.T) {
 			log.CacheCreation1hTokens,
 			log.ImageOutputTokens,
 			log.ImageOutputCost,
+			log.BillableInputTokens,
+			log.BillableOutputTokens,
+			log.BillableCacheCreationTokens,
+			log.BillableCacheReadTokens,
+			log.BillableImageOutputTokens,
+			log.BillableTextInputTokens,
+			log.BillableCachedTextInputTokens,
+			log.BillableImageInputTokens,
+			log.BillableCachedImageInputTokens,
+			float64(1),
 			log.InputCost,
 			log.OutputCost,
 			log.CacheCreationCost,
@@ -242,6 +262,25 @@ func anySliceToDriverValues(values []any) []driver.Value {
 		out = append(out, value)
 	}
 	return out
+}
+
+func usageLogScanValues(prefix []any, suffix ...any) []any {
+	values := make([]any, 0, len(prefix)+10+len(suffix))
+	values = append(values, prefix...)
+	values = append(values,
+		1, // billable_input_tokens
+		2, // billable_output_tokens
+		3, // billable_cache_creation_tokens
+		4, // billable_cache_read_tokens
+		0, // billable_image_output_tokens
+		0, // billable_text_input_tokens
+		0, // billable_cached_text_input_tokens
+		0, // billable_image_input_tokens
+		0, // billable_cached_image_input_tokens
+		sql.NullFloat64{Valid: true, Float64: 1},
+	)
+	values = append(values, suffix...)
+	return values
 }
 
 func TestUsageLogRepositoryListWithFiltersRequestTypePriority(t *testing.T) {
@@ -530,7 +569,7 @@ func (s usageLogScannerStub) Scan(dest ...any) error {
 func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 	t.Run("request_type_ws_v2_overrides_legacy", func(t *testing.T) {
 		now := time.Now().UTC()
-		log, err := scanUsageLog(usageLogScannerStub{values: []any{
+		log, err := scanUsageLog(usageLogScannerStub{values: usageLogScanValues([]any{
 			int64(1),  // id
 			int64(10), // user_id
 			int64(20), // api_key_id
@@ -538,17 +577,18 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullString{Valid: true, String: "req-1"},
 			"gpt-5", // model
 			sql.NullString{Valid: true, String: "gpt-5"}, // requested_model
-			sql.NullString{},  // upstream_model
-			sql.NullInt64{},   // group_id
-			sql.NullInt64{},   // subscription_id
-			1,                 // input_tokens
-			2,                 // output_tokens
-			3,                 // cache_creation_tokens
-			4,                 // cache_read_tokens
-			5,                 // cache_creation_5m_tokens
-			6,                 // cache_creation_1h_tokens
-			0,                 // image_output_tokens
-			0.0,               // image_output_cost
+			sql.NullString{}, // upstream_model
+			sql.NullInt64{},  // group_id
+			sql.NullInt64{},  // subscription_id
+			1,                // input_tokens
+			2,                // output_tokens
+			3,                // cache_creation_tokens
+			4,                // cache_read_tokens
+			5,                // cache_creation_5m_tokens
+			6,                // cache_creation_1h_tokens
+			0,                // image_output_tokens
+			0.0,              // image_output_cost
+		},
 			0.1,               // input_cost
 			0.2,               // output_cost
 			0.3,               // cache_creation_cost
@@ -578,7 +618,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullString{},  // billing_mode
 			sql.NullFloat64{}, // account_stats_cost
 			now,
-		}})
+		)})
 		require.NoError(t, err)
 		require.NotNil(t, log.ServiceTier)
 		require.Equal(t, "priority", *log.ServiceTier)
@@ -589,7 +629,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 
 	t.Run("request_type_unknown_falls_back_to_legacy", func(t *testing.T) {
 		now := time.Now().UTC()
-		log, err := scanUsageLog(usageLogScannerStub{values: []any{
+		log, err := scanUsageLog(usageLogScannerStub{values: usageLogScanValues([]any{
 			int64(2),
 			int64(11),
 			int64(21),
@@ -602,6 +642,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullInt64{},
 			1, 2, 3, 4, 5, 6,
 			0, 0.0, // image_output_tokens, image_output_cost
+		},
 			0.1, 0.2, 0.3, 0.4, 1.0, 0.9,
 			1.0,
 			sql.NullFloat64{},
@@ -626,7 +667,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullString{},  // billing_mode
 			sql.NullFloat64{}, // account_stats_cost
 			now,
-		}})
+		)})
 		require.NoError(t, err)
 		require.NotNil(t, log.ServiceTier)
 		require.Equal(t, "flex", *log.ServiceTier)
@@ -637,7 +678,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 
 	t.Run("service_tier_is_scanned", func(t *testing.T) {
 		now := time.Now().UTC()
-		log, err := scanUsageLog(usageLogScannerStub{values: []any{
+		log, err := scanUsageLog(usageLogScannerStub{values: usageLogScanValues([]any{
 			int64(3),
 			int64(12),
 			int64(22),
@@ -650,6 +691,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullInt64{},
 			1, 2, 3, 4, 5, 6,
 			0, 0.0, // image_output_tokens, image_output_cost
+		},
 			0.1, 0.2, 0.3, 0.4, 1.0, 0.9,
 			1.0,
 			sql.NullFloat64{},
@@ -674,7 +716,7 @@ func TestScanUsageLogRequestTypeAndLegacyFallback(t *testing.T) {
 			sql.NullString{},  // billing_mode
 			sql.NullFloat64{}, // account_stats_cost
 			now,
-		}})
+		)})
 		require.NoError(t, err)
 		require.NotNil(t, log.ServiceTier)
 		require.Equal(t, "priority", *log.ServiceTier)

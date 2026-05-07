@@ -308,6 +308,14 @@ const (
 	// sidebar entry is hidden. Defaults to false (opt-in feature).
 	SettingKeyAvailableChannelsEnabled = "available_channels_enabled"
 
+	// SettingKeyTokenMultiplierBillingEnabled controls whether raw usage is converted to
+	// billable usage through the platform-level billing token multiplier.
+	SettingKeyTokenMultiplierBillingEnabled = "token_multiplier_billing_enabled"
+
+	// SettingKeyBillingTokenMultiplier stores the platform-level token multiplier used to
+	// derive billable usage when token multiplier billing is enabled.
+	SettingKeyBillingTokenMultiplier = "billing_token_multiplier"
+
 	// =========================
 	// Overload Cooldown (529)
 	// =========================

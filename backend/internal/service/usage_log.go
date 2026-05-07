@@ -137,6 +137,17 @@ type UsageLog struct {
 	ImageOutputTokens int
 	ImageOutputCost   float64
 
+	BillableInputTokens            int
+	BillableOutputTokens           int
+	BillableCacheCreationTokens    int
+	BillableCacheReadTokens        int
+	BillableImageOutputTokens      int
+	BillableTextInputTokens        int
+	BillableCachedTextInputTokens  int
+	BillableImageInputTokens       int
+	BillableCachedImageInputTokens int
+	BillingTokenMultiplier         float64
+
 	InputCost         float64
 	OutputCost        float64
 	CacheCreationCost float64
@@ -177,6 +188,30 @@ type UsageLog struct {
 
 func (u *UsageLog) TotalTokens() int {
 	return u.InputTokens + u.OutputTokens + u.CacheCreationTokens + u.CacheReadTokens
+}
+
+func (u *UsageLog) NormalizeBillableUsageDefaults() {
+	if u == nil {
+		return
+	}
+	if u.BillingTokenMultiplier <= 0 {
+		u.BillingTokenMultiplier = 1
+	}
+	if u.BillableInputTokens == 0 && u.InputTokens > 0 {
+		u.BillableInputTokens = u.InputTokens
+	}
+	if u.BillableOutputTokens == 0 && u.OutputTokens > 0 {
+		u.BillableOutputTokens = u.OutputTokens
+	}
+	if u.BillableCacheCreationTokens == 0 && u.CacheCreationTokens > 0 {
+		u.BillableCacheCreationTokens = u.CacheCreationTokens
+	}
+	if u.BillableCacheReadTokens == 0 && u.CacheReadTokens > 0 {
+		u.BillableCacheReadTokens = u.CacheReadTokens
+	}
+	if u.BillableImageOutputTokens == 0 && u.ImageOutputTokens > 0 {
+		u.BillableImageOutputTokens = u.ImageOutputTokens
+	}
 }
 
 func (u *UsageLog) EffectiveRequestType() RequestType {

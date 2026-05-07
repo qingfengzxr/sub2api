@@ -260,7 +260,9 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		ChannelMonitorEnabled:                settings.ChannelMonitorEnabled,
 		ChannelMonitorDefaultIntervalSeconds: settings.ChannelMonitorDefaultIntervalSeconds,
 
-		AvailableChannelsEnabled: settings.AvailableChannelsEnabled,
+		AvailableChannelsEnabled:      settings.AvailableChannelsEnabled,
+		TokenMultiplierBillingEnabled: settings.TokenMultiplierBillingEnabled,
+		BillingTokenMultiplier:        settings.BillingTokenMultiplier,
 
 		AffiliateEnabled: settings.AffiliateEnabled,
 	}
@@ -562,6 +564,10 @@ type UpdateSettingsRequest struct {
 
 	// Available Channels feature switch (user-facing)
 	AvailableChannelsEnabled *bool `json:"available_channels_enabled"`
+
+	// Billable token multiplier billing
+	TokenMultiplierBillingEnabled *bool    `json:"token_multiplier_billing_enabled"`
+	BillingTokenMultiplier        *float64 `json:"billing_token_multiplier"`
 
 	// Affiliate (邀请返利) feature switch
 	AffiliateEnabled *bool `json:"affiliate_enabled"`
@@ -1493,6 +1499,18 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.AvailableChannelsEnabled
 		}(),
+		TokenMultiplierBillingEnabled: func() bool {
+			if req.TokenMultiplierBillingEnabled != nil {
+				return *req.TokenMultiplierBillingEnabled
+			}
+			return previousSettings.TokenMultiplierBillingEnabled
+		}(),
+		BillingTokenMultiplier: func() float64 {
+			if req.BillingTokenMultiplier != nil {
+				return *req.BillingTokenMultiplier
+			}
+			return previousSettings.BillingTokenMultiplier
+		}(),
 		AffiliateEnabled: func() bool {
 			if req.AffiliateEnabled != nil {
 				return *req.AffiliateEnabled
@@ -1781,7 +1799,9 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		ChannelMonitorEnabled:                updatedSettings.ChannelMonitorEnabled,
 		ChannelMonitorDefaultIntervalSeconds: updatedSettings.ChannelMonitorDefaultIntervalSeconds,
 
-		AvailableChannelsEnabled: updatedSettings.AvailableChannelsEnabled,
+		AvailableChannelsEnabled:      updatedSettings.AvailableChannelsEnabled,
+		TokenMultiplierBillingEnabled: updatedSettings.TokenMultiplierBillingEnabled,
+		BillingTokenMultiplier:        updatedSettings.BillingTokenMultiplier,
 
 		AffiliateEnabled: updatedSettings.AffiliateEnabled,
 
@@ -2182,6 +2202,12 @@ func diffSettings(before *service.SystemSettings, after *service.SystemSettings,
 	}
 	if before.AvailableChannelsEnabled != after.AvailableChannelsEnabled {
 		changed = append(changed, "available_channels_enabled")
+	}
+	if before.TokenMultiplierBillingEnabled != after.TokenMultiplierBillingEnabled {
+		changed = append(changed, "token_multiplier_billing_enabled")
+	}
+	if before.BillingTokenMultiplier != after.BillingTokenMultiplier {
+		changed = append(changed, "billing_token_multiplier")
 	}
 	if before.AffiliateEnabled != after.AffiliateEnabled {
 		changed = append(changed, "affiliate_enabled")

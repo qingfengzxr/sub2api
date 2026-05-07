@@ -213,6 +213,10 @@ type SystemSettings struct {
 	// Available Channels feature switch (user-facing aggregate view)
 	AvailableChannelsEnabled bool `json:"available_channels_enabled"`
 
+	// Billable token multiplier billing
+	TokenMultiplierBillingEnabled bool    `json:"token_multiplier_billing_enabled"`
+	BillingTokenMultiplier        float64 `json:"billing_token_multiplier"`
+
 	// 风控中心功能开关
 	RiskControlEnabled bool `json:"risk_control_enabled"`
 

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -127,6 +128,78 @@ func (s *openAIUserGroupRateRepoStub) GetByUserAndGroup(ctx context.Context, use
 	return s.rate, nil
 }
 
+type openAIRecordUsageSettingRepoStub struct {
+	values map[string]string
+	err    error
+}
+
+func (s *openAIRecordUsageSettingRepoStub) Get(ctx context.Context, key string) (*Setting, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	if v, ok := s.values[key]; ok {
+		return &Setting{Key: key, Value: v}, nil
+	}
+	return nil, ErrSettingNotFound
+}
+
+func (s *openAIRecordUsageSettingRepoStub) GetValue(ctx context.Context, key string) (string, error) {
+	if s.err != nil {
+		return "", s.err
+	}
+	if v, ok := s.values[key]; ok {
+		return v, nil
+	}
+	return "", ErrSettingNotFound
+}
+
+func (s *openAIRecordUsageSettingRepoStub) Set(ctx context.Context, key, value string) error {
+	if s.values == nil {
+		s.values = map[string]string{}
+	}
+	s.values[key] = value
+	return nil
+}
+
+func (s *openAIRecordUsageSettingRepoStub) GetMultiple(ctx context.Context, keys []string) (map[string]string, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	result := make(map[string]string, len(keys))
+	for _, key := range keys {
+		if v, ok := s.values[key]; ok {
+			result[key] = v
+		}
+	}
+	return result, nil
+}
+
+func (s *openAIRecordUsageSettingRepoStub) SetMultiple(ctx context.Context, settings map[string]string) error {
+	if s.values == nil {
+		s.values = map[string]string{}
+	}
+	for key, value := range settings {
+		s.values[key] = value
+	}
+	return nil
+}
+
+func (s *openAIRecordUsageSettingRepoStub) GetAll(ctx context.Context) (map[string]string, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	result := make(map[string]string, len(s.values))
+	for key, value := range s.values {
+		result[key] = value
+	}
+	return result, nil
+}
+
+func (s *openAIRecordUsageSettingRepoStub) Delete(ctx context.Context, key string) error {
+	delete(s.values, key)
+	return nil
+}
+
 func i64p(v int64) *int64 {
 	return &v
 }
@@ -169,6 +242,15 @@ func newOpenAIRecordUsageServiceForTest(usageRepo UsageLogRepository, userRepo U
 func newOpenAIRecordUsageServiceWithBillingRepoForTest(usageRepo UsageLogRepository, billingRepo UsageBillingRepository, userRepo UserRepository, subRepo UserSubscriptionRepository, rateRepo UserGroupRateRepository) *OpenAIGatewayService {
 	svc := newOpenAIRecordUsageServiceForTest(usageRepo, userRepo, subRepo, rateRepo)
 	svc.usageBillingRepo = billingRepo
+	return svc
+}
+
+func newOpenAIRecordUsageServiceWithTokenMultiplierForTest(usageRepo UsageLogRepository, billingRepo UsageBillingRepository, userRepo UserRepository, subRepo UserSubscriptionRepository, rateRepo UserGroupRateRepository, enabled bool, multiplier float64) *OpenAIGatewayService {
+	svc := newOpenAIRecordUsageServiceWithBillingRepoForTest(usageRepo, billingRepo, userRepo, subRepo, rateRepo)
+	svc.settingService = NewSettingService(&openAIRecordUsageSettingRepoStub{values: map[string]string{
+		SettingKeyTokenMultiplierBillingEnabled: strconv.FormatBool(enabled),
+		SettingKeyBillingTokenMultiplier:        strconv.FormatFloat(multiplier, 'f', 4, 64),
+	}}, &config.Config{})
 	return svc
 }
 
@@ -876,6 +958,91 @@ func TestOpenAIGatewayServiceRecordUsage_ServiceTierFlexHalvesCost(t *testing.T)
 	require.InDelta(t, baseCost.TotalCost*0.5, usageRepo.lastLog.TotalCost, 1e-10)
 }
 
+func TestOpenAIGatewayServiceRecordUsage_TokenMultiplierBillingPersistsRawAndBillableUsage(t *testing.T) {
+	groupID := int64(117)
+	groupRate := 1.2
+	usage := OpenAIUsage{InputTokens: 120, OutputTokens: 40, CacheReadInputTokens: 20}
+
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	billingRepo := &openAIRecordUsageBillingRepoStub{result: &UsageBillingApplyResult{Applied: true}}
+	userRepo := &openAIRecordUsageUserRepoStub{}
+	quotaSvc := &openAIRecordUsageAPIKeyQuotaStub{}
+	svc := newOpenAIRecordUsageServiceWithTokenMultiplierForTest(
+		usageRepo, billingRepo, userRepo, &openAIRecordUsageSubRepoStub{}, nil, true, 2.5,
+	)
+
+	err := svc.RecordUsage(context.Background(), &OpenAIRecordUsageInput{
+		Result: &OpenAIForwardResult{
+			RequestID: "resp_billable_tokens_enabled",
+			Model:     "gpt-5.4",
+			Usage:     usage,
+			Duration:  time.Second,
+		},
+		APIKey: &APIKey{
+			ID:          10117,
+			GroupID:     i64p(groupID),
+			Group:       &Group{ID: groupID, RateMultiplier: groupRate},
+			Quota:       10,
+			RateLimit5h: 10,
+		},
+		User:          &User{ID: 20117},
+		Account:       &Account{ID: 30117},
+		APIKeyService: quotaSvc,
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, usageRepo.lastLog)
+	require.Equal(t, 100, usageRepo.lastLog.InputTokens)
+	require.Equal(t, 40, usageRepo.lastLog.OutputTokens)
+	require.Equal(t, 20, usageRepo.lastLog.CacheReadTokens)
+	require.Equal(t, 250, usageRepo.lastLog.BillableInputTokens)
+	require.Equal(t, 100, usageRepo.lastLog.BillableOutputTokens)
+	require.Equal(t, 50, usageRepo.lastLog.BillableCacheReadTokens)
+	require.InDelta(t, 2.5, usageRepo.lastLog.BillingTokenMultiplier, 1e-12)
+	require.InDelta(t, groupRate, usageRepo.lastLog.RateMultiplier, 1e-12)
+
+	expectedTotal := float64(250)*2.5e-6 + float64(100)*15e-6 + float64(50)*0.25e-6
+	require.InDelta(t, expectedTotal, usageRepo.lastLog.TotalCost, 1e-12)
+	require.InDelta(t, expectedTotal*groupRate, usageRepo.lastLog.ActualCost, 1e-12)
+	require.NotNil(t, billingRepo.lastCmd)
+	require.InDelta(t, usageRepo.lastLog.ActualCost, billingRepo.lastCmd.BalanceCost, 1e-12)
+	require.InDelta(t, usageRepo.lastLog.ActualCost, billingRepo.lastCmd.APIKeyQuotaCost, 1e-12)
+	require.InDelta(t, usageRepo.lastLog.ActualCost, billingRepo.lastCmd.APIKeyRateLimitCost, 1e-12)
+	require.Zero(t, userRepo.lastAmount)
+	require.Zero(t, quotaSvc.lastAmount)
+}
+
+func TestOpenAIGatewayServiceRecordUsage_TokenMultiplierBillingDisabledKeepsOldUsageCost(t *testing.T) {
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	svc := newOpenAIRecordUsageServiceWithTokenMultiplierForTest(
+		usageRepo, &openAIRecordUsageBillingRepoStub{result: &UsageBillingApplyResult{Applied: true}},
+		&openAIRecordUsageUserRepoStub{}, &openAIRecordUsageSubRepoStub{}, nil, false, 2.5,
+	)
+
+	err := svc.RecordUsage(context.Background(), &OpenAIRecordUsageInput{
+		Result: &OpenAIForwardResult{
+			RequestID: "resp_billable_tokens_disabled",
+			Model:     "gpt-5.4",
+			Usage:     OpenAIUsage{InputTokens: 120, OutputTokens: 40, CacheReadInputTokens: 20},
+			Duration:  time.Second,
+		},
+		APIKey:  &APIKey{ID: 10118},
+		User:    &User{ID: 20118},
+		Account: &Account{ID: 30118},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, usageRepo.lastLog)
+	require.Equal(t, 100, usageRepo.lastLog.BillableInputTokens)
+	require.Equal(t, 40, usageRepo.lastLog.BillableOutputTokens)
+	require.Equal(t, 20, usageRepo.lastLog.BillableCacheReadTokens)
+	require.InDelta(t, 1.0, usageRepo.lastLog.BillingTokenMultiplier, 1e-12)
+
+	expectedTotal := float64(100)*2.5e-6 + float64(40)*15e-6 + float64(20)*0.25e-6
+	require.InDelta(t, expectedTotal, usageRepo.lastLog.TotalCost, 1e-12)
+	require.InDelta(t, expectedTotal*1.1, usageRepo.lastLog.ActualCost, 1e-12)
+}
+
 func TestNormalizeOpenAIServiceTier(t *testing.T) {
 	t.Run("fast maps to priority", func(t *testing.T) {
 		got := normalizeOpenAIServiceTier(" fast ")
@@ -1311,6 +1478,60 @@ func TestOpenAIGatewayServiceRecordUsage_ImageUsesPerImageBillingEvenWithUsageTo
 	require.InDelta(t, 0.0, usageRepo.lastLog.ImageOutputCost, 1e-12)
 }
 
+func TestOpenAIGatewayServiceRecordUsage_ImageTokenPricingUsesBillableImageOutputTokens(t *testing.T) {
+	groupID := int64(128)
+	imageOutputPrice := 0.00001
+	cache := newEmptyChannelCache()
+	cache.pricingByGroupModel[channelModelKey{groupID: groupID, model: "gpt-image-2"}] = &ChannelModelPricing{
+		BillingMode:      BillingModeToken,
+		ImageOutputPrice: &imageOutputPrice,
+	}
+	cache.channelByGroupID[groupID] = &Channel{ID: groupID, Status: StatusActive}
+	cache.groupPlatform[groupID] = ""
+	cache.loadedAt = time.Now()
+	channelService := &ChannelService{}
+	channelService.cache.Store(cache)
+
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	svc := newOpenAIRecordUsageServiceWithTokenMultiplierForTest(
+		usageRepo, &openAIRecordUsageBillingRepoStub{result: &UsageBillingApplyResult{Applied: true}},
+		&openAIRecordUsageUserRepoStub{}, &openAIRecordUsageSubRepoStub{}, nil, true, 2.5,
+	)
+	svc.channelService = channelService
+	svc.resolver = NewModelPricingResolver(channelService, svc.billingService)
+
+	err := svc.RecordUsage(context.Background(), &OpenAIRecordUsageInput{
+		Result: &OpenAIForwardResult{
+			RequestID: "resp_image_output_token_billable",
+			Model:     "gpt-image-2",
+			Usage: OpenAIUsage{
+				OutputTokens:      10,
+				ImageOutputTokens: 10,
+			},
+			ImageCount: 2,
+			ImageSize:  "1K",
+			Duration:   time.Second,
+		},
+		APIKey: &APIKey{
+			ID:      10128,
+			GroupID: i64p(groupID),
+			Group:   &Group{ID: groupID, RateMultiplier: 1.3},
+		},
+		User:    &User{ID: 20128},
+		Account: &Account{ID: 30128},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, usageRepo.lastLog)
+	require.Equal(t, 10, usageRepo.lastLog.ImageOutputTokens)
+	require.Equal(t, 25, usageRepo.lastLog.BillableImageOutputTokens)
+	require.InDelta(t, 2.5, usageRepo.lastLog.BillingTokenMultiplier, 1e-12)
+	require.NotNil(t, usageRepo.lastLog.BillingMode)
+	require.Equal(t, string(BillingModeToken), *usageRepo.lastLog.BillingMode)
+	require.InDelta(t, float64(25)*imageOutputPrice, usageRepo.lastLog.TotalCost, 1e-12)
+	require.InDelta(t, float64(25)*imageOutputPrice*1.3, usageRepo.lastLog.ActualCost, 1e-12)
+}
+
 func TestOpenAIGatewayServiceRecordUsage_ImageSharedMultiplierPreservesExistingBehavior(t *testing.T) {
 	imagePrice := 0.2
 	groupID := int64(121)
@@ -1538,6 +1759,7 @@ func TestGatewayServiceCalculateRecordUsageCost_ChannelImageBillingUsesImageCoun
 		"gemini-image",
 		0.15,
 		1.0,
+		BuildBillableUsage(UsageTokens{}, BillingTokenPolicy{}),
 		nil,
 	)
 
@@ -1577,6 +1799,7 @@ func TestGatewayServiceCalculateRecordUsageCost_ChannelImageBillingUsesSizeTier(
 		"gemini-image",
 		1.0,
 		1.0,
+		BuildBillableUsage(UsageTokens{}, BillingTokenPolicy{}),
 		nil,
 	)
 

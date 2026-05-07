@@ -157,6 +157,10 @@ type SystemSettings struct {
 	// Available Channels feature (user-facing aggregate view)
 	AvailableChannelsEnabled bool `json:"available_channels_enabled"`
 
+	// Billable token multiplier billing
+	TokenMultiplierBillingEnabled bool    `json:"token_multiplier_billing_enabled"`
+	BillingTokenMultiplier        float64 `json:"billing_token_multiplier"`
+
 	// Claude Code version check
 	MinClaudeCodeVersion string
 	MaxClaudeCodeVersion string

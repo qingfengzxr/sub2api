@@ -447,6 +447,17 @@ type UsageLog struct {
 	CacheCreation5mTokens int `json:"cache_creation_5m_tokens"`
 	CacheCreation1hTokens int `json:"cache_creation_1h_tokens"`
 
+	BillableInputTokens            int     `json:"billable_input_tokens"`
+	BillableOutputTokens           int     `json:"billable_output_tokens"`
+	BillableCacheCreationTokens    int     `json:"billable_cache_creation_tokens"`
+	BillableCacheReadTokens        int     `json:"billable_cache_read_tokens"`
+	BillableImageOutputTokens      int     `json:"billable_image_output_tokens"`
+	BillableTextInputTokens        int     `json:"billable_text_input_tokens"`
+	BillableCachedTextInputTokens  int     `json:"billable_cached_text_input_tokens"`
+	BillableImageInputTokens       int     `json:"billable_image_input_tokens"`
+	BillableCachedImageInputTokens int     `json:"billable_cached_image_input_tokens"`
+	BillingTokenMultiplier         float64 `json:"billing_token_multiplier"`
+
 	InputCost         float64 `json:"input_cost"`
 	OutputCost        float64 `json:"output_cost"`
 	CacheCreationCost float64 `json:"cache_creation_cost"`
