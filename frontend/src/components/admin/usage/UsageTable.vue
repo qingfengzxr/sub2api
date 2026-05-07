@@ -199,40 +199,55 @@
       }"
     >
       <div class="whitespace-nowrap rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-xs text-white shadow-xl dark:border-gray-600 dark:bg-gray-800">
-        <div class="space-y-1.5">
-          <div>
-            <div class="text-xs font-semibold text-gray-300 mb-1">{{ t('usage.tokenDetails') }}</div>
-            <div v-if="tokenTooltipData && tokenTooltipData.input_tokens > 0" class="flex items-center justify-between gap-4">
+        <div v-if="adminTokenBreakdown" class="space-y-1.5">
+          <div class="border-b border-gray-700 pb-1.5">
+            <div class="mb-1 text-xs font-semibold text-gray-300">{{ t('usage.rawTokenUsage') }}</div>
+            <div v-if="adminTokenBreakdown.raw.inputTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('admin.usage.inputTokens') }}</span>
-              <span class="font-medium text-white">{{ tokenTooltipData.input_tokens.toLocaleString() }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.inputTokens.toLocaleString() }}</span>
             </div>
-            <div v-if="tokenTooltipData && tokenTooltipData.output_tokens > 0" class="flex items-center justify-between gap-4">
+            <div v-if="adminTokenBreakdown.raw.outputTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('admin.usage.outputTokens') }}</span>
-              <span class="font-medium text-white">{{ tokenTooltipData.output_tokens.toLocaleString() }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.outputTokens.toLocaleString() }}</span>
             </div>
-            <div v-if="tokenTooltipData && tokenTooltipData.cache_creation_tokens > 0">
-              <!-- 有 5m/1h 明细时，展开显示 -->
-              <template v-if="tokenTooltipData.cache_creation_5m_tokens > 0 || tokenTooltipData.cache_creation_1h_tokens > 0">
-                <div v-if="tokenTooltipData.cache_creation_5m_tokens > 0" class="flex items-center justify-between gap-4">
-                  <span class="text-gray-400 flex items-center gap-1.5">
-                    {{ t('admin.usage.cacheCreation5mTokens') }}
-                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-amber-500/20 text-amber-400 ring-1 ring-inset ring-amber-500/30">5m</span>
-                  </span>
-                  <span class="font-medium text-white">{{ tokenTooltipData.cache_creation_5m_tokens.toLocaleString() }}</span>
-                </div>
-                <div v-if="tokenTooltipData.cache_creation_1h_tokens > 0" class="flex items-center justify-between gap-4">
-                  <span class="text-gray-400 flex items-center gap-1.5">
-                    {{ t('admin.usage.cacheCreation1hTokens') }}
-                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-500/20 text-orange-400 ring-1 ring-inset ring-orange-500/30">1h</span>
-                  </span>
-                  <span class="font-medium text-white">{{ tokenTooltipData.cache_creation_1h_tokens.toLocaleString() }}</span>
-                </div>
-              </template>
-              <!-- 无明细时，只显示聚合值 -->
-              <div v-else class="flex items-center justify-between gap-4">
-                <span class="text-gray-400">{{ t('admin.usage.cacheCreationTokens') }}</span>
-                <span class="font-medium text-white">{{ tokenTooltipData.cache_creation_tokens.toLocaleString() }}</span>
-              </div>
+            <div v-if="adminTokenBreakdown.raw.cacheCreationTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('admin.usage.cacheCreationTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheCreationTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.raw.cacheReadTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('admin.usage.cacheReadTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheReadTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.raw.imageOutputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.imageOutputTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.imageOutputTokens.toLocaleString() }}</span>
+            </div>
+            <div class="flex items-center justify-between gap-6 pt-1">
+              <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
+              <span class="font-semibold text-slate-200">{{ adminTokenBreakdown.raw.totalTokens.toLocaleString() }}</span>
+            </div>
+          </div>
+          <div>
+            <div class="mb-1 text-xs font-semibold text-gray-300">{{ t('usage.billableTokenUsage') }}</div>
+            <div v-if="adminTokenBreakdown.billable.inputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableInputTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.inputTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.billable.outputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableOutputTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.outputTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.billable.cacheCreationTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableCacheCreationTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreationTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.billable.cacheReadTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableCacheReadTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheReadTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.billable.imageOutputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.billableImageOutputTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.imageOutputTokens.toLocaleString() }}</span>
             </div>
             <div v-if="tokenTooltipData && tokenTooltipData.cache_ttl_overridden" class="flex items-center justify-between gap-4">
               <span class="text-gray-400 flex items-center gap-1.5">
@@ -241,14 +256,14 @@
               </span>
               <span class="font-medium text-rose-400">{{ tokenTooltipData.cache_creation_1h_tokens > 0 ? t('usage.cacheTtlOverridden1h') : t('usage.cacheTtlOverridden5m') }}</span>
             </div>
-            <div v-if="tokenTooltipData && tokenTooltipData.cache_read_tokens > 0" class="flex items-center justify-between gap-4">
-              <span class="text-gray-400">{{ t('admin.usage.cacheReadTokens') }}</span>
-              <span class="font-medium text-white">{{ tokenTooltipData.cache_read_tokens.toLocaleString() }}</span>
+            <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
+              <span class="text-gray-400">{{ t('usage.billingTokenMultiplier') }}</span>
+              <span class="font-semibold text-blue-400">{{ formatMultiplier(adminTokenBreakdown.billingTokenMultiplier) }}x</span>
             </div>
-          </div>
-          <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
-            <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
-            <span class="font-semibold text-blue-400">{{ ((tokenTooltipData?.input_tokens || 0) + (tokenTooltipData?.output_tokens || 0) + (tokenTooltipData?.cache_creation_tokens || 0) + (tokenTooltipData?.cache_read_tokens || 0)).toLocaleString() }}</span>
+            <div class="flex items-center justify-between gap-6">
+              <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
+              <span class="font-semibold text-blue-400">{{ adminTokenBreakdown.billable.totalTokens.toLocaleString() }}</span>
+            </div>
           </div>
         </div>
         <div class="absolute right-full top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[6px] border-t-[6px] border-b-transparent border-r-gray-900 border-t-transparent dark:border-r-gray-800"></div>
@@ -358,7 +373,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { formatDateTime, formatReasoningEffort } from '@/utils/format'
 import { formatCacheTokens, formatMultiplier } from '@/utils/formatters'
@@ -379,6 +394,56 @@ function imageUnitPrice(row: AdminUsageLog | null): number {
   const total = row.total_cost ?? 0
   const price = total / row.image_count
   return Number.isFinite(price) ? price : 0
+}
+
+const positiveNumber = (value: unknown): number => {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0
+}
+
+const billableFirstTokenValue = (
+  log: AdminUsageLog,
+  billableKey: keyof AdminUsageLog,
+  rawKey: keyof AdminUsageLog
+): number => {
+  const billableValue = positiveNumber(log[billableKey])
+  return billableValue > 0 ? billableValue : positiveNumber(log[rawKey])
+}
+
+const tokenBreakdown = (
+  inputTokens: number,
+  outputTokens: number,
+  cacheCreationTokens: number,
+  cacheReadTokens: number,
+  imageOutputTokens: number
+) => ({
+  inputTokens,
+  outputTokens,
+  cacheCreationTokens,
+  cacheReadTokens,
+  imageOutputTokens,
+  totalTokens: inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens + imageOutputTokens,
+})
+
+const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
+  if (!log) return null
+
+  const raw = tokenBreakdown(
+    positiveNumber(log.input_tokens),
+    positiveNumber(log.output_tokens),
+    positiveNumber(log.cache_creation_tokens),
+    positiveNumber(log.cache_read_tokens),
+    positiveNumber(log.image_output_tokens)
+  )
+  const billable = tokenBreakdown(
+    billableFirstTokenValue(log, 'billable_input_tokens', 'input_tokens'),
+    billableFirstTokenValue(log, 'billable_output_tokens', 'output_tokens'),
+    billableFirstTokenValue(log, 'billable_cache_creation_tokens', 'cache_creation_tokens'),
+    billableFirstTokenValue(log, 'billable_cache_read_tokens', 'cache_read_tokens'),
+    billableFirstTokenValue(log, 'billable_image_output_tokens', 'image_output_tokens')
+  )
+  const billingTokenMultiplier = positiveNumber(log.billing_token_multiplier) || 1
+
+  return { raw, billable, billingTokenMultiplier }
 }
 
 import DataTable from '@/components/common/DataTable.vue'
@@ -417,6 +482,7 @@ const tooltipData = ref<AdminUsageLog | null>(null)
 const tokenTooltipVisible = ref(false)
 const tokenTooltipPosition = ref({ x: 0, y: 0 })
 const tokenTooltipData = ref<AdminUsageLog | null>(null)
+const adminTokenBreakdown = computed(() => buildAdminTokenBreakdown(tokenTooltipData.value))
 
 const getRequestTypeLabel = (row: AdminUsageLog): string => {
   const requestType = resolveUsageRequestType(row)

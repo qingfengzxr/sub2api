@@ -13,6 +13,17 @@ const messages: Record<string, string> = {
   'usage.inputTokenPrice': 'Input price',
   'usage.outputTokenPrice': 'Output price',
   'usage.perMillionTokens': '/ 1M tokens',
+  'usage.tokenDetails': 'Token Breakdown',
+  'usage.totalTokens': 'Total Tokens',
+  'usage.rawTokenUsage': 'Raw Usage',
+  'usage.billableTokenUsage': 'Billable Usage',
+  'usage.billingTokenMultiplier': 'Multiplier Snapshot',
+  'usage.billableInputTokens': 'Billable Input Tokens',
+  'usage.billableOutputTokens': 'Billable Output Tokens',
+  'usage.billableCacheCreationTokens': 'Billable Cache Write Tokens',
+  'usage.billableCacheReadTokens': 'Billable Cache Read Tokens',
+  'usage.billableImageOutputTokens': 'Billable Image Output Tokens',
+  'usage.imageOutputTokens': 'Image Output Tokens',
   'usage.serviceTier': 'Service tier',
   'usage.serviceTierPriority': 'Fast',
   'usage.serviceTierFlex': 'Flex',
@@ -22,6 +33,10 @@ const messages: Record<string, string> = {
   'usage.original': 'Original',
   'usage.userBilled': 'User billed',
   'usage.accountBilled': 'Account billed',
+  'admin.usage.inputTokens': 'Input Tokens',
+  'admin.usage.outputTokens': 'Output Tokens',
+  'admin.usage.cacheCreationTokens': 'Cache Write Tokens',
+  'admin.usage.cacheReadTokens': 'Cache Read Tokens',
 }
 
 vi.mock('vue-i18n', async () => {
@@ -40,6 +55,7 @@ const DataTableStub = {
     <div>
       <div v-for="row in data" :key="row.request_id">
         <slot name="cell-model" :row="row" :value="row.model" />
+        <slot name="cell-tokens" :row="row" />
         <slot name="cell-cost" :row="row" />
       </div>
     </div>
@@ -93,7 +109,7 @@ describe('admin UsageTable tooltip', () => {
       },
     })
 
-    await wrapper.find('.group.relative').trigger('mouseenter')
+    await wrapper.findAll('.group.relative')[1].trigger('mouseenter')
     await nextTick()
 
     const text = wrapper.text()
@@ -108,6 +124,124 @@ describe('admin UsageTable tooltip', () => {
     expect(text).toContain('$5.0000 / 1M tokens')
     expect(text).toContain('$30.0000 / 1M tokens')
     expect(text).toContain('$0.069568')
+  })
+
+  it('shows raw and billable token audit details in token tooltip', async () => {
+    const row = {
+      request_id: 'req-admin-token-1',
+      actual_cost: 0.113297,
+      total_cost: 0.102997,
+      account_rate_multiplier: 1,
+      rate_multiplier: 1.1,
+      service_tier: null,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 1938,
+      output_tokens: 597,
+      cache_creation_tokens: 0,
+      cache_read_tokens: 235904,
+      image_output_tokens: 4,
+      billable_input_tokens: 4845,
+      billable_output_tokens: 1493,
+      billable_cache_creation_tokens: 0,
+      billable_cache_read_tokens: 589760,
+      billable_image_output_tokens: 10,
+      billing_token_multiplier: 2.5,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await wrapper.findAll('.group.relative')[0].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Raw Usage')
+    expect(text).toContain('Input Tokens')
+    expect(text).toContain('1,938')
+    expect(text).toContain('597')
+    expect(text).toContain('235,904')
+    expect(text).toContain('238,443')
+    expect(text).toContain('Billable Usage')
+    expect(text).toContain('Billable Input Tokens')
+    expect(text).toContain('4,845')
+    expect(text).toContain('1,493')
+    expect(text).toContain('589,760')
+    expect(text).toContain('10')
+    expect(text).toContain('596,108')
+    expect(text).toContain('Multiplier Snapshot')
+    expect(text).toContain('2.50x')
+  })
+
+  it('falls back to raw token details when admin billable fields are absent', async () => {
+    const row = {
+      request_id: 'req-admin-token-legacy',
+      actual_cost: 0.01,
+      total_cost: 0.01,
+      account_rate_multiplier: 1,
+      rate_multiplier: 1,
+      service_tier: null,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 12,
+      output_tokens: 5,
+      cache_creation_tokens: 0,
+      cache_read_tokens: 3,
+      image_output_tokens: 0,
+      billable_input_tokens: 0,
+      billable_output_tokens: 0,
+      billable_cache_creation_tokens: 0,
+      billable_cache_read_tokens: 0,
+      billable_image_output_tokens: 0,
+      billing_token_multiplier: 0,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await wrapper.findAll('.group.relative')[0].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Raw Usage')
+    expect(text).toContain('Billable Usage')
+    expect(text).toContain('12')
+    expect(text).toContain('5')
+    expect(text).toContain('3')
+    expect(text).toContain('20')
+    expect(text).toContain('1.00x')
   })
 
   it('shows requested and upstream models separately for admin rows', () => {
