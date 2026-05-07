@@ -1131,6 +1131,7 @@ export interface UsageLog {
   cache_read_tokens: number
   cache_creation_5m_tokens: number
   cache_creation_1h_tokens: number
+  image_output_tokens: number
 
   billable_input_tokens: number
   billable_output_tokens: number

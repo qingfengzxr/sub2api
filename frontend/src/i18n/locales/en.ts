@@ -802,6 +802,7 @@ export default {
     billableCacheCreationTokens: 'Billable Cache Write Tokens',
     billableCacheReadTokens: 'Billable Cache Read Tokens',
     billableImageOutputTokens: 'Billable Image Output Tokens',
+    imageOutputTokens: 'Image Output Tokens',
     cacheTtlOverriddenHint: 'Cache TTL Override enabled',
     cacheTtlOverriddenLabel: 'TTL Override',
     cacheTtlOverridden5m: 'Billed as 5m',

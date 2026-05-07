@@ -806,6 +806,7 @@ export default {
     billableCacheCreationTokens: '计费缓存写入 Token',
     billableCacheReadTokens: '计费缓存读取 Token',
     billableImageOutputTokens: '计费图片输出 Token',
+    imageOutputTokens: '图片输出 Token',
     cacheTtlOverriddenHint: '缓存 TTL Override 已启用',
     cacheTtlOverriddenLabel: 'TTL 替换',
     cacheTtlOverridden5m: '按 5m 计费',
