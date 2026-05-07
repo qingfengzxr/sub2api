@@ -119,6 +119,84 @@ func APIKeyFromService(k *service.APIKey) *APIKey {
 	return out
 }
 
+func UserAPIKeyFromService(k *service.APIKey) *UserAPIKey {
+	if k == nil {
+		return nil
+	}
+	out := &UserAPIKey{
+		ID:            k.ID,
+		UserID:        k.UserID,
+		Key:           k.Key,
+		Name:          k.Name,
+		GroupID:       k.GroupID,
+		Status:        k.Status,
+		IPWhitelist:   k.IPWhitelist,
+		IPBlacklist:   k.IPBlacklist,
+		LastUsedAt:    k.LastUsedAt,
+		Quota:         k.Quota,
+		QuotaUsed:     k.QuotaUsed,
+		ExpiresAt:     k.ExpiresAt,
+		CreatedAt:     k.CreatedAt,
+		UpdatedAt:     k.UpdatedAt,
+		RateLimit5h:   k.RateLimit5h,
+		RateLimit1d:   k.RateLimit1d,
+		RateLimit7d:   k.RateLimit7d,
+		Usage5h:       k.EffectiveUsage5h(),
+		Usage1d:       k.EffectiveUsage1d(),
+		Usage7d:       k.EffectiveUsage7d(),
+		Window5hStart: k.Window5hStart,
+		Window1dStart: k.Window1dStart,
+		Window7dStart: k.Window7dStart,
+		User:          UserFromServiceShallow(k.User),
+		Group:         UserGroupFromService(k.Group),
+	}
+	if k.Window5hStart != nil && !service.IsWindowExpired(k.Window5hStart, service.RateLimitWindow5h) {
+		t := k.Window5hStart.Add(service.RateLimitWindow5h)
+		out.Reset5hAt = &t
+	}
+	if k.Window1dStart != nil && !service.IsWindowExpired(k.Window1dStart, service.RateLimitWindow1d) {
+		t := k.Window1dStart.Add(service.RateLimitWindow1d)
+		out.Reset1dAt = &t
+	}
+	if k.Window7dStart != nil && !service.IsWindowExpired(k.Window7dStart, service.RateLimitWindow7d) {
+		t := k.Window7dStart.Add(service.RateLimitWindow7d)
+		out.Reset7dAt = &t
+	}
+	return out
+}
+
+func UserGroupFromService(g *service.Group) *UserGroup {
+	if g == nil {
+		return nil
+	}
+	return &UserGroup{
+		ID:                              g.ID,
+		Name:                            g.Name,
+		Description:                     g.Description,
+		Platform:                        g.Platform,
+		IsExclusive:                     g.IsExclusive,
+		Status:                          g.Status,
+		SubscriptionType:                g.SubscriptionType,
+		DailyLimitUSD:                   g.DailyLimitUSD,
+		WeeklyLimitUSD:                  g.WeeklyLimitUSD,
+		MonthlyLimitUSD:                 g.MonthlyLimitUSD,
+		AllowImageGeneration:            g.AllowImageGeneration,
+		ImageRateIndependent:            g.ImageRateIndependent,
+		ImagePrice1K:                    g.ImagePrice1K,
+		ImagePrice2K:                    g.ImagePrice2K,
+		ImagePrice4K:                    g.ImagePrice4K,
+		ClaudeCodeOnly:                  g.ClaudeCodeOnly,
+		FallbackGroupID:                 g.FallbackGroupID,
+		FallbackGroupIDOnInvalidRequest: g.FallbackGroupIDOnInvalidRequest,
+		AllowMessagesDispatch:           g.AllowMessagesDispatch,
+		RequireOAuthOnly:                g.RequireOAuthOnly,
+		RequirePrivacySet:               g.RequirePrivacySet,
+		RPMLimit:                        g.RPMLimit,
+		CreatedAt:                       g.CreatedAt,
+		UpdatedAt:                       g.UpdatedAt,
+	}
+}
+
 func GroupFromServiceShallow(g *service.Group) *Group {
 	if g == nil {
 		return nil

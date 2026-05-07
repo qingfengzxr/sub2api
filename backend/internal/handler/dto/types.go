@@ -79,6 +79,69 @@ type APIKey struct {
 	Group *Group `json:"group,omitempty"`
 }
 
+type UserAPIKey struct {
+	ID          int64      `json:"id"`
+	UserID      int64      `json:"user_id"`
+	Key         string     `json:"key"`
+	Name        string     `json:"name"`
+	GroupID     *int64     `json:"group_id"`
+	Status      string     `json:"status"`
+	IPWhitelist []string   `json:"ip_whitelist"`
+	IPBlacklist []string   `json:"ip_blacklist"`
+	LastUsedAt  *time.Time `json:"last_used_at"`
+	Quota       float64    `json:"quota"`
+	QuotaUsed   float64    `json:"quota_used"`
+	ExpiresAt   *time.Time `json:"expires_at"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+
+	RateLimit5h   float64    `json:"rate_limit_5h"`
+	RateLimit1d   float64    `json:"rate_limit_1d"`
+	RateLimit7d   float64    `json:"rate_limit_7d"`
+	Usage5h       float64    `json:"usage_5h"`
+	Usage1d       float64    `json:"usage_1d"`
+	Usage7d       float64    `json:"usage_7d"`
+	Window5hStart *time.Time `json:"window_5h_start"`
+	Window1dStart *time.Time `json:"window_1d_start"`
+	Window7dStart *time.Time `json:"window_7d_start"`
+	Reset5hAt     *time.Time `json:"reset_5h_at,omitempty"`
+	Reset1dAt     *time.Time `json:"reset_1d_at,omitempty"`
+	Reset7dAt     *time.Time `json:"reset_7d_at,omitempty"`
+
+	User  *User      `json:"user,omitempty"`
+	Group *UserGroup `json:"group,omitempty"`
+}
+
+type UserGroup struct {
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Platform    string `json:"platform"`
+	IsExclusive bool   `json:"is_exclusive"`
+	Status      string `json:"status"`
+
+	SubscriptionType string   `json:"subscription_type"`
+	DailyLimitUSD    *float64 `json:"daily_limit_usd"`
+	WeeklyLimitUSD   *float64 `json:"weekly_limit_usd"`
+	MonthlyLimitUSD  *float64 `json:"monthly_limit_usd"`
+
+	AllowImageGeneration bool     `json:"allow_image_generation"`
+	ImageRateIndependent bool     `json:"image_rate_independent"`
+	ImagePrice1K         *float64 `json:"image_price_1k"`
+	ImagePrice2K         *float64 `json:"image_price_2k"`
+	ImagePrice4K         *float64 `json:"image_price_4k"`
+
+	ClaudeCodeOnly                  bool      `json:"claude_code_only"`
+	FallbackGroupID                 *int64    `json:"fallback_group_id"`
+	FallbackGroupIDOnInvalidRequest *int64    `json:"fallback_group_id_on_invalid_request"`
+	AllowMessagesDispatch           bool      `json:"allow_messages_dispatch"`
+	RequireOAuthOnly                bool      `json:"require_oauth_only"`
+	RequirePrivacySet               bool      `json:"require_privacy_set"`
+	RPMLimit                        int       `json:"rpm_limit"`
+	CreatedAt                       time.Time `json:"created_at"`
+	UpdatedAt                       time.Time `json:"updated_at"`
+}
+
 type Group struct {
 	ID             int64   `json:"id"`
 	Name           string  `json:"name"`

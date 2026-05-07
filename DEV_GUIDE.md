@@ -232,7 +232,19 @@ git add ent/       # 生成的文件也要提交
 
 ---
 
-### 坑 11：PR 提交前检查清单
+### 坑 11：C 端隐藏分组倍率的最小收敛
+
+C 端普通用户页面不应直接展示分组倍率、用户专属倍率或 `x倍` 文案；倍率属于内部计费和运营配置。为降低长期独立分支同步上游的冲突成本，当前只做最小收敛：
+
+- 前端 C 端页面通过 `GroupBadge` 的 `showRate=false` 或不传倍率字段来隐藏展示；
+- `/api/v1/keys` 的普通用户响应使用用户侧 mapper，嵌套 `group` 不返回 `rate_multiplier` / `image_rate_multiplier`；
+- `/api/v1/groups/rates` 对普通用户返回空对象，避免泄露用户专属倍率；
+- 不修改通用/admin DTO，不影响管理员后台倍率配置和用量分析；
+- 不改变 gateway / billing / usage 的实际计费倍率计算。
+
+---
+
+### 坑 12：PR 提交前检查清单
 
 提交 PR 前务必本地验证：
 
