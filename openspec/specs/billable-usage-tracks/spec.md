@@ -125,6 +125,12 @@
 - **WHEN** 用户导出 usage logs
 - **THEN** 导出内容必须包含 raw usage 字段、billable usage 字段、`billing_token_multiplier`、选定模型/定价上下文、`total_cost` 和 `actual_cost`
 
+#### Scenario: C 端 Usage 表格使用 billable token 主显示
+- **WHEN** 普通用户在 Usage 表格查看 `TOKEN` 列
+- **THEN** `TOKEN` 列必须优先使用 `billable_input_tokens`、`billable_output_tokens`、`billable_cache_creation_tokens`、`billable_cache_read_tokens`、`billable_image_output_tokens` 和等价图片兼容 billable 字段计算主显示值
+- **THEN** 对缺失 billable 字段的历史 usage log，系统必须按 raw-compatible 语义回退到对应 raw token 字段
+- **THEN** `TOKEN` 列显示的输入、输出、缓存/总量等值必须与本条记录的费用核验口径一致
+
 #### Scenario: C 端 Usage tooltip 展示最终计费用量
 - **WHEN** 普通用户在 Usage 页面查看单条记录的 token tooltip
 - **THEN** tooltip 的 input、output、cache 和 image output token 明细必须直接展示 billable usage 口径
@@ -142,4 +148,5 @@
 #### Scenario: C 端页面保持费用口径清晰
 - **WHEN** 普通用户查看 Usage、Dashboard、Keys、KeyUsage、Payment、Subscriptions、Orders 或 Available Channels 页面
 - **THEN** 页面必须继续展示最终消费或用户账单可核验的 token 用量这类用户可理解信息
+- **THEN** Usage 表格 `TOKEN` 列必须直接展示 billable token 口径的用户可核验用量
 - **THEN** 页面不得展示内部 group/account 倍率 badge，也不得恢复旧的标准/实际双口径费用解释

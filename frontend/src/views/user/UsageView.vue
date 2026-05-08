@@ -219,36 +219,36 @@
                   <div class="inline-flex items-center gap-1">
                     <Icon name="arrowDown" size="sm" class="text-emerald-500" />
                     <span class="font-medium text-gray-900 dark:text-white">{{
-                      row.input_tokens.toLocaleString()
+                      buildBillableFirstTokenBreakdown(row)!.inputTokens.toLocaleString()
                     }}</span>
                   </div>
                   <!-- Output -->
                   <div class="inline-flex items-center gap-1">
                     <Icon name="arrowUp" size="sm" class="text-violet-500" />
                     <span class="font-medium text-gray-900 dark:text-white">{{
-                      row.output_tokens.toLocaleString()
+                      buildBillableFirstTokenBreakdown(row)!.outputTokens.toLocaleString()
                     }}</span>
                   </div>
                 </div>
                 <!-- Cache Tokens (Read + Write) -->
                 <div
-                  v-if="row.cache_read_tokens > 0 || row.cache_creation_tokens > 0"
+                  v-if="buildBillableFirstTokenBreakdown(row)!.cacheReadTokens > 0 || buildBillableFirstTokenBreakdown(row)!.cacheCreationTokens > 0"
                   class="flex items-center gap-2"
                 >
                   <!-- Cache Read -->
-                  <div v-if="row.cache_read_tokens > 0" class="inline-flex items-center gap-1">
+                  <div v-if="buildBillableFirstTokenBreakdown(row)!.cacheReadTokens > 0" class="inline-flex items-center gap-1">
                     <Icon name="inbox" size="sm" class="text-sky-500" />
                     <span class="font-medium text-sky-600 dark:text-sky-400">{{
-                      formatCacheTokens(row.cache_read_tokens)
+                      formatCacheTokens(buildBillableFirstTokenBreakdown(row)!.cacheReadTokens)
                     }}</span>
                   </div>
                   <!-- Cache Write -->
-                  <div v-if="row.cache_creation_tokens > 0" class="inline-flex items-center gap-1">
+                  <div v-if="buildBillableFirstTokenBreakdown(row)!.cacheCreationTokens > 0" class="inline-flex items-center gap-1">
                     <Icon name="edit" size="sm" class="text-amber-500" />
                     <span class="font-medium text-amber-600 dark:text-amber-400">{{
-                      formatCacheTokens(row.cache_creation_tokens)
+                      formatCacheTokens(buildBillableFirstTokenBreakdown(row)!.cacheCreationTokens)
                     }}</span>
-                    <span v-if="row.cache_creation_1h_tokens > 0" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-100 text-orange-600 ring-1 ring-inset ring-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:ring-orange-500/30">1h</span>
+                    <span v-if="buildBillableFirstTokenBreakdown(row)!.cacheCreation1hTokens > 0" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-100 text-orange-600 ring-1 ring-inset ring-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:ring-orange-500/30">1h</span>
                     <span v-if="row.cache_ttl_overridden" :title="t('usage.cacheTtlOverriddenHint')" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-rose-100 text-rose-600 ring-1 ring-inset ring-rose-200 dark:bg-rose-500/20 dark:text-rose-400 dark:ring-rose-500/30 cursor-help">R</span>
                   </div>
                 </div>

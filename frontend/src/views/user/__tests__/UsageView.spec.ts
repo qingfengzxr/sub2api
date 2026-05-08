@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 
 import UsageView from '../UsageView.vue'
 
@@ -71,7 +71,22 @@ vi.mock('vue-i18n', async () => {
 
 const AppLayoutStub = { template: '<div><slot /></div>' }
 const TablePageLayoutStub = {
-  template: '<div><slot name="actions" /><slot name="filters" /><slot /></div>',
+  template: '<div><slot name="actions" /><slot name="filters" /><slot name="table" /><slot name="pagination" /><slot /></div>',
+}
+const DataTableStub = {
+  props: ['columns', 'data'],
+  setup(props: { columns: Array<{ key: string }>; data: Array<Record<string, unknown>> }, { slots }: any) {
+    return () =>
+      h(
+        'div',
+        props.data.flatMap((row) =>
+          props.columns.map((column) => {
+            const slot = slots[`cell-${column.key}`]
+            return h('div', { class: `cell-${column.key}` }, slot ? slot({ row, value: row[column.key] }) : String(row[column.key] ?? ''))
+          })
+        )
+      )
+  },
 }
 
 describe('user UsageView tooltip', () => {
@@ -100,6 +115,20 @@ describe('user UsageView tooltip', () => {
       observe() {}
       disconnect() {}
     }
+
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: true,
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    })
   })
 
   it('shows final cost and service tier in user tooltip', async () => {
@@ -148,6 +177,7 @@ describe('user UsageView tooltip', () => {
           EmptyState: true,
           Select: true,
           DateRangePicker: true,
+          DataTable: DataTableStub,
           Icon: true,
           Teleport: true,
         },
@@ -246,6 +276,7 @@ describe('user UsageView tooltip', () => {
           EmptyState: true,
           Select: true,
           DateRangePicker: true,
+          DataTable: DataTableStub,
           Icon: true,
           Teleport: true,
         },
@@ -333,6 +364,7 @@ describe('user UsageView tooltip', () => {
           EmptyState: true,
           Select: true,
           DateRangePicker: true,
+          DataTable: DataTableStub,
           Icon: true,
         },
       },
@@ -340,6 +372,14 @@ describe('user UsageView tooltip', () => {
 
     await flushPromises()
     await nextTick()
+
+    const tableText = wrapper.text()
+    expect(tableText).toContain('1,510')
+    expect(tableText).toContain('673')
+    expect(tableText).toContain('438.7K')
+    expect(tableText).not.toContain('604')
+    expect(tableText).not.toContain('269')
+    expect(tableText).not.toContain('175.5K')
 
     const setupState = (wrapper.vm as any).$?.setupState
     setupState.tokenTooltipData = {
@@ -429,6 +469,7 @@ describe('user UsageView tooltip', () => {
           EmptyState: true,
           Select: true,
           DateRangePicker: true,
+          DataTable: DataTableStub,
           Icon: true,
         },
       },
@@ -436,6 +477,11 @@ describe('user UsageView tooltip', () => {
 
     await flushPromises()
     await nextTick()
+
+    const tableText = wrapper.text()
+    expect(tableText).toContain('12')
+    expect(tableText).toContain('5')
+    expect(tableText).toContain('3')
 
     const setupState = (wrapper.vm as any).$?.setupState
     setupState.tokenTooltipData = {
