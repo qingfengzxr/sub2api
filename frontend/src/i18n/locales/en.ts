@@ -5130,6 +5130,14 @@ export default {
           multiplier: 'Platform token multiplier',
           multiplierHint: 'Used to generate billable tokens; total_cost = official price × billable tokens, and actual_cost may still stack amount-side multipliers.',
         },
+        longContextPricing: {
+          title: 'Long-context Pricing',
+          description: 'Optional platform switch for model long-context surcharges. When enabled, billable input + cache-read tokens above the threshold use the model-defined long-context multipliers.',
+          enabled: 'Enable long-context pricing',
+          enabledHint: 'When off, requests do not receive model long-context surcharges even if they exceed the threshold.',
+          threshold: 'Context threshold tokens',
+          thresholdHint: 'Compared against billable input tokens plus billable cache-read tokens. GPT-5.4/5.5 previously used 272,000.',
+        },
         riskControl: {
           title: 'Risk Control',
           description: 'Enable the content moderation menu and gateway audit entry point. Disabled by default.',

@@ -527,6 +527,10 @@ export interface SystemSettings {
   token_multiplier_billing_enabled: boolean;
   billing_token_multiplier: number;
 
+  // Long-context pricing
+  long_context_pricing_enabled: boolean;
+  long_context_pricing_threshold_tokens: number;
+
   // Affiliate (邀请返利) feature switch
   affiliate_enabled: boolean;
 
@@ -725,6 +729,10 @@ export interface UpdateSettingsRequest {
   // Billable token multiplier billing
   token_multiplier_billing_enabled?: boolean;
   billing_token_multiplier?: number;
+
+  // Long-context pricing
+  long_context_pricing_enabled?: boolean;
+  long_context_pricing_threshold_tokens?: number;
 
   // Affiliate (邀请返利) feature switch
   affiliate_enabled?: boolean;

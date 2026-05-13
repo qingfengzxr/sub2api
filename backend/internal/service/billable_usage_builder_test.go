@@ -63,7 +63,7 @@ func TestBuildBillableUsage_TotalCostCanBeRecomputedFromBillableTokens(t *testin
 	cost := (&BillingService{}).computeTokenBreakdown(&ModelPricing{
 		InputPricePerToken:  0.000001,
 		OutputPricePerToken: 0.000002,
-	}, billable.UsageTokens(), 1.2, "", false)
+	}, billable.UsageTokens(), 1.2, "", LongContextPricingPolicy{})
 
 	require.InDelta(t, 0.0005, cost.TotalCost, 1e-12)
 	require.InDelta(t, 0.0006, cost.ActualCost, 1e-12)

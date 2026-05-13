@@ -325,3 +325,89 @@ func TestSettingService_UpdateSettings_RejectsInvalidPaymentVisibleMethodSource(
 	require.Equal(t, "INVALID_PAYMENT_VISIBLE_METHOD_SOURCE", infraerrors.Reason(err))
 	require.Nil(t, repo.updates)
 }
+
+func TestSettingService_UpdateSettings_LongContextPricing(t *testing.T) {
+	repo := &settingUpdateRepoStub{}
+	svc := NewSettingService(repo, &config.Config{})
+
+	err := svc.UpdateSettings(context.Background(), &SystemSettings{
+		LongContextPricingEnabled:         true,
+		LongContextPricingThresholdTokens: 345000,
+	})
+	require.NoError(t, err)
+	require.Equal(t, "true", repo.updates[SettingKeyLongContextPricingEnabled])
+	require.Equal(t, "345000", repo.updates[SettingKeyLongContextPricingThresholdTokens])
+}
+
+func TestSettingService_UpdateSettings_LongContextPricingInvalidThresholdUsesDefault(t *testing.T) {
+	repo := &settingUpdateRepoStub{}
+	svc := NewSettingService(repo, &config.Config{})
+
+	err := svc.UpdateSettings(context.Background(), &SystemSettings{
+		LongContextPricingEnabled:         true,
+		LongContextPricingThresholdTokens: -1,
+	})
+	require.NoError(t, err)
+	require.Equal(t, "true", repo.updates[SettingKeyLongContextPricingEnabled])
+	require.Equal(t, "272000", repo.updates[SettingKeyLongContextPricingThresholdTokens])
+}
+
+func TestSettingService_GetLongContextPricingPolicy(t *testing.T) {
+	repo := &settingUpdateGetAllRepoStub{values: map[string]string{
+		SettingKeyLongContextPricingEnabled:         "true",
+		SettingKeyLongContextPricingThresholdTokens: "123456",
+	}}
+	svc := NewSettingService(repo, &config.Config{})
+
+	policy := svc.GetLongContextPricingPolicy(context.Background())
+	require.True(t, policy.Enabled)
+	require.Equal(t, 123456, policy.ThresholdTokens)
+}
+
+func TestSettingService_GetLongContextPricingPolicy_InvalidFallsBackDisabled(t *testing.T) {
+	repo := &settingUpdateGetAllRepoStub{values: map[string]string{
+		SettingKeyLongContextPricingEnabled:         "true",
+		SettingKeyLongContextPricingThresholdTokens: "bad",
+	}}
+	svc := NewSettingService(repo, &config.Config{})
+
+	policy := svc.GetLongContextPricingPolicy(context.Background())
+	require.False(t, policy.Enabled)
+	require.Zero(t, policy.ThresholdTokens)
+}
+
+type settingUpdateGetAllRepoStub struct {
+	values map[string]string
+	err    error
+}
+
+func (s *settingUpdateGetAllRepoStub) Get(ctx context.Context, key string) (*Setting, error) {
+	panic("unexpected Get call")
+}
+
+func (s *settingUpdateGetAllRepoStub) GetValue(ctx context.Context, key string) (string, error) {
+	panic("unexpected GetValue call")
+}
+
+func (s *settingUpdateGetAllRepoStub) Set(ctx context.Context, key, value string) error {
+	panic("unexpected Set call")
+}
+
+func (s *settingUpdateGetAllRepoStub) GetMultiple(ctx context.Context, keys []string) (map[string]string, error) {
+	panic("unexpected GetMultiple call")
+}
+
+func (s *settingUpdateGetAllRepoStub) SetMultiple(ctx context.Context, settings map[string]string) error {
+	panic("unexpected SetMultiple call")
+}
+
+func (s *settingUpdateGetAllRepoStub) GetAll(ctx context.Context) (map[string]string, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	return s.values, nil
+}
+
+func (s *settingUpdateGetAllRepoStub) Delete(ctx context.Context, key string) error {
+	panic("unexpected Delete call")
+}

@@ -5293,6 +5293,14 @@ export default {
           multiplier: '平台级 token 放大倍率',
           multiplierHint: '用于生成 billable tokens；total_cost = 官方单价 × billable tokens，actual_cost 可继续叠加金额侧倍率。',
         },
+        longContextPricing: {
+          title: '长上下文加价',
+          description: '可选的平台级模型长上下文加价开关。启用后，计费输入 + 计费缓存读取超过阈值时使用模型定义的长上下文倍率。',
+          enabled: '启用长上下文加价',
+          enabledHint: '关闭后，即使请求超过阈值，也不会叠加模型长上下文加价。',
+          threshold: '上下文阈值 Token',
+          thresholdHint: '按 billable input tokens + billable cache read tokens 判断。GPT-5.4/5.5 之前使用 272,000。',
+        },
         riskControl: {
           title: '风控中心',
           description: '启用内容审计菜单和全端点请求审核入口。默认关闭。',

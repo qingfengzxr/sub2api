@@ -178,7 +178,7 @@ func TestGetModelPricing_OpenAIGPT54MiniFallback(t *testing.T) {
 	require.Zero(t, pricing.LongContextInputThreshold)
 }
 
-func TestCalculateCost_OpenAIGPT54LongContextAppliesWholeSessionMultipliers(t *testing.T) {
+func TestCalculateCost_OpenAIGPT54LongContextDisabledByDefault(t *testing.T) {
 	svc := newTestBillingService()
 
 	tokens := UsageTokens{
@@ -189,12 +189,50 @@ func TestCalculateCost_OpenAIGPT54LongContextAppliesWholeSessionMultipliers(t *t
 	cost, err := svc.CalculateCost("gpt-5.4-2026-03-05", tokens, 1.0)
 	require.NoError(t, err)
 
-	expectedInput := float64(tokens.InputTokens) * 2.5e-6 * 2.0
-	expectedOutput := float64(tokens.OutputTokens) * 15e-6 * 1.5
+	expectedInput := float64(tokens.InputTokens) * 2.5e-6
+	expectedOutput := float64(tokens.OutputTokens) * 15e-6
 	require.InDelta(t, expectedInput, cost.InputCost, 1e-10)
 	require.InDelta(t, expectedOutput, cost.OutputCost, 1e-10)
-	require.InDelta(t, expectedInput+expectedOutput, cost.TotalCost, 1e-10)
-	require.InDelta(t, expectedInput+expectedOutput, cost.ActualCost, 1e-10)
+}
+
+func TestCalculateCost_OpenAIGPT54LongContextPolicyAppliesWholeSessionMultipliers(t *testing.T) {
+	svc := newTestBillingService()
+
+	tokens := UsageTokens{
+		InputTokens:     300000,
+		OutputTokens:    4000,
+		CacheReadTokens: 1000,
+	}
+
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.4-2026-03-05", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: 272000},
+	)
+	require.NoError(t, err)
+
+	expectedInput := float64(tokens.InputTokens) * 2.5e-6 * 2.0
+	expectedOutput := float64(tokens.OutputTokens) * 15e-6 * 1.5
+	expectedCacheRead := float64(tokens.CacheReadTokens) * 0.25e-6
+	require.InDelta(t, expectedInput, cost.InputCost, 1e-10)
+	require.InDelta(t, expectedOutput, cost.OutputCost, 1e-10)
+	require.InDelta(t, expectedCacheRead, cost.CacheReadCost, 1e-10)
+	require.InDelta(t, expectedInput+expectedOutput+expectedCacheRead, cost.TotalCost, 1e-10)
+}
+
+func TestCalculateCost_OpenAIGPT54LongContextPolicyBelowThreshold(t *testing.T) {
+	svc := newTestBillingService()
+
+	tokens := UsageTokens{InputTokens: 200000, CacheReadTokens: 72000, OutputTokens: 4000}
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.4", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: 272000},
+	)
+	require.NoError(t, err)
+
+	expectedInput := float64(tokens.InputTokens) * 2.5e-6
+	expectedOutput := float64(tokens.OutputTokens) * 15e-6
+	require.InDelta(t, expectedInput, cost.InputCost, 1e-10)
+	require.InDelta(t, expectedOutput, cost.OutputCost, 1e-10)
 }
 
 func TestGetFallbackPricing_FamilyMatching(t *testing.T) {
@@ -697,6 +735,47 @@ func TestGetModelPricing_MapsDynamicPriorityFieldsIntoBillingPricing(t *testing.
 	require.Equal(t, 999, pricing.LongContextInputThreshold)
 	require.InDelta(t, 1.5, pricing.LongContextInputMultiplier, 1e-12)
 	require.InDelta(t, 1.25, pricing.LongContextOutputMultiplier, 1e-12)
+}
+
+func TestCalculateCostUnified_ChannelIntervalDoesNotApplyLongContextPolicy(t *testing.T) {
+	svc := newTestBillingService()
+	resolver := &ModelPricingResolver{billingService: svc}
+
+	inputPrice := 10e-6
+	outputPrice := 45e-6
+	cacheReadPrice := 0.5e-6
+	resolved := &ResolvedPricing{
+		Mode: BillingModeToken,
+		BasePricing: &ModelPricing{
+			InputPricePerToken:          2.5e-6,
+			OutputPricePerToken:         15e-6,
+			CacheReadPricePerToken:      0.25e-6,
+			LongContextInputMultiplier:  2,
+			LongContextOutputMultiplier: 1.5,
+		},
+		Intervals: []PricingInterval{{
+			MinTokens:      0,
+			InputPrice:     &inputPrice,
+			OutputPrice:    &outputPrice,
+			CacheReadPrice: &cacheReadPrice,
+		}},
+	}
+	tokens := UsageTokens{InputTokens: 300000, OutputTokens: 4000, CacheReadTokens: 1000}
+
+	cost, err := svc.CalculateCostUnified(CostInput{
+		Ctx:                nil,
+		Model:              "gpt-5.4",
+		Tokens:             tokens,
+		RateMultiplier:     1,
+		Resolver:           resolver,
+		Resolved:           resolved,
+		LongContextPricing: LongContextPricingPolicy{Enabled: true, ThresholdTokens: 1},
+	})
+	require.NoError(t, err)
+
+	require.InDelta(t, float64(tokens.InputTokens)*inputPrice, cost.InputCost, 1e-10)
+	require.InDelta(t, float64(tokens.OutputTokens)*outputPrice, cost.OutputCost, 1e-10)
+	require.InDelta(t, float64(tokens.CacheReadTokens)*cacheReadPrice, cost.CacheReadCost, 1e-10)
 }
 
 // ---------------------------------------------------------------------------

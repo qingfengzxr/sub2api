@@ -316,6 +316,14 @@ const (
 	// derive billable usage when token multiplier billing is enabled.
 	SettingKeyBillingTokenMultiplier = "billing_token_multiplier"
 
+	// SettingKeyLongContextPricingEnabled controls whether model long-context pricing
+	// can be applied during token billing.
+	SettingKeyLongContextPricingEnabled = "long_context_pricing_enabled"
+
+	// SettingKeyLongContextPricingThresholdTokens stores the platform-level context
+	// threshold based on billable input + billable cache-read tokens.
+	SettingKeyLongContextPricingThresholdTokens = "long_context_pricing_threshold_tokens"
+
 	// =========================
 	// Overload Cooldown (529)
 	// =========================

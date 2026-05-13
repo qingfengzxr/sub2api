@@ -401,6 +401,13 @@ const baseSettingsResponse = {
   balance_low_notify_recharge_url: "",
   account_quota_notify_enabled: false,
   account_quota_notify_emails: [],
+  channel_monitor_enabled: true,
+  channel_monitor_default_interval_seconds: 60,
+  available_channels_enabled: false,
+  token_multiplier_billing_enabled: false,
+  billing_token_multiplier: 1,
+  long_context_pricing_enabled: false,
+  long_context_pricing_threshold_tokens: 272000,
 };
 
 function mountView() {
@@ -581,6 +588,29 @@ describe("admin SettingsView payment visible method controls", () => {
     expect(payload).not.toHaveProperty("payment_visible_method_wxpay_source");
     expect(payload).not.toHaveProperty("payment_visible_method_alipay_enabled");
     expect(payload).not.toHaveProperty("payment_visible_method_wxpay_enabled");
+  });
+
+
+  it("submits long-context pricing feature settings", async () => {
+    getSettings.mockResolvedValueOnce({
+      ...baseSettingsResponse,
+      long_context_pricing_enabled: true,
+      long_context_pricing_threshold_tokens: 345000,
+    });
+
+    const wrapper = mountView();
+
+    await flushPromises();
+    await wrapper.find("form").trigger("submit.prevent");
+    await flushPromises();
+
+    expect(updateSettings).toHaveBeenCalledTimes(1);
+    expect(updateSettings).toHaveBeenCalledWith(
+      expect.objectContaining({
+        long_context_pricing_enabled: true,
+        long_context_pricing_threshold_tokens: 345000,
+      }),
+    );
   });
 
   it("submits Anthropic cache TTL injection gateway setting", async () => {

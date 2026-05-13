@@ -5473,24 +5473,26 @@ func (s *OpenAIGatewayService) calculateOpenAIRecordUsageTokenCost(
 	serviceTier string,
 ) (*CostBreakdown, error) {
 	tokens := billableUsage.UsageTokens()
+	longContextPolicy := s.longContextPricingPolicy(ctx)
 	if s.resolver != nil && apiKey.Group != nil {
 		gid := apiKey.Group.ID
 		cost, err := s.billingService.CalculateCostUnified(CostInput{
-			Ctx:            ctx,
-			Model:          billingModel,
-			GroupID:        &gid,
-			Tokens:         tokens,
-			RequestCount:   1,
-			RateMultiplier: multiplier,
-			ServiceTier:    serviceTier,
-			Resolver:       s.resolver,
+			Ctx:                ctx,
+			Model:              billingModel,
+			GroupID:            &gid,
+			Tokens:             tokens,
+			RequestCount:       1,
+			RateMultiplier:     multiplier,
+			ServiceTier:        serviceTier,
+			Resolver:           s.resolver,
+			LongContextPricing: longContextPolicy,
 		})
 		if cost != nil {
 			cost.BillableUsage = billableUsage
 		}
 		return cost, err
 	}
-	cost, err := s.billingService.CalculateCostWithServiceTier(billingModel, tokens, multiplier, serviceTier)
+	cost, err := s.billingService.CalculateCostWithServiceTierAndLongContextPolicy(billingModel, tokens, multiplier, serviceTier, longContextPolicy)
 	if cost != nil {
 		cost.BillableUsage = billableUsage
 	}
@@ -5578,6 +5580,13 @@ func (s *OpenAIGatewayService) billingTokenPolicy(ctx context.Context) BillingTo
 		return BillingTokenPolicy{Multiplier: 1}
 	}
 	return s.settingService.GetBillingTokenPolicy(ctx)
+}
+
+func (s *OpenAIGatewayService) longContextPricingPolicy(ctx context.Context) LongContextPricingPolicy {
+	if s == nil || s.settingService == nil {
+		return LongContextPricingPolicy{}
+	}
+	return s.settingService.GetLongContextPricingPolicy(ctx)
 }
 
 // ParseCodexRateLimitHeaders extracts Codex usage limits from response headers.

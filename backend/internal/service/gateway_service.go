@@ -8247,6 +8247,13 @@ func (s *GatewayService) billingTokenPolicy(ctx context.Context) BillingTokenPol
 	return s.settingService.GetBillingTokenPolicy(ctx)
 }
 
+func (s *GatewayService) longContextPricingPolicy(ctx context.Context) LongContextPricingPolicy {
+	if s == nil || s.settingService == nil {
+		return LongContextPricingPolicy{}
+	}
+	return s.settingService.GetLongContextPricingPolicy(ctx)
+}
+
 func writeUsageLogBestEffort(ctx context.Context, repo UsageLogRepository, usageLog *UsageLog, logKey string) {
 	if repo == nil || usageLog == nil {
 		return
@@ -8580,18 +8587,21 @@ func (s *GatewayService) calculateTokenCost(
 	var cost *CostBreakdown
 	var err error
 
+	longContextPolicy := s.longContextPricingPolicy(ctx)
+
 	// 优先尝试渠道定价 → CalculateCostUnified
 	if resolved := s.resolveChannelPricing(ctx, billingModel, apiKey); resolved != nil {
 		gid := apiKey.Group.ID
 		cost, err = s.billingService.CalculateCostUnified(CostInput{
-			Ctx:            ctx,
-			Model:          billingModel,
-			GroupID:        &gid,
-			Tokens:         tokens,
-			RequestCount:   1,
-			RateMultiplier: multiplier,
-			Resolver:       s.resolver,
-			Resolved:       resolved,
+			Ctx:                ctx,
+			Model:              billingModel,
+			GroupID:            &gid,
+			Tokens:             tokens,
+			RequestCount:       1,
+			RateMultiplier:     multiplier,
+			Resolver:           s.resolver,
+			Resolved:           resolved,
+			LongContextPricing: longContextPolicy,
 		})
 	} else if opts.LongContextThreshold > 0 {
 		// 长上下文双倍计费（如 Gemini 200K 阈值）
@@ -8600,7 +8610,7 @@ func (s *GatewayService) calculateTokenCost(
 			opts.LongContextThreshold, opts.LongContextMultiplier,
 		)
 	} else {
-		cost, err = s.billingService.CalculateCost(billingModel, tokens, multiplier)
+		cost, err = s.billingService.CalculateCostWithServiceTierAndLongContextPolicy(billingModel, tokens, multiplier, "", longContextPolicy)
 	}
 	if err != nil {
 		logger.LegacyPrintf("service.gateway", "Calculate cost failed: %v", err)

@@ -1627,6 +1627,8 @@ func (s *SettingService) buildSystemSettingsUpdates(ctx context.Context, setting
 	updates[SettingKeyAvailableChannelsEnabled] = strconv.FormatBool(settings.AvailableChannelsEnabled)
 	updates[SettingKeyTokenMultiplierBillingEnabled] = strconv.FormatBool(settings.TokenMultiplierBillingEnabled)
 	updates[SettingKeyBillingTokenMultiplier] = strconv.FormatFloat(normalizeBillingTokenMultiplier(settings.BillingTokenMultiplier), 'f', 4, 64)
+	updates[SettingKeyLongContextPricingEnabled] = strconv.FormatBool(settings.LongContextPricingEnabled)
+	updates[SettingKeyLongContextPricingThresholdTokens] = strconv.Itoa(normalizeLongContextPricingThresholdTokens(settings.LongContextPricingThresholdTokens))
 
 	// Affiliate (邀请返利) feature switch
 	updates[SettingKeyAffiliateEnabled] = strconv.FormatBool(settings.AffiliateEnabled)
@@ -2063,6 +2065,20 @@ func (s *SettingService) GetBillingTokenPolicy(ctx context.Context) BillingToken
 	}
 }
 
+func (s *SettingService) GetLongContextPricingPolicy(ctx context.Context) LongContextPricingPolicy {
+	if s == nil {
+		return LongContextPricingPolicy{}
+	}
+	settings, err := s.GetAllSettings(ctx)
+	if err != nil || settings == nil {
+		return LongContextPricingPolicy{}
+	}
+	return normalizeLongContextPricingPolicy(LongContextPricingPolicy{
+		Enabled:         settings.LongContextPricingEnabled,
+		ThresholdTokens: settings.LongContextPricingThresholdTokens,
+	})
+}
+
 // GetAffiliateRebateRatePercent 读取并 clamp 全局返利比例。
 // 解析失败、缺失或越界都回退到 AffiliateRebateRateDefault — 该比例从不抛错，
 // 调用方只关心一个可用的数值。
@@ -2464,6 +2480,10 @@ func (s *SettingService) InitializeDefaultSettings(ctx context.Context) error {
 		SettingKeyTokenMultiplierBillingEnabled: "false",
 		SettingKeyBillingTokenMultiplier:        "1.0000",
 
+		// Long-context pricing (default disabled; threshold preserves previous GPT-5.4/5.5 value when enabled)
+		SettingKeyLongContextPricingEnabled:         "false",
+		SettingKeyLongContextPricingThresholdTokens: strconv.Itoa(DefaultLongContextPricingThresholdTokens),
+
 		// Affiliate (邀请返利) feature (default disabled; opt-in)
 		SettingKeyAffiliateEnabled: "false",
 
@@ -2834,6 +2854,8 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 	result.AvailableChannelsEnabled = settings[SettingKeyAvailableChannelsEnabled] == "true"
 	result.TokenMultiplierBillingEnabled = settings[SettingKeyTokenMultiplierBillingEnabled] == "true"
 	result.BillingTokenMultiplier = parseBillingTokenMultiplier(settings[SettingKeyBillingTokenMultiplier])
+	result.LongContextPricingEnabled = settings[SettingKeyLongContextPricingEnabled] == "true"
+	result.LongContextPricingThresholdTokens = parseLongContextPricingThresholdTokens(settings[SettingKeyLongContextPricingThresholdTokens])
 
 	// Affiliate (邀请返利) feature (default: disabled; strict true)
 	result.AffiliateEnabled = settings[SettingKeyAffiliateEnabled] == "true"
@@ -2916,6 +2938,21 @@ func isFalseSettingValue(value string) bool {
 	default:
 		return false
 	}
+}
+
+func normalizeLongContextPricingThresholdTokens(value int) int {
+	if value <= 0 {
+		return DefaultLongContextPricingThresholdTokens
+	}
+	return value
+}
+
+func parseLongContextPricingThresholdTokens(raw string) int {
+	v, err := strconv.Atoi(strings.TrimSpace(raw))
+	if err != nil {
+		return 0
+	}
+	return v
 }
 
 func normalizeBillingTokenMultiplier(value float64) float64 {

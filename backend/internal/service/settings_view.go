@@ -161,6 +161,10 @@ type SystemSettings struct {
 	TokenMultiplierBillingEnabled bool    `json:"token_multiplier_billing_enabled"`
 	BillingTokenMultiplier        float64 `json:"billing_token_multiplier"`
 
+	// Long-context pricing
+	LongContextPricingEnabled         bool `json:"long_context_pricing_enabled"`
+	LongContextPricingThresholdTokens int  `json:"long_context_pricing_threshold_tokens"`
+
 	// Claude Code version check
 	MinClaudeCodeVersion string
 	MaxClaudeCodeVersion string
