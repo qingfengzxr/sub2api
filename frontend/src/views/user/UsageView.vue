@@ -852,47 +852,34 @@ const exportToCSV = async () => {
       'Reasoning Effort',
       'Inbound Endpoint',
       'Type',
-      'Billing Mode',
       'Input Tokens',
       'Output Tokens',
       'Cache Read Tokens',
       'Cache Creation Tokens',
-      'Billable Input Tokens',
-      'Billable Output Tokens',
-      'Billable Cache Read Tokens',
-      'Billable Cache Creation Tokens',
-      'Billable Image Output Tokens',
-      'Billing Token Multiplier',
+      'Image Output Tokens',
       'Final Cost',
-      'Billing Base Cost',
       'First Token (ms)',
       'Duration (ms)'
     ]
-    const rows = allLogs.map((log) =>
-      [
+    const rows = allLogs.map((log) => {
+      const tokenBreakdown = buildBillableFirstTokenBreakdown(log)
+      return [
         log.created_at,
         log.api_key?.name || '',
         log.model,
         formatReasoningEffort(log.reasoning_effort),
         log.inbound_endpoint || '',
         getRequestTypeExportText(log),
-        getBillingModeLabel(log.billing_mode, t),
-        log.input_tokens,
-        log.output_tokens,
-        log.cache_read_tokens,
-        log.cache_creation_tokens,
-        log.billable_input_tokens,
-        log.billable_output_tokens,
-        log.billable_cache_read_tokens,
-        log.billable_cache_creation_tokens,
-        log.billable_image_output_tokens,
-        log.billing_token_multiplier,
+        tokenBreakdown?.inputTokens ?? 0,
+        tokenBreakdown?.outputTokens ?? 0,
+        tokenBreakdown?.cacheReadTokens ?? 0,
+        tokenBreakdown?.cacheCreationTokens ?? 0,
+        tokenBreakdown?.imageOutputTokens ?? 0,
         log.actual_cost.toFixed(8),
-        log.total_cost.toFixed(8),
         log.first_token_ms ?? '',
         log.duration_ms
       ].map(escapeCSVValue)
-    )
+    })
 
     const csvContent = [
       headers.map(escapeCSVValue).join(','),

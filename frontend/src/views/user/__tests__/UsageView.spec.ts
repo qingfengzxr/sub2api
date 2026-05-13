@@ -215,7 +215,7 @@ describe('user UsageView tooltip', () => {
     expect(text).not.toContain('$30.0000 / 1M tokens')
   })
 
-  it('exports csv with input and output unit price columns', async () => {
+  it('exports user csv with billable-first tokens and no internal billing columns', async () => {
     const exportedLogs = [
       {
         request_id: 'req-user-export',
@@ -233,6 +233,12 @@ describe('user UsageView tooltip', () => {
         cache_read_tokens: 278272,
         cache_creation_5m_tokens: 0,
         cache_creation_1h_tokens: 0,
+        billable_input_tokens: 10143,
+        billable_output_tokens: 253,
+        billable_cache_creation_tokens: 10,
+        billable_cache_read_tokens: 695680,
+        billable_image_output_tokens: 0,
+        billing_token_multiplier: 2.5,
         image_count: 0,
         image_size: null,
         first_token_ms: 12,
@@ -302,6 +308,20 @@ describe('user UsageView tooltip', () => {
     expect(hasSortedExportQuery).toBe(true)
     expect(clickSpy).toHaveBeenCalled()
     expect(showSuccess).toHaveBeenCalled()
+
+    const csv = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = () => reject(reader.error)
+      reader.readAsText(exportedBlob!)
+    })
+    const [headerLine, dataLine] = csv.split('\n')
+    expect(headerLine).toContain('Input Tokens,Output Tokens,Cache Read Tokens,Cache Creation Tokens,Image Output Tokens,Final Cost')
+    expect(headerLine).not.toContain('Billable')
+    expect(headerLine).not.toContain('Billing')
+    expect(dataLine).toContain('10143,253,695680,10,0,0.09288300')
+    expect(dataLine).not.toContain('4057,101,278272,4')
+    expect(dataLine).not.toContain('2.5')
 
     window.URL.createObjectURL = originalCreateObjectURL
     window.URL.revokeObjectURL = originalRevokeObjectURL
