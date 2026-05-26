@@ -43,6 +43,33 @@ const messages: Record<string, string> = {
   'admin.usage.cacheCreation5mTokens': 'Cache Write Tokens',
   'admin.usage.cacheCreation1hTokens': 'Cache Write Tokens',
   'admin.usage.cacheReadTokens': 'Cache Read Tokens',
+  'admin.usage.inputCost': 'Input Cost',
+  'admin.usage.outputCost': 'Output Cost',
+  'admin.usage.cacheCreationCost': 'Cache Creation Cost',
+  'admin.usage.cacheReadCost': 'Cache Read Cost',
+  'usage.imageUnit': ' images',
+  'usage.imageCount': 'Image count',
+  'usage.imageBillingSize': 'Billing size',
+  'usage.imageInputSize': 'Input size',
+  'usage.imageOutputSize': 'Output size',
+  'usage.imageSizeSource': 'Size source',
+  'usage.imageSizeBreakdown': 'Size breakdown',
+  'usage.imageSizeSourceOutput': 'Upstream output',
+  'usage.imageSizeSourceInput': 'Request input',
+  'usage.imageSizeSourceDefault': 'Default billing tier',
+  'usage.imageSizeSourceLegacy': 'Legacy record',
+  'usage.imageSizeSourceMissing': 'Not recorded',
+  'usage.imageSizeNotRecorded': 'not recorded',
+  'usage.imageSizeLegacyUnstandardized': 'legacy unstandardized',
+  'usage.imageSizeUnknown': 'unknown',
+  'usage.imageUnitPrice': 'Per-image price',
+  'usage.imageTotalPrice': 'Image total price',
+  'usage.inputTokenPrice': 'Input price',
+  'usage.outputTokenPrice': 'Output price',
+  'usage.perMillionTokens': '/ 1M tokens',
+  'admin.usage.billingModeToken': 'Token',
+  'admin.usage.billingModePerRequest': 'Per request',
+  'admin.usage.billingModeImage': 'Image',
 }
 
 vi.mock('@/api', () => ({
@@ -211,8 +238,8 @@ describe('user UsageView tooltip', () => {
     expect(text).not.toContain('Rate')
     expect(text).not.toContain('1.00x')
     expect(text).not.toContain('Billed')
-    expect(text).not.toContain('$5.0000 / 1M tokens')
-    expect(text).not.toContain('$30.0000 / 1M tokens')
+    expect(text).toContain('$5.0000 / 1M tokens')
+    expect(text).toContain('$30.0000 / 1M tokens')
   })
 
   it('exports user csv with billable-first tokens and no internal billing columns', async () => {
@@ -316,10 +343,9 @@ describe('user UsageView tooltip', () => {
       reader.readAsText(exportedBlob!)
     })
     const [headerLine, dataLine] = csv.split('\n')
-    expect(headerLine).toContain('Input Tokens,Output Tokens,Cache Read Tokens,Cache Creation Tokens,Image Output Tokens,Final Cost')
+    expect(headerLine).toContain('Billing Mode,Input Tokens,Output Tokens,Cache Read Tokens,Cache Creation Tokens,Image Output Tokens,Final Cost')
     expect(headerLine).not.toContain('Billable')
-    expect(headerLine).not.toContain('Billing')
-    expect(dataLine).toContain('10143,253,695680,10,0,0.09288300')
+    expect(dataLine).toContain('Token,10143,253,695680,10,0,0.09288300')
     expect(dataLine).not.toContain('4057,101,278272,4')
     expect(dataLine).not.toContain('2.5')
 
@@ -386,6 +412,7 @@ describe('user UsageView tooltip', () => {
           DateRangePicker: true,
           DataTable: DataTableStub,
           Icon: true,
+          Teleport: true,
         },
       },
     })
@@ -421,7 +448,7 @@ describe('user UsageView tooltip', () => {
     setupState.tokenTooltipVisible = true
     await nextTick()
 
-    const text = document.body.textContent || ''
+    const text = wrapper.text()
     expect(text).toContain('1,510')
     expect(text).toContain('673')
     expect(text).toContain('438,720')
@@ -431,6 +458,164 @@ describe('user UsageView tooltip', () => {
     expect(text).not.toContain('175,488')
     expect(text).not.toContain('Billing Check Usage')
     expect(text).not.toContain('2.5')
+  })
+
+  it('exports historical image rows with image billing mode derived from image_count', async () => {
+    const exportedLogs = [
+      {
+        request_id: 'req-user-export-legacy-image',
+        actual_cost: 0.2,
+        total_cost: 0.2,
+        rate_multiplier: 1,
+        service_tier: null,
+        input_cost: 0,
+        output_cost: 0,
+        cache_creation_cost: 0,
+        cache_read_cost: 0,
+        input_tokens: 0,
+        output_tokens: 0,
+        cache_creation_tokens: 0,
+        cache_read_tokens: 0,
+        cache_creation_5m_tokens: 0,
+        cache_creation_1h_tokens: 0,
+        image_count: 1,
+        image_size: null,
+        billing_mode: null,
+        first_token_ms: null,
+        duration_ms: 345,
+        created_at: '2026-03-08T00:00:00Z',
+        model: 'gpt-image-2',
+        reasoning_effort: null,
+        api_key: { name: 'demo-key' },
+      },
+    ]
+
+    query.mockResolvedValue({
+      items: exportedLogs,
+      total: 1,
+      pages: 1,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 1,
+      total_tokens: 0,
+      total_cost: 0.2,
+      avg_duration_ms: 1,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    let exportedBlob: Blob | null = null
+    const originalCreateObjectURL = window.URL.createObjectURL
+    const originalRevokeObjectURL = window.URL.revokeObjectURL
+    window.URL.createObjectURL = vi.fn((blob: Blob | MediaSource) => {
+      exportedBlob = blob as Blob
+      return 'blob:usage-export'
+    }) as typeof window.URL.createObjectURL
+    window.URL.revokeObjectURL = vi.fn(() => {}) as typeof window.URL.revokeObjectURL
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+
+    const setupState = (wrapper.vm as any).$?.setupState
+    await setupState.exportToCSV()
+
+    expect(exportedBlob).not.toBeNull()
+    const csv = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = () => reject(reader.error)
+      reader.readAsText(exportedBlob as Blob)
+    })
+    expect(csv).toContain('Billing Mode')
+    expect(csv).toContain('Image')
+    expect(csv).not.toContain(',Token,0,0,0,0,')
+
+    window.URL.createObjectURL = originalCreateObjectURL
+    window.URL.revokeObjectURL = originalRevokeObjectURL
+    clickSpy.mockRestore()
+  })
+
+  it('does not display a 2K fallback for historical image rows with missing size', async () => {
+    query.mockResolvedValue({
+      items: [
+        {
+          request_id: 'req-user-legacy-missing-image',
+          actual_cost: 0.2,
+          total_cost: 0.2,
+          rate_multiplier: 1,
+          service_tier: null,
+          input_cost: 0,
+          output_cost: 0,
+          cache_creation_cost: 0,
+          cache_read_cost: 0,
+          input_tokens: 0,
+          output_tokens: 0,
+          cache_creation_tokens: 0,
+          cache_read_tokens: 0,
+          cache_creation_5m_tokens: 0,
+          cache_creation_1h_tokens: 0,
+          image_count: 1,
+          image_size: null,
+          image_input_size: null,
+          image_output_size: null,
+          image_size_source: null,
+          image_size_breakdown: null,
+          billing_mode: null,
+          first_token_ms: null,
+          duration_ms: 1,
+          created_at: '2026-03-08T00:00:00Z',
+          model: 'gpt-image-2',
+        },
+      ],
+      total: 1,
+      pages: 1,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 1,
+      total_tokens: 0,
+      total_cost: 0.2,
+      avg_duration_ms: 1,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Image')
+    expect(text).toContain('not recorded')
+    expect(text).not.toContain('(2K)')
   })
 
   it('falls back to raw tokens when billable token fields are absent', async () => {
@@ -491,6 +676,7 @@ describe('user UsageView tooltip', () => {
           DateRangePicker: true,
           DataTable: DataTableStub,
           Icon: true,
+          Teleport: true,
         },
       },
     })
@@ -523,11 +709,82 @@ describe('user UsageView tooltip', () => {
     setupState.tokenTooltipVisible = true
     await nextTick()
 
-    const text = document.body.textContent || ''
+    const text = wrapper.text()
     expect(text).toContain('12')
     expect(text).toContain('5')
     expect(text).toContain('3')
     expect(text).toContain('20')
     expect(text).not.toContain('Billing Check Usage')
+  })
+
+  it('shows image billing metadata in the user cost tooltip', async () => {
+    query.mockResolvedValue({
+      items: [],
+      total: 0,
+      pages: 0,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 0,
+      total_tokens: 0,
+      total_cost: 0,
+      avg_duration_ms: 0,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+
+    const setupState = (wrapper.vm as any).$?.setupState
+    setupState.tooltipData = {
+      request_id: 'req-user-output-image',
+      actual_cost: 0.8,
+      total_cost: 0.8,
+      rate_multiplier: 1,
+      service_tier: null,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 0,
+      output_tokens: 0,
+      cache_creation_tokens: 0,
+      cache_read_tokens: 0,
+      billing_mode: null,
+      image_count: 2,
+      image_size: '4K',
+      image_input_size: '1024x1024',
+      image_output_size: '3840x2160',
+      image_size_source: 'output',
+      image_size_breakdown: { '4K': 2 },
+    }
+    setupState.tooltipVisible = true
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Image count')
+    expect(text).toContain('Billing size')
+    expect(text).toContain('4K')
+    expect(text).toContain('Size source')
+    expect(text).toContain('Upstream output')
+    expect(text).toContain('Input size')
+    expect(text).toContain('1024x1024')
+    expect(text).toContain('Output size')
+    expect(text).toContain('3840x2160')
+    expect(text).toContain('4K x 2')
   })
 })
