@@ -543,6 +543,9 @@ type UsageLog struct {
 
 	// User-Agent
 	UserAgent *string `json:"user_agent"`
+	// IPAddress is the request IP for this usage record. User endpoints only return it
+	// for records already scoped to the authenticated owner.
+	IPAddress *string `json:"ip_address,omitempty"`
 
 	// Cache TTL Override 标记
 	CacheTTLOverridden bool `json:"cache_ttl_overridden"`
@@ -577,9 +580,6 @@ type AdminUsageLog struct {
 	AccountRateMultiplier *float64 `json:"account_rate_multiplier"`
 	// AccountStatsCost 自定义定价规则计算的账号统计费用（nil 表示使用默认公式）
 	AccountStatsCost *float64 `json:"account_stats_cost,omitempty"`
-
-	// IPAddress 用户请求 IP（仅管理员可见）
-	IPAddress *string `json:"ip_address,omitempty"`
 
 	// Account 最小账号信息（避免泄露敏感字段）
 	Account *AccountSummary `json:"account,omitempty"`

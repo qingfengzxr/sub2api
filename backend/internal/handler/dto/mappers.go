@@ -643,7 +643,7 @@ func AccountSummaryFromService(a *service.Account) *AccountSummary {
 }
 
 func usageLogFromServiceUser(l *service.UsageLog) UsageLog {
-	// 普通用户 DTO：严禁包含管理员字段（例如 account_rate_multiplier、ip_address、account）。
+	// 普通用户 DTO：严禁包含管理员字段（例如 account_rate_multiplier、account）。
 	requestType := l.EffectiveRequestType()
 	stream, openAIWSMode := service.ApplyLegacyRequestFields(requestType, l.Stream, l.OpenAIWSMode)
 	requestedModel := l.RequestedModel
@@ -700,6 +700,7 @@ func usageLogFromServiceUser(l *service.UsageLog) UsageLog {
 		ImageSizeBreakdown:             l.ImageSizeBreakdown,
 		MediaType:                      l.MediaType,
 		UserAgent:                      l.UserAgent,
+		IPAddress:                      l.IPAddress,
 		CacheTTLOverridden:             l.CacheTTLOverridden,
 		BillingMode:                    l.BillingMode,
 		CreatedAt:                      l.CreatedAt,
@@ -711,7 +712,7 @@ func usageLogFromServiceUser(l *service.UsageLog) UsageLog {
 }
 
 // UsageLogFromService converts a service UsageLog to DTO for regular users.
-// It excludes Account details and IP address - users should not see these.
+// It excludes administrator-only Account details and billing audit fields.
 func UsageLogFromService(l *service.UsageLog) *UsageLog {
 	if l == nil {
 		return nil
@@ -721,7 +722,7 @@ func UsageLogFromService(l *service.UsageLog) *UsageLog {
 }
 
 // UsageLogFromServiceAdmin converts a service UsageLog to DTO for admin users.
-// It includes minimal Account info (ID, Name only) and IP address.
+// It includes minimal Account info (ID, Name only) and administrator billing audit fields.
 func UsageLogFromServiceAdmin(l *service.UsageLog) *AdminUsageLog {
 	if l == nil {
 		return nil
@@ -734,7 +735,6 @@ func UsageLogFromServiceAdmin(l *service.UsageLog) *AdminUsageLog {
 		BillingTier:           l.BillingTier,
 		AccountRateMultiplier: l.AccountRateMultiplier,
 		AccountStatsCost:      l.AccountStatsCost,
-		IPAddress:             l.IPAddress,
 		Account:               AccountSummaryFromService(l.Account),
 	}
 }

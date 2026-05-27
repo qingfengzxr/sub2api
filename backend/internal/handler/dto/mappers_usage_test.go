@@ -148,6 +148,33 @@ func TestUsageLogFromService_FallsBackToLegacyModelWhenRequestedModelMissing(t *
 	require.Equal(t, "claude-3", adminDTO.Model)
 }
 
+func TestUsageLogFromService_IncludesIPAddressForUserAndAdmin(t *testing.T) {
+	t.Parallel()
+
+	ipAddress := "58.20.71.62"
+	log := &service.UsageLog{
+		RequestID:             "req_ip",
+		Model:                 "gpt-5.5",
+		IPAddress:             &ipAddress,
+		AccountRateMultiplier: f64Ptr(1.25),
+	}
+
+	userDTO := UsageLogFromService(log)
+	adminDTO := UsageLogFromServiceAdmin(log)
+
+	require.NotNil(t, userDTO.IPAddress)
+	require.Equal(t, ipAddress, *userDTO.IPAddress)
+	require.NotNil(t, adminDTO.IPAddress)
+	require.Equal(t, ipAddress, *adminDTO.IPAddress)
+	require.NotNil(t, adminDTO.AccountRateMultiplier)
+	require.InDelta(t, 1.25, *adminDTO.AccountRateMultiplier, 1e-12)
+
+	userJSON, err := json.Marshal(userDTO)
+	require.NoError(t, err)
+	require.Contains(t, string(userJSON), `"ip_address":"58.20.71.62"`)
+	require.NotContains(t, string(userJSON), "account_rate_multiplier")
+}
+
 func TestUsageLogFromService_IncludesImageBillingMetadataForUserAndAdmin(t *testing.T) {
 	t.Parallel()
 

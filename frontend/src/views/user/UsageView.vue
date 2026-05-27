@@ -323,6 +323,11 @@
             <span v-else class="text-sm text-gray-400 dark:text-gray-500">-</span>
           </template>
 
+          <template #cell-ip_address="{ row }">
+            <span v-if="row.ip_address" class="text-sm font-mono text-gray-600 dark:text-gray-400">{{ row.ip_address }}</span>
+            <span v-else class="text-sm text-gray-400 dark:text-gray-500">-</span>
+          </template>
+
           <template #empty>
             <EmptyState :message="t('usage.noRecords')" />
           </template>
@@ -588,7 +593,8 @@ const columns = computed<Column[]>(() => [
   { key: 'first_token', label: t('usage.firstToken'), sortable: false },
   { key: 'duration', label: t('usage.duration'), sortable: false },
   { key: 'created_at', label: t('usage.time'), sortable: true },
-  { key: 'user_agent', label: t('usage.userAgent'), sortable: false }
+  { key: 'user_agent', label: t('usage.userAgent'), sortable: false },
+  { key: 'ip_address', label: t('admin.usage.ipAddress'), sortable: false }
 ])
 
 const usageLogs = ref<UsageLog[]>([])
@@ -951,7 +957,8 @@ const exportToCSV = async () => {
       'Image Output Tokens',
       'Final Cost',
       'First Token (ms)',
-      'Duration (ms)'
+      'Duration (ms)',
+      'IP'
     ]
     const rows = allLogs.map((log) => {
       const tokenBreakdown = buildBillableFirstTokenBreakdown(log)
@@ -970,7 +977,8 @@ const exportToCSV = async () => {
         tokenBreakdown?.imageOutputTokens ?? 0,
         log.actual_cost.toFixed(8),
         log.first_token_ms ?? '',
-        log.duration_ms
+        log.duration_ms,
+        log.ip_address || ''
       ].map(escapeCSVValue)
     })
 

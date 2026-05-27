@@ -1229,6 +1229,9 @@ export interface UsageLog {
   // User-Agent
   user_agent: string | null
 
+  // 请求 IP
+  ip_address?: string | null
+
   // Cache TTL Override
   cache_ttl_overridden: boolean
 
@@ -1260,9 +1263,6 @@ export interface AdminUsageLog extends UsageLog {
   // 渠道 ID 和计费等级（仅管理员可见）
   channel_id?: number | null
   billing_tier?: string | null
-
-  // 用户请求 IP（仅管理员可见）
-  ip_address?: string | null
 
   // 最小账号信息（仅管理员接口返回）
   account?: UsageLogAccountSummary

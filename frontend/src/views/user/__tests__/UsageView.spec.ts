@@ -37,6 +37,7 @@ const messages: Record<string, string> = {
   'usage.duration': 'Duration',
   'usage.time': 'Time',
   'usage.userAgent': 'User Agent',
+  'admin.usage.ipAddress': 'IP',
   'admin.usage.inputTokens': 'Input Tokens',
   'admin.usage.outputTokens': 'Output Tokens',
   'admin.usage.cacheCreationTokens': 'Cache Write Tokens',
@@ -242,6 +243,92 @@ describe('user UsageView tooltip', () => {
     expect(text).toContain('$30.0000 / 1M tokens')
   })
 
+  it('renders usage IP values with fallback for missing records', async () => {
+    query.mockResolvedValue({
+      items: [
+        {
+          request_id: 'req-user-ip-present',
+          actual_cost: 0.01,
+          total_cost: 0.01,
+          rate_multiplier: 1,
+          service_tier: null,
+          input_cost: 0,
+          output_cost: 0,
+          cache_creation_cost: 0,
+          cache_read_cost: 0,
+          input_tokens: 12,
+          output_tokens: 5,
+          cache_creation_tokens: 0,
+          cache_read_tokens: 0,
+          cache_creation_5m_tokens: 0,
+          cache_creation_1h_tokens: 0,
+          image_count: 0,
+          image_size: null,
+          first_token_ms: null,
+          duration_ms: 1,
+          created_at: '2026-03-08T00:00:00Z',
+          model: 'gpt-5.4',
+          ip_address: '203.0.113.10',
+        },
+        {
+          request_id: 'req-user-ip-missing',
+          actual_cost: 0.02,
+          total_cost: 0.02,
+          rate_multiplier: 1,
+          service_tier: null,
+          input_cost: 0,
+          output_cost: 0,
+          cache_creation_cost: 0,
+          cache_read_cost: 0,
+          input_tokens: 8,
+          output_tokens: 3,
+          cache_creation_tokens: 0,
+          cache_read_tokens: 0,
+          cache_creation_5m_tokens: 0,
+          cache_creation_1h_tokens: 0,
+          image_count: 0,
+          image_size: null,
+          first_token_ms: null,
+          duration_ms: 1,
+          created_at: '2026-03-08T00:01:00Z',
+          model: 'gpt-5.4',
+          ip_address: null,
+        },
+      ],
+      total: 2,
+      pages: 1,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 2,
+      total_tokens: 28,
+      total_cost: 0.03,
+      avg_duration_ms: 1,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+    await nextTick()
+
+    const ipCells = wrapper.findAll('.cell-ip_address')
+    expect(ipCells.map((cell) => cell.text())).toEqual(['203.0.113.10', '-'])
+  })
+
   it('exports user csv with billable-first tokens and no internal billing columns', async () => {
     const exportedLogs = [
       {
@@ -273,6 +360,7 @@ describe('user UsageView tooltip', () => {
         created_at: '2026-03-08T00:00:00Z',
         model: 'gpt-5.4',
         reasoning_effort: null,
+        ip_address: '203.0.113.10',
         api_key: { name: 'demo-key' },
       },
     ]
@@ -344,8 +432,10 @@ describe('user UsageView tooltip', () => {
     })
     const [headerLine, dataLine] = csv.split('\n')
     expect(headerLine).toContain('Billing Mode,Input Tokens,Output Tokens,Cache Read Tokens,Cache Creation Tokens,Image Output Tokens,Final Cost')
+    expect(headerLine.split(',')).toContain('IP')
     expect(headerLine).not.toContain('Billable')
     expect(dataLine).toContain('Token,10143,253,695680,10,0,0.09288300')
+    expect(dataLine).toContain('203.0.113.10')
     expect(dataLine).not.toContain('4057,101,278272,4')
     expect(dataLine).not.toContain('2.5')
 
