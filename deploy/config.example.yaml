@@ -148,7 +148,7 @@ security:
 gateway:
   # Timeout for waiting upstream response headers (seconds)
   # 等待上游响应头超时时间（秒）
-  response_header_timeout: 600
+  response_header_timeout: 180
   # OpenAI/Codex upstream response header timeout (seconds, 0=disabled)
   # OpenAI/Codex 等待上游响应头超时时间（秒，0=禁用本地响应头超时）
   openai_response_header_timeout: 0
