@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"strconv"
 	"strings"
 	"time"
@@ -18,15 +19,21 @@ import (
 
 // UsageHandler handles usage-related requests
 type UsageHandler struct {
-	usageService  *service.UsageService
-	apiKeyService *service.APIKeyService
+	usageService              *service.UsageService
+	apiKeyService             *service.APIKeyService
+	standardUnitPriceResolver *service.UsageStandardUnitPriceResolver
 }
 
 // NewUsageHandler creates a new UsageHandler
-func NewUsageHandler(usageService *service.UsageService, apiKeyService *service.APIKeyService) *UsageHandler {
+func NewUsageHandler(
+	usageService *service.UsageService,
+	apiKeyService *service.APIKeyService,
+	standardUnitPriceResolver *service.UsageStandardUnitPriceResolver,
+) *UsageHandler {
 	return &UsageHandler{
-		usageService:  usageService,
-		apiKeyService: apiKeyService,
+		usageService:              usageService,
+		apiKeyService:             apiKeyService,
+		standardUnitPriceResolver: standardUnitPriceResolver,
 	}
 }
 
@@ -144,7 +151,7 @@ func (h *UsageHandler) List(c *gin.Context) {
 
 	out := make([]dto.UsageLog, 0, len(records))
 	for i := range records {
-		out = append(out, *dto.UsageLogFromService(&records[i]))
+		out = append(out, *h.usageLogFromServiceForUser(c.Request.Context(), &records[i]))
 	}
 	response.Paginated(c, out, result.Total, page, pageSize)
 }
@@ -176,7 +183,17 @@ func (h *UsageHandler) GetByID(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, dto.UsageLogFromService(record))
+	response.Success(c, h.usageLogFromServiceForUser(c.Request.Context(), record))
+}
+
+func (h *UsageHandler) usageLogFromServiceForUser(ctx context.Context, record *service.UsageLog) *dto.UsageLog {
+	if record == nil {
+		return nil
+	}
+	if h.standardUnitPriceResolver != nil {
+		h.standardUnitPriceResolver.Apply(ctx, record)
+	}
+	return dto.UsageLogFromService(record)
 }
 
 // Stats handles getting usage statistics

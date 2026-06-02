@@ -914,6 +914,14 @@ func (s *BillingService) CalculateImageCost(model string, imageSize string, imag
 	}
 }
 
+// GetImageUnitPrice returns the base per-image price before any rate multiplier.
+func (s *BillingService) GetImageUnitPrice(model string, imageSize string, groupConfig *ImagePriceConfig) float64 {
+	if s == nil {
+		return 0
+	}
+	return s.getImageUnitPrice(model, NormalizeImageBillingTierOrDefault(imageSize), groupConfig)
+}
+
 // getImageUnitPrice 获取图片单价
 func (s *BillingService) getImageUnitPrice(model string, imageSize string, groupConfig *ImagePriceConfig) float64 {
 	// 优先使用分组配置的价格

@@ -527,6 +527,13 @@ type UsageLog struct {
 	ActualCost        float64 `json:"actual_cost"`
 	RateMultiplier    float64 `json:"rate_multiplier"`
 
+	StandardInputPricePerMillion         *float64 `json:"standard_input_price_per_million,omitempty"`
+	StandardOutputPricePerMillion        *float64 `json:"standard_output_price_per_million,omitempty"`
+	StandardCacheCreationPricePerMillion *float64 `json:"standard_cache_creation_price_per_million,omitempty"`
+	StandardCacheReadPricePerMillion     *float64 `json:"standard_cache_read_price_per_million,omitempty"`
+	StandardImageOutputPricePerMillion   *float64 `json:"standard_image_output_price_per_million,omitempty"`
+	StandardUnitPrice                    *float64 `json:"standard_unit_price,omitempty"`
+
 	BillingType  int8   `json:"billing_type"`
 	RequestType  string `json:"request_type"`
 	Stream       bool   `json:"stream"`

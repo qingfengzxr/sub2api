@@ -159,7 +159,7 @@ describe('user UsageView tooltip', () => {
     })
   })
 
-  it('shows final cost and service tier in user tooltip', async () => {
+  it('shows standard token prices while preserving final cost and service tier', async () => {
     query.mockResolvedValue({
       items: [
         {
@@ -172,6 +172,8 @@ describe('user UsageView tooltip', () => {
           output_cost: 0.00303,
           cache_creation_cost: 0,
           cache_read_cost: 0.069568,
+          standard_input_price_per_million: 2.5,
+          standard_output_price_per_million: 15,
           input_tokens: 4057,
           output_tokens: 101,
           cache_creation_tokens: 0,
@@ -226,6 +228,8 @@ describe('user UsageView tooltip', () => {
       output_cost: 0.00303,
       cache_creation_cost: 0,
       cache_read_cost: 0.069568,
+      standard_input_price_per_million: 2.5,
+      standard_output_price_per_million: 15,
       input_tokens: 4057,
       output_tokens: 101,
     }
@@ -239,8 +243,176 @@ describe('user UsageView tooltip', () => {
     expect(text).not.toContain('Rate')
     expect(text).not.toContain('1.00x')
     expect(text).not.toContain('Billed')
-    expect(text).toContain('$5.0000 / 1M tokens')
-    expect(text).toContain('$30.0000 / 1M tokens')
+    expect(text).toContain('$2.5000 / 1M tokens')
+    expect(text).toContain('$15.0000 / 1M tokens')
+    expect(text).not.toContain('$5.0000 / 1M tokens')
+    expect(text).not.toContain('$30.0000 / 1M tokens')
+  })
+
+  it('shows standard image unit price instead of cost-derived image price', async () => {
+    query.mockResolvedValue({
+      items: [
+        {
+          request_id: 'req-image-standard-price',
+          actual_cost: 0.4,
+          total_cost: 0.4,
+          rate_multiplier: 1,
+          service_tier: null,
+          input_cost: 0,
+          output_cost: 0,
+          cache_creation_cost: 0,
+          cache_read_cost: 0,
+          input_tokens: 0,
+          output_tokens: 0,
+          cache_creation_tokens: 0,
+          cache_read_tokens: 0,
+          cache_creation_5m_tokens: 0,
+          cache_creation_1h_tokens: 0,
+          image_count: 2,
+          image_size: '2K',
+          standard_unit_price: 0.06,
+          first_token_ms: null,
+          duration_ms: 1,
+          created_at: '2026-03-08T00:00:00Z',
+        },
+      ],
+      total: 1,
+      pages: 1,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 1,
+      total_tokens: 0,
+      total_cost: 0.4,
+      avg_duration_ms: 1,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+    await nextTick()
+
+    const setupState = (wrapper.vm as any).$?.setupState
+    setupState.tooltipData = {
+      request_id: 'req-image-standard-price',
+      actual_cost: 0.4,
+      total_cost: 0.4,
+      rate_multiplier: 1,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 0,
+      output_tokens: 0,
+      image_count: 2,
+      image_size: '2K',
+      image_input_size: null,
+      image_output_size: null,
+      image_size_source: null,
+      image_size_breakdown: null,
+      standard_unit_price: 0.06,
+    }
+    setupState.tooltipVisible = true
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Per-image price')
+    expect(text).toContain('$0.060000')
+    expect(text).not.toContain('$0.200000')
+  })
+
+  it('shows a placeholder when standard token prices are unavailable', async () => {
+    query.mockResolvedValue({
+      items: [
+        {
+          request_id: 'req-missing-standard-price',
+          actual_cost: 0.03,
+          total_cost: 0.03,
+          rate_multiplier: 1,
+          service_tier: null,
+          input_cost: 0.01,
+          output_cost: 0.02,
+          cache_creation_cost: 0,
+          cache_read_cost: 0,
+          input_tokens: 1000,
+          output_tokens: 1000,
+          cache_creation_tokens: 0,
+          cache_read_tokens: 0,
+          cache_creation_5m_tokens: 0,
+          cache_creation_1h_tokens: 0,
+          image_count: 0,
+          image_size: null,
+          first_token_ms: null,
+          duration_ms: 1,
+          created_at: '2026-03-08T00:00:00Z',
+        },
+      ],
+      total: 1,
+      pages: 1,
+    })
+    getStatsByDateRange.mockResolvedValue({
+      total_requests: 1,
+      total_tokens: 2000,
+      total_cost: 0.03,
+      avg_duration_ms: 1,
+    })
+    list.mockResolvedValue({ items: [] })
+
+    const wrapper = mount(UsageView, {
+      global: {
+        stubs: {
+          AppLayout: AppLayoutStub,
+          TablePageLayout: TablePageLayoutStub,
+          Pagination: true,
+          EmptyState: true,
+          Select: true,
+          DateRangePicker: true,
+          DataTable: DataTableStub,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await flushPromises()
+    await nextTick()
+
+    const setupState = (wrapper.vm as any).$?.setupState
+    setupState.tooltipData = {
+      request_id: 'req-missing-standard-price',
+      actual_cost: 0.03,
+      total_cost: 0.03,
+      rate_multiplier: 1,
+      input_cost: 0.01,
+      output_cost: 0.02,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 1000,
+      output_tokens: 1000,
+      image_count: 0,
+    }
+    setupState.tooltipVisible = true
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Input price-')
+    expect(text).toContain('Output price-')
+    expect(text).not.toContain('$10.0000 / 1M tokens')
+    expect(text).not.toContain('$20.0000 / 1M tokens')
   })
 
   it('renders usage IP values with fallback for missing records', async () => {

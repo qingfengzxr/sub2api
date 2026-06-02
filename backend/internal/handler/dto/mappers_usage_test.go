@@ -175,6 +175,36 @@ func TestUsageLogFromService_IncludesIPAddressForUserAndAdmin(t *testing.T) {
 	require.NotContains(t, string(userJSON), "account_rate_multiplier")
 }
 
+func TestUsageLogFromService_IncludesStandardUnitPrices(t *testing.T) {
+	t.Parallel()
+
+	log := &service.UsageLog{
+		RequestID:                            "req_standard_prices",
+		Model:                                "gpt-5.4",
+		StandardInputPricePerMillion:         f64Ptr(2.5),
+		StandardOutputPricePerMillion:        f64Ptr(15),
+		StandardCacheCreationPricePerMillion: f64Ptr(3.75),
+		StandardCacheReadPricePerMillion:     f64Ptr(0.25),
+		StandardImageOutputPricePerMillion:   f64Ptr(40),
+		StandardUnitPrice:                    f64Ptr(0.06),
+	}
+
+	userDTO := UsageLogFromService(log)
+
+	require.InDelta(t, 2.5, *userDTO.StandardInputPricePerMillion, 1e-12)
+	require.InDelta(t, 15, *userDTO.StandardOutputPricePerMillion, 1e-12)
+	require.InDelta(t, 3.75, *userDTO.StandardCacheCreationPricePerMillion, 1e-12)
+	require.InDelta(t, 0.25, *userDTO.StandardCacheReadPricePerMillion, 1e-12)
+	require.InDelta(t, 40, *userDTO.StandardImageOutputPricePerMillion, 1e-12)
+	require.InDelta(t, 0.06, *userDTO.StandardUnitPrice, 1e-12)
+
+	userJSON, err := json.Marshal(userDTO)
+	require.NoError(t, err)
+	require.Contains(t, string(userJSON), `"standard_input_price_per_million":2.5`)
+	require.Contains(t, string(userJSON), `"standard_output_price_per_million":15`)
+	require.Contains(t, string(userJSON), `"standard_unit_price":0.06`)
+}
+
 func TestUsageLogFromService_IncludesImageBillingMetadataForUserAndAdmin(t *testing.T) {
 	t.Parallel()
 

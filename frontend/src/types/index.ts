@@ -1232,6 +1232,12 @@ export interface UsageLog {
   total_cost: number
   actual_cost: number
   rate_multiplier: number
+  standard_input_price_per_million?: number | null
+  standard_output_price_per_million?: number | null
+  standard_cache_creation_price_per_million?: number | null
+  standard_cache_read_price_per_million?: number | null
+  standard_image_output_price_per_million?: number | null
+  standard_unit_price?: number | null
   billing_type: number
 
   request_type?: UsageRequestType
