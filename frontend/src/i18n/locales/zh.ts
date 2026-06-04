@@ -1,7 +1,6 @@
 export default {
   // Home Page
   home: {
-    viewOnGithub: '在 GitHub 上查看',
     viewDocs: '查看文档',
     docs: '文档',
     switchToLight: '切换到浅色模式',
@@ -10,100 +9,157 @@ export default {
     login: '登录',
     getStarted: '立即开始',
     goToDashboard: '进入控制台',
+    heroKicker: 'AI 基础设施平台',
     // 新增：面向用户的价值主张
-    heroSubtitle: '一个密钥，畅用多个 AI 模型',
-    heroDescription: '无需管理多个订阅账号，一站式接入 Claude、GPT、Gemini 等主流 AI 服务',
+    heroSubtitle: '专为建设者构建的AI基础设施平台',
+    heroDescription: '统一承载模型接入、请求策略、权限边界、用量计量与运行监控，帮助团队快速构建自己的 AI 能力，并以平台化方式稳定交付、加速业务发展。',
     tags: {
-      subscriptionToApi: '模型可靠',
-      stickySession: '会话保持',
-      realtimeBilling: '按量计费'
+      subscriptionToApi: '统一接入层',
+      stickySession: '策略与权限治理',
+      realtimeBilling: '可观测与计量'
+    },
+    stats: {
+      gateway: {
+        value: 'Infra',
+        label: '面向 AI 应用的统一基础设施层'
+      },
+      routing: {
+        value: 'Policy',
+        label: '模型、密钥、权限与请求策略集中治理'
+      },
+      ops: {
+        value: 'Ops',
+        label: '用量、成本、健康状态持续可见'
+      }
     },
     // 用户痛点区块
     painPoints: {
-      title: '你是否也遇到这些问题？',
+      title: 'AI 落地是否也遇到这些问题？',
       items: {
         expensive: {
-          title: '订阅费用高',
-          desc: '每个 AI 服务都要单独订阅，每月支出越来越多'
+          title: '成本边界不清',
+          desc: '模型调用散落在不同应用和团队里，预算、归因和责任很难追踪'
         },
         complex: {
-          title: '多账号难管理',
-          desc: '不同平台的账号、密钥分散各处，管理起来很麻烦'
+          title: '接入重复建设',
+          desc: '每个项目都在各自处理密钥、模型配置和调用规则，维护成本越来越高'
         },
         unstable: {
-          title: '服务不稳定',
-          desc: '单一账号容易触发限制，影响正常使用'
+          title: '生产稳定性不足',
+          desc: '调用链缺少统一治理和观测，异常定位、降级和恢复都不够清晰'
         },
         noControl: {
-          title: '用量无法控制',
-          desc: '不知道钱花在哪了，也无法限制团队成员的使用'
+          title: '治理能力缺失',
+          desc: '权限、额度、审计和策略分散，难以支撑团队级 AI 使用'
         }
       }
     },
     // 解决方案区块
     solutions: {
-      title: '我们帮你解决',
-      subtitle: '简单三步，开始省心使用 AI'
+      title: '我们在建设什么',
+      subtitle: '把 AI 能力建设成稳定、可治理、可运营的基础设施平台'
     },
     features: {
-      unifiedGateway: '一键接入',
-      unifiedGatewayDesc: '获取一个 API 密钥，即可调用所有已接入的 AI 模型，无需分别申请。',
-      multiAccount: '稳定可靠',
-      multiAccountDesc: '智能调度多个上游账号，自动切换和负载均衡，告别频繁报错。',
-      balanceQuota: '用多少付多少',
-      balanceQuotaDesc: '按实际使用量计费，支持设置配额上限，团队用量一目了然。'
+      unifiedGateway: '统一接入层',
+      unifiedGatewayDesc: '为多类模型与应用接入提供统一网关入口，降低客户端重复集成和配置成本。',
+      multiAccount: '治理与边界',
+      multiAccountDesc: '将密钥权限、额度规则、服务范围和使用规范收束到统一后台，降低生产使用中的不可控性。',
+      balanceQuota: '计量与可观测',
+      balanceQuotaDesc: '将请求、Token、成本、额度和健康状态沉淀为可追踪数据，支撑团队运营和问题排查。'
+    },
+    operations: {
+      eyebrow: '面向产品和团队的 AI 运行底座',
+      title: '把 AI 能力接入建设成可持续运营的基础设施',
+      description:
+        '河狸AI围绕模型接入、权限边界、请求策略、用量成本和运行状态建立统一平台，让 AI 服务在团队和生产场景中更可控、更可见。',
+      items: {
+        keys: {
+          title: '统一接入',
+          description: '以一致的接口和密钥体系连接应用侧调用，减少重复集成和环境差异。'
+        },
+        routing: {
+          title: '服务治理',
+          description: '围绕权限边界、额度规则、服务范围和团队使用规范建立清晰的管理秩序。'
+        },
+        sessions: {
+          title: '可靠运行',
+          description: '通过状态感知、异常处理和降级能力提升生产流量的连续性。'
+        },
+        billing: {
+          title: '成本透明',
+          description: '请求、Token、费用和额度进入统一记录，方便预算管理和责任归因。'
+        }
+      }
+    },
+    scale: {
+      eyebrow: '从接入到生产级治理',
+      title: '让 AI 能力在真实业务中长期稳定运行',
+      description:
+        '当 AI 使用进入产品和团队流程，平台需要的不只是调用入口，而是可观测、可计量、可治理、可恢复的运行体系。河狸AI的后台能力围绕这一点组织。',
+      points: {
+        monitoring: '健康状态、错误趋势和请求细节帮助团队快速定位运行问题。',
+        failover: '策略控制、状态感知和异常处理为高峰、限流和故障提供缓冲空间。',
+        billing: '用量记录、预算边界、订阅和额度控制让 AI 服务运营更可控。'
+      }
     },
     // 优势对比
     comparison: {
-      title: '为什么选择我们？',
+      title: '为什么需要平台化？',
       headers: {
         feature: '对比项',
-        official: '官方订阅',
-        us: '本平台'
+        official: '零散接入',
+        us: '基础设施平台'
       },
       items: {
         pricing: {
-          feature: '付费方式',
-          official: '固定月费，用不完也付',
-          us: '按量付费，用多少付多少'
+          feature: '成本管理',
+          official: '分散在各项目和团队中',
+          us: '统一计量、预算和额度边界'
         },
         models: {
-          feature: '模型选择',
-          official: '单一服务商',
-          us: '多模型随意切换'
+          feature: '能力接入',
+          official: '每个应用重复集成',
+          us: '统一接口承载多类 AI 能力'
         },
         management: {
-          feature: '账号管理',
-          official: '每个服务单独管理',
-          us: '统一密钥，一站管理'
+          feature: '治理方式',
+          official: '密钥、权限和策略各自维护',
+          us: '集中管理密钥、权限和请求策略'
         },
         stability: {
-          feature: '服务稳定性',
-          official: '单账号易触发限制',
-          us: '多账号池，自动切换'
+          feature: '运行可靠性',
+          official: '异常依赖应用侧自行处理',
+          us: '统一观测、异常处理和恢复策略'
         },
         control: {
-          feature: '用量控制',
-          official: '无法限制',
-          us: '可设配额、查明细'
+          feature: '可观测性',
+          official: '调用明细和成本视图割裂',
+          us: '请求、成本、额度和健康状态持续可见'
         }
       }
     },
     providers: {
-      title: '已支持的 AI 模型',
-      description: '一个 API，多种选择',
-      supported: '已支持',
+      title: '支持主流 AI 能力',
+      description: '在统一基础设施之上接入多类模型和服务',
+      supported: '支持',
       soon: '即将推出',
       claude: 'Claude',
       gemini: 'Gemini',
       antigravity: 'Antigravity',
-      more: '更多'
+      more: '更多',
+      captions: {
+        claude: 'Claude 能力接入',
+        gpt: 'GPT 模型服务',
+        gemini: 'Gemini 原生能力',
+        antigravity: '专属模型通道',
+        more: '能力持续扩展'
+      }
     },
     // CTA 区块
     cta: {
-      title: '准备好开始了吗？',
-      description: '注册即可获得免费试用额度，体验一站式 AI 服务',
-      button: '免费注册'
+      title: '把 AI 能力建设成平台资产',
+      description: '从统一接入、策略治理到成本可见，让 AI 应用拥有更稳定的运行底座',
+      button: '进入平台'
     },
     footer: {
       allRightsReserved: '保留所有权利。'
@@ -5857,7 +5913,7 @@ export default {
         siteNamePlaceholder: 'Sub2API',
         siteSubtitle: '站点副标题',
         siteSubtitleHint: '显示在登录和注册页面',
-        siteSubtitlePlaceholder: '订阅转 API 转换平台',
+        siteSubtitlePlaceholder: 'AI 基础设施平台',
         apiBaseUrl: 'API 端点地址',
         apiBaseUrlHint: '用于"使用密钥"和"导入到 CC Switch"功能，留空则使用当前站点地址',
         apiBaseUrlPlaceholder: 'https://api.example.com',

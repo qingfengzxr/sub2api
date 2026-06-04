@@ -86,16 +86,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import Icon from '@/components/icons/Icon.vue'
 import { getPublicSettings } from '@/api/auth'
+import { displaySiteName } from '@/utils/siteName'
 import { sanitizeUrl } from '@/utils/url'
 import type { LoginAgreementDocument, PublicSettings } from '@/types'
 
 type LegalDocumentIcon = 'document' | 'shield' | 'globe' | 'cog'
 
 const route = useRoute()
+const { locale } = useI18n()
 const settings = ref<PublicSettings | null>(null)
 const loading = ref(true)
 const loadError = ref(false)
@@ -107,7 +110,7 @@ marked.setOptions({
 
 const documentId = computed(() => String(route.params.documentId || ''))
 const documents = computed(() => settings.value?.login_agreement_documents ?? [])
-const siteName = computed(() => settings.value?.site_name || 'Sub2API')
+const siteName = computed(() => displaySiteName(settings.value?.site_name, locale.value))
 const siteLogo = computed(() => sanitizeUrl(settings.value?.site_logo || '', {
   allowRelative: true,
   allowDataUrl: true,

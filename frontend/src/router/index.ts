@@ -739,8 +739,7 @@ router.beforeEach(async (to, _from, next) => {
     const menuItem = publicItems.find((item) => item.id === id)
       ?? (authStore.isAdmin ? adminSettingsStore.customMenuItems.find((item) => item.id === id) : undefined)
     if (menuItem?.label) {
-      const siteName = appStore.siteName || 'Sub2API'
-      document.title = `${menuItem.label} - ${siteName}`
+      document.title = resolveDocumentTitle(menuItem.label, appStore.siteName)
     } else {
       document.title = resolveDocumentTitle(to.meta.title, appStore.siteName, to.meta.titleKey as string)
     }

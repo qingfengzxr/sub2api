@@ -187,6 +187,7 @@ import { useAdminSettingsStore, useAppStore, useAuthStore, useOnboardingStore } 
 import VersionBadge from '@/components/common/VersionBadge.vue'
 import { sanitizeSvg } from '@/utils/sanitize'
 import { FeatureFlags, makeSidebarFlag } from '@/utils/featureFlags'
+import { displaySiteName } from '@/utils/siteName'
 
 interface NavItem {
   path: string
@@ -224,7 +225,7 @@ function applyFeatureFlags(items: NavItem[]): NavItem[] {
   return out
 }
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
@@ -242,7 +243,7 @@ const isDark = ref(document.documentElement.classList.contains('dark'))
 const expandedGroups = ref<Set<string>>(new Set())
 
 // Site settings from appStore (cached, no flicker)
-const siteName = computed(() => appStore.siteName)
+const siteName = computed(() => displaySiteName(appStore.siteName, locale.value))
 const siteLogo = computed(() => appStore.siteLogo)
 const siteVersion = computed(() => appStore.siteVersion)
 const settingsLoaded = computed(() => appStore.publicSettingsLoaded)

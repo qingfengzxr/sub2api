@@ -1,7 +1,6 @@
 export default {
   // Home Page
   home: {
-    viewOnGithub: 'View on GitHub',
     viewDocs: 'View Documentation',
     docs: 'Docs',
     switchToLight: 'Switch to Light Mode',
@@ -10,100 +9,157 @@ export default {
     login: 'Login',
     getStarted: 'Get Started',
     goToDashboard: 'Go to Dashboard',
+    heroKicker: 'AI Infrastructure Platform',
     // User-focused value proposition
-    heroSubtitle: 'One Key, All AI Models',
-    heroDescription: 'No need to manage multiple subscriptions. Access Claude, GPT, Gemini and more with a single API key',
+    heroSubtitle: 'An AI infrastructure platform built for builders',
+    heroDescription: 'Bring model access, request policy, permission boundaries, usage metering, and runtime monitoring into one platform layer so teams can quickly build their own AI capabilities, deliver reliably, and accelerate business growth.',
     tags: {
-      subscriptionToApi: 'Trusted Models',
-      stickySession: 'Session Persistence',
-      realtimeBilling: 'Pay As You Go'
+      subscriptionToApi: 'Unified Access Layer',
+      stickySession: 'Policy & Access Control',
+      realtimeBilling: 'Observability & Metering'
+    },
+    stats: {
+      gateway: {
+        value: 'Infra',
+        label: 'A unified infrastructure layer for AI applications'
+      },
+      routing: {
+        value: 'Policy',
+        label: 'Centralized governance for models, keys, permissions, and requests'
+      },
+      ops: {
+        value: 'Ops',
+        label: 'Usage, cost, and health continuously visible'
+      }
     },
     // Pain points section
     painPoints: {
-      title: 'Sound Familiar?',
+      title: 'Where AI Rollouts Start to Strain',
       items: {
         expensive: {
-          title: 'High Subscription Costs',
-          desc: 'Paying for multiple AI subscriptions that add up every month'
+          title: 'Unclear Cost Boundaries',
+          desc: 'Model usage spreads across apps and teams, making budgets, attribution, and ownership hard to track'
         },
         complex: {
-          title: 'Account Chaos',
-          desc: 'Managing scattered accounts and API keys across different platforms'
+          title: 'Repeated Integration Work',
+          desc: 'Every project handles keys, model configuration, and request rules on its own'
         },
         unstable: {
-          title: 'Service Interruptions',
-          desc: 'Single accounts hitting rate limits and disrupting your workflow'
+          title: 'Runtime Fragility',
+          desc: 'Without shared governance and observability, failures are harder to locate, degrade, and recover from'
         },
         noControl: {
-          title: 'No Usage Control',
-          desc: "Can't track where your money goes or limit team member usage"
+          title: 'Missing Governance',
+          desc: 'Permissions, quotas, auditing, and policy are fragmented across teams and services'
         }
       }
     },
     // Solutions section
     solutions: {
-      title: 'We Solve These Problems',
-      subtitle: 'Three simple steps to stress-free AI access'
+      title: 'What We Are Building',
+      subtitle: 'Turn AI capabilities into stable, governable, and operable platform infrastructure'
     },
     features: {
-      unifiedGateway: 'One-Click Access',
-      unifiedGatewayDesc: 'Get a single API key to call all connected AI models. No separate applications needed.',
-      multiAccount: 'Always Reliable',
-      multiAccountDesc: 'Smart routing across multiple upstream accounts with automatic failover. Say goodbye to errors.',
-      balanceQuota: 'Pay What You Use',
-      balanceQuotaDesc: 'Usage-based billing with quota limits. Full visibility into team consumption.'
+      unifiedGateway: 'Unified Access Layer',
+      unifiedGatewayDesc: 'Provide a unified gateway entry point for multiple model and application integrations, reducing repeated client setup and configuration.',
+      multiAccount: 'Governance Boundaries',
+      multiAccountDesc: 'Centralize key permissions, quota rules, service scope, and usage standards so production AI usage stays controlled.',
+      balanceQuota: 'Metering & Observability',
+      balanceQuotaDesc: 'Turn requests, tokens, cost, quotas, and health into traceable operational data for teams.'
+    },
+    operations: {
+      eyebrow: 'An AI Runtime Foundation for Products and Teams',
+      title: 'Move from one-off model access to an operable platform capability',
+      description:
+        'BOBRAI brings AI service access, permission control, request governance, cost metering, and runtime monitoring into one platform so teams can build, deliver, and maintain AI applications with clarity.',
+      items: {
+        keys: {
+          title: 'Unified Access',
+          description: 'Connect application calls through a consistent API and key system across environments.'
+        },
+        routing: {
+          title: 'Service Governance',
+          description: 'Create clear operating order around permission boundaries, quota rules, service scope, and team usage standards.'
+        },
+        sessions: {
+          title: 'Reliable Runtime',
+          description: 'Use state awareness, exception handling, and fallback behavior to keep production traffic moving.'
+        },
+        billing: {
+          title: 'Transparent Cost',
+          description: 'Bring requests, tokens, cost, and quotas into one traceable view for budgets and accountability.'
+        }
+      }
+    },
+    scale: {
+      eyebrow: 'From Access to Production Governance',
+      title: 'Keep AI capabilities running in real business workflows',
+      description:
+        'As AI usage moves into products and team workflows, a platform needs more than an API entry point. It needs an observable, measurable, governable, and recoverable operating layer.',
+      points: {
+        monitoring: 'Health state, error trends, and request detail help teams locate runtime issues quickly.',
+        failover: 'Policy control, state awareness, and exception handling create room for traffic peaks, limits, and failures.',
+        billing: 'Usage records, budget boundaries, subscriptions, and quota controls make AI operations easier to govern.'
+      }
     },
     // Comparison section
     comparison: {
-      title: 'Why Choose Us?',
+      title: 'Why Platformize AI Infrastructure?',
       headers: {
         feature: 'Comparison',
-        official: 'Official Subscriptions',
-        us: 'Our Platform'
+        official: 'Fragmented Access',
+        us: 'Infrastructure Platform'
       },
       items: {
         pricing: {
-          feature: 'Pricing',
-          official: 'Fixed monthly fee, pay even if unused',
-          us: 'Pay only for what you use'
+          feature: 'Cost Management',
+          official: 'Spread across projects and teams',
+          us: 'Unified metering, budgets, and quota boundaries'
         },
         models: {
-          feature: 'Model Selection',
-          official: 'Single provider only',
-          us: 'Switch between models freely'
+          feature: 'Capability Access',
+          official: 'Every app integrates separately',
+          us: 'One interface for multiple AI capability categories'
         },
         management: {
-          feature: 'Account Management',
-          official: 'Manage each service separately',
-          us: 'Unified key, one dashboard'
+          feature: 'Governance',
+          official: 'Keys, permissions, and policy maintained separately',
+          us: 'Centralized keys, permissions, and request policy'
         },
         stability: {
-          feature: 'Stability',
-          official: 'Single account rate limits',
-          us: 'Multi-account pool, auto-failover'
+          feature: 'Reliability',
+          official: 'Each app handles failures alone',
+          us: 'Shared observability, exception handling, and recovery policy'
         },
         control: {
-          feature: 'Usage Control',
-          official: 'Not available',
-          us: 'Quotas & detailed analytics'
+          feature: 'Observability',
+          official: 'Call detail and cost views are fragmented',
+          us: 'Requests, cost, quotas, and health remain continuously visible'
         }
       }
     },
     providers: {
-      title: 'Supported AI Models',
-      description: 'One API, Multiple Choices',
+      title: 'Supports Mainstream AI Capabilities',
+      description: 'Connect multiple model and service categories on top of one infrastructure layer',
       supported: 'Supported',
       soon: 'Soon',
       claude: 'Claude',
       gemini: 'Gemini',
       antigravity: 'Antigravity',
-      more: 'More'
+      more: 'More',
+      captions: {
+        claude: 'Claude capability access',
+        gpt: 'GPT model service',
+        gemini: 'Gemini native capability',
+        antigravity: 'Dedicated model channel',
+        more: 'Continuously expanding'
+      }
     },
     // CTA section
     cta: {
-      title: 'Ready to Get Started?',
-      description: 'Sign up now and get free trial credits to experience seamless AI access',
-      button: 'Sign Up Free'
+      title: 'Turn AI capability into a platform asset',
+      description: 'From unified access to policy governance and cost visibility, give AI applications a steadier runtime foundation',
+      button: 'Enter Platform'
     },
     footer: {
       allRightsReserved: 'All rights reserved.'
@@ -5702,7 +5758,7 @@ export default {
         siteNamePlaceholder: 'Sub2API',
         siteNameHint: 'Displayed in emails and page titles',
         siteSubtitle: 'Site Subtitle',
-        siteSubtitlePlaceholder: 'Subscription to API Conversion Platform',
+        siteSubtitlePlaceholder: 'AI Infrastructure Platform',
         siteSubtitleHint: 'Displayed on login and register pages',
         apiBaseUrl: 'API Base URL',
         apiBaseUrlPlaceholder: 'https://api.example.com',

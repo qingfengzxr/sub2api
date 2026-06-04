@@ -1,12 +1,12 @@
 <template>
   <AuthLayout>
-    <div class="space-y-6">
+    <div class="space-y-7">
       <!-- Title -->
-      <div class="text-center">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <div>
+        <h2 class="text-2xl font-bold tracking-normal text-gray-950 dark:text-white">
           {{ t('auth.welcomeBack') }}
         </h2>
-        <p class="mt-2 text-sm text-gray-500 dark:text-dark-400">
+        <p class="mt-2 text-sm leading-6 text-gray-500 dark:text-dark-400">
           {{ t('auth.signInToAccount') }}
         </p>
       </div>
@@ -29,7 +29,7 @@
               autofocus
               autocomplete="email"
               :disabled="authActionDisabled"
-              class="input pl-11"
+              class="input h-11 pl-11"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
             />
@@ -52,7 +52,7 @@
               required
               autocomplete="current-password"
               :disabled="authActionDisabled"
-              class="input pl-11 pr-11"
+              class="input h-11 pl-11 pr-11"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.passwordPlaceholder')"
             />
@@ -93,7 +93,7 @@
         <button
           type="submit"
           :disabled="authActionDisabled || (turnstileEnabled && !turnstileToken)"
-          class="btn btn-primary w-full"
+          class="btn btn-primary h-12 w-full rounded-lg text-sm font-semibold shadow-lg shadow-primary-500/20"
         >
           <svg
             v-if="isLoading"

@@ -14,6 +14,7 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const subscriptionStore = useSubscriptionStore()
 const announcementStore = useAnnouncementStore()
+const defaultFavicon = '/let-build-logo.png'
 
 /**
  * Update favicon dynamically
@@ -27,7 +28,7 @@ function updateFavicon(logoUrl: string) {
     link.rel = 'icon'
     document.head.appendChild(link)
   }
-  link.type = logoUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/x-icon'
+  link.type = logoUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png'
   link.href = logoUrl
 }
 
@@ -35,9 +36,7 @@ function updateFavicon(logoUrl: string) {
 watch(
   () => appStore.siteLogo,
   (newLogo) => {
-    if (newLogo) {
-      updateFavicon(newLogo)
-    }
+    updateFavicon(newLogo || defaultFavicon)
   },
   { immediate: true }
 )

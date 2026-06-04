@@ -131,6 +131,13 @@ const antigravityUserAgentVersionDBTimeout = 5 * time.Second
 // DefaultOpenAICodexUserAgent OpenAI Codex 默认 User-Agent（用于规避 Cloudflare 对浏览器 UA 的质询）
 const DefaultOpenAICodexUserAgent = "codex-tui/0.125.0 (Ubuntu 22.4.0; x86_64) xterm-256color (codex-tui; 0.125.0)"
 
+const (
+	defaultSiteName           = "BOBRAI"
+	legacyDefaultSiteName     = "Sub2API"
+	defaultSiteSubtitle       = "AI Infrastructure Platform"
+	legacyDefaultSiteSubtitle = "Subscription to API Conversion Platform"
+)
+
 // cachedOpenAICodexUserAgent 缓存 OpenAI Codex UA（进程内缓存，60s TTL）
 type cachedOpenAICodexUserAgent struct {
 	value     string
@@ -834,9 +841,9 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		LoginAgreementDocuments:          loginAgreementDocuments,
 		TurnstileEnabled:                 settings[SettingKeyTurnstileEnabled] == "true",
 		TurnstileSiteKey:                 settings[SettingKeyTurnstileSiteKey],
-		SiteName:                         s.getStringOrDefault(settings, SettingKeySiteName, "Sub2API"),
+		SiteName:                         normalizeSiteName(settings[SettingKeySiteName]),
 		SiteLogo:                         settings[SettingKeySiteLogo],
-		SiteSubtitle:                     s.getStringOrDefault(settings, SettingKeySiteSubtitle, "Subscription to API Conversion Platform"),
+		SiteSubtitle:                     normalizeSiteSubtitle(settings[SettingKeySiteSubtitle]),
 		APIBaseURL:                       settings[SettingKeyAPIBaseURL],
 		ContactInfo:                      settings[SettingKeyContactInfo],
 		DocURL:                           settings[SettingKeyDocURL],
@@ -2506,10 +2513,10 @@ func (s *SettingService) IsTotpEncryptionKeyConfigured() bool {
 // GetSiteName 获取网站名称
 func (s *SettingService) GetSiteName(ctx context.Context) string {
 	value, err := s.settingRepo.GetValue(ctx, SettingKeySiteName)
-	if err != nil || value == "" {
-		return "Sub2API"
+	if err != nil {
+		return defaultSiteName
 	}
-	return value
+	return normalizeSiteName(value)
 }
 
 // GetDefaultConcurrency 获取默认并发量
@@ -2702,7 +2709,8 @@ func (s *SettingService) InitializeDefaultSettings(ctx context.Context) error {
 		SettingKeyLoginAgreementUpdatedAt:                   defaultLoginAgreementDate,
 		SettingKeyLoginAgreementDocuments:                   loginAgreementDocumentsJSON,
 		SettingKeyAPIKeyACLTrustForwardedIP:                 "false",
-		SettingKeySiteName:                                  "Sub2API",
+		SettingKeySiteName:                                  defaultSiteName,
+		SettingKeySiteSubtitle:                              defaultSiteSubtitle,
 		SettingKeySiteLogo:                                  "",
 		SettingKeyPurchaseSubscriptionEnabled:               "false",
 		SettingKeyPurchaseSubscriptionURL:                   "",
@@ -2898,9 +2906,9 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 		TurnstileSiteKey:                 settings[SettingKeyTurnstileSiteKey],
 		TurnstileSecretKeyConfigured:     settings[SettingKeyTurnstileSecretKey] != "",
 		APIKeyACLTrustForwardedIP:        apiKeyACLTrustForwardedIP,
-		SiteName:                         s.getStringOrDefault(settings, SettingKeySiteName, "Sub2API"),
+		SiteName:                         normalizeSiteName(settings[SettingKeySiteName]),
 		SiteLogo:                         settings[SettingKeySiteLogo],
-		SiteSubtitle:                     s.getStringOrDefault(settings, SettingKeySiteSubtitle, "Subscription to API Conversion Platform"),
+		SiteSubtitle:                     normalizeSiteSubtitle(settings[SettingKeySiteSubtitle]),
 		APIBaseURL:                       settings[SettingKeyAPIBaseURL],
 		ContactInfo:                      settings[SettingKeyContactInfo],
 		DocURL:                           settings[SettingKeyDocURL],
@@ -3655,6 +3663,22 @@ func (s *SettingService) getStringOrDefault(settings map[string]string, key, def
 		return value
 	}
 	return defaultValue
+}
+
+func normalizeSiteName(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" || trimmed == legacyDefaultSiteName {
+		return defaultSiteName
+	}
+	return trimmed
+}
+
+func normalizeSiteSubtitle(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" || trimmed == legacyDefaultSiteSubtitle {
+		return defaultSiteSubtitle
+	}
+	return trimmed
 }
 
 // IsTurnstileEnabled 检查是否启用 Turnstile 验证

@@ -63,6 +63,38 @@ func TestSettingService_GetPublicSettings_ExposesRegistrationEmailSuffixWhitelis
 	require.Equal(t, []string{"@example.com", "@foo.bar", "*.edu.cn"}, settings.RegistrationEmailSuffixWhitelist)
 }
 
+func TestSettingService_GetPublicSettings_UsesBobraiDefaultSiteName(t *testing.T) {
+	svc := NewSettingService(&settingPublicRepoStub{values: map[string]string{}}, &config.Config{})
+
+	settings, err := svc.GetPublicSettings(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, defaultSiteName, settings.SiteName)
+}
+
+func TestSettingService_GetPublicSettings_TreatsLegacySiteNameAsDefault(t *testing.T) {
+	svc := NewSettingService(&settingPublicRepoStub{
+		values: map[string]string{
+			SettingKeySiteName: legacyDefaultSiteName,
+		},
+	}, &config.Config{})
+
+	settings, err := svc.GetPublicSettings(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, defaultSiteName, settings.SiteName)
+}
+
+func TestSettingService_GetPublicSettings_KeepsCustomSiteName(t *testing.T) {
+	svc := NewSettingService(&settingPublicRepoStub{
+		values: map[string]string{
+			SettingKeySiteName: "My Custom Site",
+		},
+	}, &config.Config{})
+
+	settings, err := svc.GetPublicSettings(context.Background())
+	require.NoError(t, err)
+	require.Equal(t, "My Custom Site", settings.SiteName)
+}
+
 func TestSettingService_GetPublicSettings_ExposesTablePreferences(t *testing.T) {
 	repo := &settingPublicRepoStub{
 		values: map[string]string{

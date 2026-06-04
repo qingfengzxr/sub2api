@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { i18n } from '@/i18n'
 import { resolveDocumentTitle } from '@/router/title'
 
 describe('resolveDocumentTitle', () => {
@@ -11,8 +12,17 @@ describe('resolveDocumentTitle', () => {
   })
 
   it('站点名为空时，回退默认站点名', () => {
-    expect(resolveDocumentTitle('Dashboard', '')).toBe('Dashboard - Sub2API')
-    expect(resolveDocumentTitle(undefined, '   ')).toBe('Sub2API')
+    i18n.global.locale.value = 'en'
+
+    expect(resolveDocumentTitle('Dashboard', '')).toBe('Dashboard - BOBRAI')
+    expect(resolveDocumentTitle(undefined, '   ')).toBe('BOBRAI')
+  })
+
+  it('中文环境下默认品牌名使用中文显示', () => {
+    i18n.global.locale.value = 'zh'
+
+    expect(resolveDocumentTitle('Dashboard', 'BOBRAI')).toBe('Dashboard - 河狸AI')
+    expect(resolveDocumentTitle(undefined, 'BOBR')).toBe('河狸')
   })
 
   it('站点名变更时仅影响后续路由标题计算', () => {
