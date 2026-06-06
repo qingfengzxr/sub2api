@@ -540,6 +540,7 @@ func TestFrontendServer_Middleware(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 		assert.Contains(t, w.Header().Get("Content-Type"), "image/png")
+		assert.Equal(t, staticAssetCacheControl, w.Header().Get("Cache-Control"))
 	})
 }
 
@@ -573,6 +574,35 @@ func TestNewFrontendServer(t *testing.T) {
 	})
 }
 
+func TestSetStaticAssetCacheHeaders(t *testing.T) {
+	t.Run("uses_immutable_cache_for_vite_assets", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		setStaticAssetCacheHeaders(c, "assets/index-abc123.js")
+
+		assert.Equal(t, fingerprintedAssetCacheControl, w.Header().Get("Cache-Control"))
+	})
+
+	t.Run("uses_shorter_cache_for_public_static_files", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		setStaticAssetCacheHeaders(c, "frontpage/2-1440.webp")
+
+		assert.Equal(t, staticAssetCacheControl, w.Header().Get("Cache-Control"))
+	})
+
+	t.Run("skips_extensionless_spa_paths", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(w)
+
+		setStaticAssetCacheHeaders(c, "dashboard")
+
+		assert.Empty(t, w.Header().Get("Cache-Control"))
+	})
+}
+
 func TestHasEmbeddedFrontend(t *testing.T) {
 	t.Run("returns_true_when_frontend_embedded", func(t *testing.T) {
 		result := HasEmbeddedFrontend()
@@ -594,6 +624,7 @@ func TestServeEmbeddedFrontend(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, w.Code)
 		assert.Contains(t, w.Header().Get("Content-Type"), "image/png")
+		assert.Equal(t, staticAssetCacheControl, w.Header().Get("Cache-Control"))
 	})
 
 	t.Run("serves_index_html_for_root", func(t *testing.T) {

@@ -14,7 +14,7 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const subscriptionStore = useSubscriptionStore()
 const announcementStore = useAnnouncementStore()
-const defaultFavicon = '/let-build-logo.png'
+const defaultFavicon = '/let-build-logo-256.png'
 
 /**
  * Update favicon dynamically

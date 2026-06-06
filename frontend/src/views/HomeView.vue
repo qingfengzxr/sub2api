@@ -15,12 +15,22 @@
   <!-- Default Home Page -->
   <div v-else class="min-h-screen bg-slate-50 text-slate-950 transition-colors dark:bg-slate-950 dark:text-white">
     <section class="relative min-h-[88vh] overflow-hidden bg-slate-100 dark:bg-slate-950">
-      <img
-        src="/frontpage/2.png"
-        alt=""
-        class="absolute inset-0 h-full w-full object-cover object-[58%_center] sm:object-center"
-        fetchpriority="high"
-      />
+      <picture class="absolute inset-0 block h-full w-full">
+        <source
+          type="image/webp"
+          srcset="/frontpage/2-960.webp 960w, /frontpage/2-1440.webp 1440w, /frontpage/2-1920.webp 1920w, /frontpage/2-2560.webp 2560w"
+          sizes="100vw"
+        />
+        <img
+          src="/frontpage/2.png"
+          alt=""
+          class="h-full w-full object-cover object-[58%_center] sm:object-center"
+          width="2560"
+          height="1440"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
       <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(248,250,252,0.94)_0%,rgba(241,245,249,0.82)_38%,rgba(241,245,249,0.28)_72%,rgba(248,250,252,0.58)_100%)] dark:bg-[linear-gradient(90deg,rgba(2,6,23,0.88)_0%,rgba(7,20,37,0.72)_38%,rgba(7,20,37,0.24)_72%,rgba(2,6,23,0.5)_100%)]"></div>
       <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-50 to-transparent dark:from-slate-950"></div>
 
@@ -28,7 +38,7 @@
         <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <div class="flex min-w-0 items-center gap-3">
             <div class="h-11 w-11 flex-shrink-0 overflow-hidden rounded-xl bg-white/90 p-1 shadow-xl shadow-slate-300/40 ring-1 ring-slate-900/10 dark:shadow-blue-950/30 dark:ring-white/30">
-              <img :src="siteLogo || '/logo.png'" alt="Logo" class="h-full w-full object-contain" />
+              <img :src="siteLogo || '/let-build-logo-256.png'" alt="Logo" class="h-full w-full object-contain" width="256" height="256" decoding="async" />
             </div>
             <span class="truncate text-sm font-semibold tracking-wide text-slate-950/95 dark:text-white/95 sm:text-base">
               {{ siteName }}
@@ -181,12 +191,22 @@
     <section class="bg-slate-100 px-5 py-16 text-slate-950 dark:bg-slate-900 dark:text-white sm:px-6 lg:px-8 lg:py-20">
       <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div class="overflow-hidden rounded-lg shadow-2xl shadow-slate-300/60 ring-1 ring-slate-200 dark:shadow-slate-950/40 dark:ring-white/10">
-          <img
-            src="/frontpage/1.png"
-            alt=""
-            class="aspect-[3/2] h-full w-full object-cover"
-            loading="lazy"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset="/frontpage/1-720.webp 720w, /frontpage/1-1080.webp 1080w, /frontpage/1-1536.webp 1536w"
+              sizes="(min-width: 1024px) 48vw, 100vw"
+            />
+            <img
+              src="/frontpage/1.png"
+              alt=""
+              class="aspect-[3/2] h-full w-full object-cover"
+              width="1536"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </div>
 
         <div>
@@ -241,12 +261,22 @@
         </div>
 
         <div class="overflow-hidden rounded-lg shadow-2xl shadow-slate-300/60 ring-1 ring-slate-200 dark:shadow-cyan-950/40 dark:ring-white/10">
-          <img
-            src="/frontpage/3.png"
-            alt=""
-            class="aspect-[16/9] h-full w-full object-cover"
-            loading="lazy"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset="/frontpage/3-720.webp 720w, /frontpage/3-1080.webp 1080w, /frontpage/3-1440.webp 1440w"
+              sizes="(min-width: 1024px) 46vw, 100vw"
+            />
+            <img
+              src="/frontpage/3.png"
+              alt=""
+              class="aspect-[16/9] h-full w-full object-cover"
+              width="2560"
+              height="1440"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </div>
       </div>
     </section>
