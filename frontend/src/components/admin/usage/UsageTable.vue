@@ -486,13 +486,12 @@ const positiveNumber = (value: unknown): number => {
   return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0
 }
 
-const billableFirstTokenValue = (
+const billableTokenValue = (
   log: AdminUsageLog,
-  billableKey: keyof AdminUsageLog,
-  rawKey: keyof AdminUsageLog
+  billableKey: keyof AdminUsageLog
 ): number => {
   const billableValue = positiveNumber(log[billableKey])
-  return billableValue > 0 ? billableValue : positiveNumber(log[rawKey])
+  return billableValue > 0 ? billableValue : 0
 }
 
 const tokenBreakdown = (
@@ -531,7 +530,7 @@ const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
     rawCacheCreation5mTokens,
     rawCacheCreation1hTokens
   )
-  const billableCacheCreationTokens = billableFirstTokenValue(log, 'billable_cache_creation_tokens', 'cache_creation_tokens')
+  const billableCacheCreationTokens = billableTokenValue(log, 'billable_cache_creation_tokens')
   const billableCacheCreation5mTokens =
     rawCacheCreationTokens > 0 && billableCacheCreationTokens > 0 && rawCacheCreation5mTokens > 0
       ? Math.ceil((rawCacheCreation5mTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
@@ -541,11 +540,11 @@ const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
       ? Math.ceil((rawCacheCreation1hTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
       : 0
   const billable = tokenBreakdown(
-    billableFirstTokenValue(log, 'billable_input_tokens', 'input_tokens'),
-    billableFirstTokenValue(log, 'billable_output_tokens', 'output_tokens'),
+    billableTokenValue(log, 'billable_input_tokens'),
+    billableTokenValue(log, 'billable_output_tokens'),
     billableCacheCreationTokens,
-    billableFirstTokenValue(log, 'billable_cache_read_tokens', 'cache_read_tokens'),
-    billableFirstTokenValue(log, 'billable_image_output_tokens', 'image_output_tokens'),
+    billableTokenValue(log, 'billable_cache_read_tokens'),
+    billableTokenValue(log, 'billable_image_output_tokens'),
     billableCacheCreation5mTokens,
     billableCacheCreation1hTokens
   )
