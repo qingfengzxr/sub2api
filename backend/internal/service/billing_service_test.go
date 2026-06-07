@@ -212,7 +212,7 @@ func TestCalculateCost_OpenAIGPT54LongContextPolicyAppliesWholeSessionMultiplier
 
 	expectedInput := float64(tokens.InputTokens) * 2.5e-6 * 2.0
 	expectedOutput := float64(tokens.OutputTokens) * 15e-6 * 1.5
-	expectedCacheRead := float64(tokens.CacheReadTokens) * 0.25e-6
+	expectedCacheRead := float64(tokens.CacheReadTokens) * 0.25e-6 * 2.0
 	require.InDelta(t, expectedInput, cost.InputCost, 1e-10)
 	require.InDelta(t, expectedOutput, cost.OutputCost, 1e-10)
 	require.InDelta(t, expectedCacheRead, cost.CacheReadCost, 1e-10)
@@ -248,7 +248,10 @@ func TestCalculateCost_OpenAIGPT54LongContextAppliesMultiplierToCacheRead(t *tes
 		OutputTokens:    1000,
 	}
 
-	cost, err := svc.CalculateCost("gpt-5.4-2026-03-05", tokens, 1.0)
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.4-2026-03-05", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: DefaultLongContextPricingThresholdTokens},
+	)
 	require.NoError(t, err)
 
 	expectedInput := float64(tokens.InputTokens) * 2.5e-6 * 2.0
@@ -276,7 +279,10 @@ func TestCalculateCost_OpenAIGPT54NoLongContextKeepsCacheReadAtBasePrice(t *test
 		OutputTokens:    1000,
 	}
 
-	cost, err := svc.CalculateCost("gpt-5.4-2026-03-05", tokens, 1.0)
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.4-2026-03-05", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: DefaultLongContextPricingThresholdTokens},
+	)
 	require.NoError(t, err)
 
 	expectedCacheRead := float64(tokens.CacheReadTokens) * 0.25e-6
@@ -299,7 +305,10 @@ func TestCalculateCost_OpenAIGPT54LongContextAppliesMultiplierToCacheCreation(t 
 		OutputTokens:        1000,
 	}
 
-	cost, err := svc.CalculateCost("gpt-5.4-2026-03-05", tokens, 1.0)
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.4-2026-03-05", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: DefaultLongContextPricingThresholdTokens},
+	)
 	require.NoError(t, err)
 
 	// gpt-5.4 fallback: CacheCreationPricePerToken = 2.5e-6, LongContextInputMultiplier = 2.0
@@ -1028,4 +1037,63 @@ func TestGetModelPricingWithChannel_UnknownModelReturnsError(t *testing.T) {
 	require.Error(t, err)
 	require.Nil(t, pricing)
 	require.Contains(t, err.Error(), "pricing not found")
+}
+
+func TestGetModelPricingWithChannel_NilImageOutputPriceZerosAndMarksExplicit(t *testing.T) {
+	svc := newTestBillingService()
+
+	chPricing := &ChannelModelPricing{
+		InputPrice:  testPtrFloat64(10e-6),
+		OutputPrice: testPtrFloat64(20e-6),
+		// ImageOutputPrice intentionally nil
+	}
+	pricing, err := svc.GetModelPricingWithChannel("claude-sonnet-4", chPricing)
+	require.NoError(t, err)
+
+	require.Equal(t, 0.0, pricing.ImageOutputPricePerToken)
+	require.True(t, pricing.ImageOutputPriceExplicit)
+}
+
+func TestComputeTokenBreakdown_ExplicitZeroImagePrice_NoFallback(t *testing.T) {
+	svc := newTestBillingService()
+
+	pricing := &ModelPricing{
+		InputPricePerToken:       3e-6,
+		OutputPricePerToken:      15e-6,
+		ImageOutputPricePerToken: 0,
+		ImageOutputPriceExplicit: true,
+	}
+	tokens := UsageTokens{
+		InputTokens:       100,
+		OutputTokens:      200,
+		ImageOutputTokens: 50,
+	}
+	bd := svc.computeTokenBreakdown(pricing, tokens, 1.0, "", LongContextPricingPolicy{})
+
+	// ImageOutputTokens should NOT fall back to outputPrice
+	require.Equal(t, 0.0, bd.ImageOutputCost)
+	// textOutputTokens = 200 - 50 = 150
+	require.InDelta(t, 150*15e-6, bd.OutputCost, 1e-12)
+}
+
+func TestComputeTokenBreakdown_NonExplicitZeroImagePrice_FallsBackToOutput(t *testing.T) {
+	svc := newTestBillingService()
+
+	pricing := &ModelPricing{
+		InputPricePerToken:       3e-6,
+		OutputPricePerToken:      15e-6,
+		ImageOutputPricePerToken: 0,
+		ImageOutputPriceExplicit: false,
+	}
+	tokens := UsageTokens{
+		InputTokens:       100,
+		OutputTokens:      200,
+		ImageOutputTokens: 50,
+	}
+	bd := svc.computeTokenBreakdown(pricing, tokens, 1.0, "", LongContextPricingPolicy{})
+
+	// Should fall back to outputPrice since not explicit
+	require.InDelta(t, 50*15e-6, bd.ImageOutputCost, 1e-12)
+	// textOutputTokens = 200 - 50 = 150
+	require.InDelta(t, 150*15e-6, bd.OutputCost, 1e-12)
 }

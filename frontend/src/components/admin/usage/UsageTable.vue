@@ -109,23 +109,29 @@
               <div class="flex items-center gap-2">
                 <div class="inline-flex items-center gap-1">
                   <Icon name="arrowDown" size="sm" class="h-3.5 w-3.5 text-emerald-500" />
-                  <span class="font-medium text-gray-900 dark:text-white">{{ row.input_tokens?.toLocaleString() || 0 }}</span>
+                  <span class="font-medium text-gray-900 dark:text-white">{{ buildAdminTokenBreakdown(row)!.billable.inputTokens.toLocaleString() }}</span>
                 </div>
                 <div class="inline-flex items-center gap-1">
                   <Icon name="arrowUp" size="sm" class="h-3.5 w-3.5 text-violet-500" />
-                  <span class="font-medium text-gray-900 dark:text-white">{{ row.output_tokens?.toLocaleString() || 0 }}</span>
+                  <span class="font-medium text-gray-900 dark:text-white">{{ buildAdminTokenBreakdown(row)!.billable.outputTokens.toLocaleString() }}</span>
                 </div>
               </div>
-              <div v-if="row.cache_read_tokens > 0 || row.cache_creation_tokens > 0" class="flex items-center gap-2">
-                <div v-if="row.cache_read_tokens > 0" class="inline-flex items-center gap-1">
+              <div v-if="buildAdminTokenBreakdown(row)!.billable.cacheReadTokens > 0 || buildAdminTokenBreakdown(row)!.billable.cacheCreationTokens > 0" class="flex items-center gap-2">
+                <div v-if="buildAdminTokenBreakdown(row)!.billable.cacheReadTokens > 0" class="inline-flex items-center gap-1">
                   <svg class="h-3.5 w-3.5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
-                  <span class="font-medium text-sky-600 dark:text-sky-400">{{ formatCacheTokens(row.cache_read_tokens) }}</span>
+                  <span class="font-medium text-sky-600 dark:text-sky-400">{{ formatCacheTokens(buildAdminTokenBreakdown(row)!.billable.cacheReadTokens) }}</span>
                 </div>
-                <div v-if="row.cache_creation_tokens > 0" class="inline-flex items-center gap-1">
+                <div v-if="buildAdminTokenBreakdown(row)!.billable.cacheCreationTokens > 0" class="inline-flex items-center gap-1">
                   <svg class="h-3.5 w-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                  <span class="font-medium text-amber-600 dark:text-amber-400">{{ formatCacheTokens(row.cache_creation_tokens) }}</span>
-                  <span v-if="row.cache_creation_1h_tokens > 0" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-100 text-orange-600 ring-1 ring-inset ring-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:ring-orange-500/30">1h</span>
+                  <span class="font-medium text-amber-600 dark:text-amber-400">{{ formatCacheTokens(buildAdminTokenBreakdown(row)!.billable.cacheCreationTokens) }}</span>
+                  <span v-if="buildAdminTokenBreakdown(row)!.billable.cacheCreation1hTokens > 0" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-100 text-orange-600 ring-1 ring-inset ring-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:ring-orange-500/30">1h</span>
                   <span v-if="row.cache_ttl_overridden" :title="t('usage.cacheTtlOverriddenHint')" class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-rose-100 text-rose-600 ring-1 ring-inset ring-rose-200 dark:bg-rose-500/20 dark:text-rose-400 dark:ring-rose-500/30 cursor-help">R</span>
+                </div>
+              </div>
+              <div v-if="buildAdminTokenBreakdown(row)!.billable.imageOutputTokens > 0" class="flex items-center gap-2">
+                <div class="inline-flex items-center gap-1">
+                  <svg class="h-3.5 w-3.5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  <span class="font-medium text-pink-600 dark:text-pink-400">{{ buildAdminTokenBreakdown(row)!.billable.imageOutputTokens.toLocaleString() }}</span>
                 </div>
               </div>
             </div>
@@ -209,21 +215,43 @@
               <span class="text-gray-400">{{ t('admin.usage.inputTokens') }}</span>
               <span class="font-medium text-white">{{ adminTokenBreakdown.raw.inputTokens.toLocaleString() }}</span>
             </div>
-            <div v-if="adminTokenBreakdown.raw.outputTokens > 0" class="flex items-center justify-between gap-4">
+            <div v-if="adminTokenBreakdown.raw.outputTokens > 0 && !adminTokenBreakdown.raw.imageOutputTokens" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('admin.usage.outputTokens') }}</span>
               <span class="font-medium text-white">{{ adminTokenBreakdown.raw.outputTokens.toLocaleString() }}</span>
             </div>
-            <div v-if="adminTokenBreakdown.raw.cacheCreationTokens > 0" class="flex items-center justify-between gap-4">
-              <span class="text-gray-400">{{ t('admin.usage.cacheCreationTokens') }}</span>
-              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheCreationTokens.toLocaleString() }}</span>
+            <div v-if="adminTokenBreakdown.raw.imageOutputTokens > 0 && adminTokenBreakdown.raw.textOutputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('admin.usage.outputTokens') }}</span>
+              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.textOutputTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.raw.imageOutputTokens > 0" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.imageOutputTokens') }}</span>
+              <span class="font-medium text-pink-300">{{ adminTokenBreakdown.raw.imageOutputTokens.toLocaleString() }}</span>
+            </div>
+            <div v-if="adminTokenBreakdown.raw.cacheCreationTokens > 0">
+              <template v-if="adminTokenBreakdown.raw.cacheCreation5mTokens > 0 || adminTokenBreakdown.raw.cacheCreation1hTokens > 0">
+                <div v-if="adminTokenBreakdown.raw.cacheCreation5mTokens > 0" class="flex items-center justify-between gap-4">
+                  <span class="text-gray-400 flex items-center gap-1.5">
+                    {{ t('admin.usage.cacheCreation5mTokens') }}
+                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-amber-500/20 text-amber-400 ring-1 ring-inset ring-amber-500/30">5m</span>
+                  </span>
+                  <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheCreation5mTokens.toLocaleString() }}</span>
+                </div>
+                <div v-if="adminTokenBreakdown.raw.cacheCreation1hTokens > 0" class="flex items-center justify-between gap-4">
+                  <span class="text-gray-400 flex items-center gap-1.5">
+                    {{ t('admin.usage.cacheCreation1hTokens') }}
+                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-500/20 text-orange-400 ring-1 ring-inset ring-orange-500/30">1h</span>
+                  </span>
+                  <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheCreation1hTokens.toLocaleString() }}</span>
+                </div>
+              </template>
+              <div v-else class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('admin.usage.cacheCreationTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheCreationTokens.toLocaleString() }}</span>
+              </div>
             </div>
             <div v-if="adminTokenBreakdown.raw.cacheReadTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('admin.usage.cacheReadTokens') }}</span>
               <span class="font-medium text-white">{{ adminTokenBreakdown.raw.cacheReadTokens.toLocaleString() }}</span>
-            </div>
-            <div v-if="adminTokenBreakdown.raw.imageOutputTokens > 0" class="flex items-center justify-between gap-4">
-              <span class="text-gray-400">{{ t('usage.imageOutputTokens') }}</span>
-              <span class="font-medium text-white">{{ adminTokenBreakdown.raw.imageOutputTokens.toLocaleString() }}</span>
             </div>
             <div class="flex items-center justify-between gap-6 pt-1">
               <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
@@ -240,9 +268,27 @@
               <span class="text-gray-400">{{ t('usage.billableOutputTokens') }}</span>
               <span class="font-medium text-white">{{ adminTokenBreakdown.billable.outputTokens.toLocaleString() }}</span>
             </div>
-            <div v-if="adminTokenBreakdown.billable.cacheCreationTokens > 0" class="flex items-center justify-between gap-4">
-              <span class="text-gray-400">{{ t('usage.billableCacheCreationTokens') }}</span>
-              <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreationTokens.toLocaleString() }}</span>
+            <div v-if="adminTokenBreakdown.billable.cacheCreationTokens > 0">
+              <template v-if="adminTokenBreakdown.billable.cacheCreation5mTokens > 0 || adminTokenBreakdown.billable.cacheCreation1hTokens > 0">
+                <div v-if="adminTokenBreakdown.billable.cacheCreation5mTokens > 0" class="flex items-center justify-between gap-4">
+                  <span class="text-gray-400 flex items-center gap-1.5">
+                    {{ t('admin.usage.cacheCreation5mTokens') }}
+                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-amber-500/20 text-amber-400 ring-1 ring-inset ring-amber-500/30">5m</span>
+                  </span>
+                  <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreation5mTokens.toLocaleString() }}</span>
+                </div>
+                <div v-if="adminTokenBreakdown.billable.cacheCreation1hTokens > 0" class="flex items-center justify-between gap-4">
+                  <span class="text-gray-400 flex items-center gap-1.5">
+                    {{ t('admin.usage.cacheCreation1hTokens') }}
+                    <span class="inline-flex items-center rounded px-1 py-px text-[10px] font-medium leading-tight bg-orange-500/20 text-orange-400 ring-1 ring-inset ring-orange-500/30">1h</span>
+                  </span>
+                  <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreation1hTokens.toLocaleString() }}</span>
+                </div>
+              </template>
+              <div v-else class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('usage.billableCacheCreationTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreationTokens.toLocaleString() }}</span>
+              </div>
             </div>
             <div v-if="adminTokenBreakdown.billable.cacheReadTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('usage.billableCacheReadTokens') }}</span>
@@ -297,8 +343,26 @@
               <span class="text-gray-400">{{ t('admin.usage.outputCost') }}</span>
               <span class="font-medium text-white">${{ tooltipData.output_cost.toFixed(6) }}</span>
             </div>
+            <div v-if="tooltipData && hasImageOutputCost(tooltipData)" class="flex items-center justify-between gap-4">
+              <span class="text-gray-400">{{ t('usage.imageOutputCost') }}</span>
+              <span class="font-medium text-pink-300">${{ tooltipData.image_output_cost.toFixed(6) }}</span>
+            </div>
             <!-- Token billing: show unit prices per 1M tokens -->
-            <template v-if="tooltipData && isImageUsage(tooltipData)">
+            <template v-if="!tooltipData?.billing_mode || tooltipData.billing_mode === BILLING_MODE_TOKEN">
+              <div v-if="tooltipData && tooltipData.input_tokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('usage.inputTokenPrice') }}</span>
+                <span class="font-medium text-sky-300">{{ formatTokenPricePerMillion(tooltipData.input_cost, tooltipData.input_tokens) }} {{ t('usage.perMillionTokens') }}</span>
+              </div>
+              <div v-if="tooltipData && tooltipData.output_cost > 0 && textOutputTokens(tooltipData) > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('usage.outputTokenPrice') }}</span>
+                <span class="font-medium text-violet-300">{{ formatTokenPricePerMillion(tooltipData.output_cost, textOutputTokens(tooltipData)) }} {{ t('usage.perMillionTokens') }}</span>
+              </div>
+              <div v-if="tooltipData && hasImageOutputTokens(tooltipData)" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('usage.imageOutputTokenPrice') }}</span>
+                <span class="font-medium text-pink-300">{{ formatTokenPricePerMillion(tooltipData.image_output_cost ?? 0, tooltipData.image_output_tokens) }} {{ t('usage.perMillionTokens') }}</span>
+              </div>
+            </template>
+            <template v-else-if="isImageUsage(tooltipData)">
               <div class="flex items-center justify-between gap-4">
                 <span class="text-gray-400">{{ t('usage.imageCount') }}</span>
                 <span class="font-medium text-white">{{ tooltipData.image_count }}{{ t('usage.imageUnit') }}</span>
@@ -330,16 +394,6 @@
               <div class="flex items-center justify-between gap-4">
                 <span class="text-gray-400">{{ t('usage.imageTotalPrice') }}</span>
                 <span class="font-medium text-white">${{ tooltipData.total_cost?.toFixed(6) || '0.000000' }}</span>
-              </div>
-            </template>
-            <template v-else-if="!tooltipData?.billing_mode || tooltipData.billing_mode === BILLING_MODE_TOKEN">
-              <div v-if="tooltipData && tooltipData.input_tokens > 0" class="flex items-center justify-between gap-4">
-                <span class="text-gray-400">{{ t('usage.inputTokenPrice') }}</span>
-                <span class="font-medium text-sky-300">{{ formatTokenPricePerMillion(tooltipData.input_cost, tooltipData.input_tokens) }} {{ t('usage.perMillionTokens') }}</span>
-              </div>
-              <div v-if="tooltipData && tooltipData.output_tokens > 0" class="flex items-center justify-between gap-4">
-                <span class="text-gray-400">{{ t('usage.outputTokenPrice') }}</span>
-                <span class="font-medium text-violet-300">{{ formatTokenPricePerMillion(tooltipData.output_cost, tooltipData.output_tokens) }} {{ t('usage.perMillionTokens') }}</span>
               </div>
             </template>
             <div v-else class="flex items-center justify-between gap-4">
@@ -402,13 +456,23 @@ import { formatCacheTokens, formatMultiplier } from '@/utils/formatters'
 import { formatTokenPricePerMillion } from '@/utils/usagePricing'
 import { getUsageServiceTierLabel } from '@/utils/usageServiceTier'
 import { resolveUsageRequestType } from '@/utils/usageRequestType'
-import { getBillingModeLabel, getBillingModeBadgeClass, BILLING_MODE_TOKEN, BILLING_MODE_IMAGE } from '@/utils/billingMode'
+import {
+  BILLING_MODE_TOKEN,
+  getBillingModeLabel,
+  getBillingModeBadgeClass,
+  isImageUsage,
+  getDisplayBillingMode,
+  imageUnitPrice,
+} from '@/utils/billingMode'
 import {
   formatImageBillingSize,
   formatImageInputSize,
   formatImageOutputSize,
   formatImageSizeBreakdown,
   formatImageSizeSource,
+  hasImageOutputTokens,
+  textOutputTokens,
+  hasImageOutputCost,
 } from '@/utils/imageUsage'
 
 /** Compute the account-billed cost for display: (account_stats_cost ?? total_cost) * rate_multiplier */
@@ -416,13 +480,6 @@ function accountBilled(row: { total_cost?: number | null; account_stats_cost?: n
   const base = row.account_stats_cost != null ? row.account_stats_cost : (row.total_cost ?? 0)
   const result = base * (row.account_rate_multiplier ?? 1)
   return Number.isNaN(result) ? 0 : result
-}
-
-function imageUnitPrice(row: AdminUsageLog | null): number {
-  if (!row || row.image_count <= 0) return 0
-  const total = row.total_cost ?? 0
-  const price = total / row.image_count
-  return Number.isFinite(price) ? price : 0
 }
 
 const positiveNumber = (value: unknown): number => {
@@ -443,47 +500,58 @@ const tokenBreakdown = (
   outputTokens: number,
   cacheCreationTokens: number,
   cacheReadTokens: number,
-  imageOutputTokens: number
+  imageOutputTokens: number,
+  cacheCreation5mTokens = 0,
+  cacheCreation1hTokens = 0
 ) => ({
   inputTokens,
   outputTokens,
+  textOutputTokens: Math.max(0, outputTokens - imageOutputTokens),
   cacheCreationTokens,
+  cacheCreation5mTokens,
+  cacheCreation1hTokens,
   cacheReadTokens,
   imageOutputTokens,
-  totalTokens: inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens + imageOutputTokens,
+  totalTokens: inputTokens + outputTokens + cacheCreationTokens + cacheReadTokens,
 })
 
 const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
   if (!log) return null
 
+  const rawCacheCreationTokens = positiveNumber(log.cache_creation_tokens)
+  const rawCacheCreation5mTokens = positiveNumber(log.cache_creation_5m_tokens)
+  const rawCacheCreation1hTokens = positiveNumber(log.cache_creation_1h_tokens)
+
   const raw = tokenBreakdown(
     positiveNumber(log.input_tokens),
     positiveNumber(log.output_tokens),
-    positiveNumber(log.cache_creation_tokens),
+    rawCacheCreationTokens,
     positiveNumber(log.cache_read_tokens),
-    positiveNumber(log.image_output_tokens)
+    positiveNumber(log.image_output_tokens),
+    rawCacheCreation5mTokens,
+    rawCacheCreation1hTokens
   )
+  const billableCacheCreationTokens = billableFirstTokenValue(log, 'billable_cache_creation_tokens', 'cache_creation_tokens')
+  const billableCacheCreation5mTokens =
+    rawCacheCreationTokens > 0 && billableCacheCreationTokens > 0 && rawCacheCreation5mTokens > 0
+      ? Math.ceil((rawCacheCreation5mTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
+      : 0
+  const billableCacheCreation1hTokens =
+    rawCacheCreationTokens > 0 && billableCacheCreationTokens > 0 && rawCacheCreation1hTokens > 0
+      ? Math.ceil((rawCacheCreation1hTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
+      : 0
   const billable = tokenBreakdown(
     billableFirstTokenValue(log, 'billable_input_tokens', 'input_tokens'),
     billableFirstTokenValue(log, 'billable_output_tokens', 'output_tokens'),
-    billableFirstTokenValue(log, 'billable_cache_creation_tokens', 'cache_creation_tokens'),
+    billableCacheCreationTokens,
     billableFirstTokenValue(log, 'billable_cache_read_tokens', 'cache_read_tokens'),
-    billableFirstTokenValue(log, 'billable_image_output_tokens', 'image_output_tokens')
+    billableFirstTokenValue(log, 'billable_image_output_tokens', 'image_output_tokens'),
+    billableCacheCreation5mTokens,
+    billableCacheCreation1hTokens
   )
   const billingTokenMultiplier = positiveNumber(log.billing_token_multiplier) || 1
 
   return { raw, billable, billingTokenMultiplier }
-}
-
-function isImageUsage(row: Pick<AdminUsageLog, 'image_count'> | null | undefined): boolean {
-  return (row?.image_count ?? 0) > 0
-}
-
-function getDisplayBillingMode(row: Pick<AdminUsageLog, 'billing_mode' | 'image_count'> | null | undefined): string | null | undefined {
-  if (isImageUsage(row)) {
-    return BILLING_MODE_IMAGE
-  }
-  return row?.billing_mode
 }
 
 import DataTable from '@/components/common/DataTable.vue'

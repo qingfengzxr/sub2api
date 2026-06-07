@@ -246,6 +246,13 @@ func newOpenAIRecordUsageServiceWithBillingRepoForTest(usageRepo UsageLogReposit
 	return svc
 }
 
+func enableOpenAILongContextPricingForTest(svc *OpenAIGatewayService, threshold int) {
+	svc.settingService = NewSettingService(&openAIRecordUsageSettingRepoStub{values: map[string]string{
+		SettingKeyLongContextPricingEnabled:         "true",
+		SettingKeyLongContextPricingThresholdTokens: strconv.Itoa(threshold),
+	}}, &config.Config{})
+}
+
 func newOpenAIRecordUsageServiceWithTokenMultiplierForTest(usageRepo UsageLogRepository, billingRepo UsageBillingRepository, userRepo UserRepository, subRepo UserSubscriptionRepository, rateRepo UserGroupRateRepository, enabled bool, multiplier float64) *OpenAIGatewayService {
 	svc := newOpenAIRecordUsageServiceWithBillingRepoForTest(usageRepo, billingRepo, userRepo, subRepo, rateRepo)
 	svc.settingService = NewSettingService(&openAIRecordUsageSettingRepoStub{values: map[string]string{
@@ -953,6 +960,10 @@ func TestOpenAIGatewayServiceRecordUsage_Gpt54LongContextBillsWholeSession(t *te
 	userRepo := &openAIRecordUsageUserRepoStub{}
 	subRepo := &openAIRecordUsageSubRepoStub{}
 	svc := newOpenAIRecordUsageServiceForTest(usageRepo, userRepo, subRepo, nil)
+	enableOpenAILongContextPricingForTest(svc, DefaultLongContextPricingThresholdTokens)
+	policy := svc.longContextPricingPolicy(context.Background())
+	require.True(t, policy.Enabled)
+	require.Equal(t, DefaultLongContextPricingThresholdTokens, policy.ThresholdTokens)
 
 	err := svc.RecordUsage(context.Background(), &OpenAIRecordUsageInput{
 		Result: &OpenAIForwardResult{
