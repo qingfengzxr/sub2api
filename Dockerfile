@@ -29,6 +29,8 @@ RUN pnpm install --frozen-lockfile
 
 # Copy frontend source and build
 COPY frontend/ ./
+COPY docs/legal/admin-compliance.zh.md /app/docs/legal/admin-compliance.zh.md
+COPY docs/legal/admin-compliance.en.md /app/docs/legal/admin-compliance.en.md
 RUN pnpm run build
 
 # -----------------------------------------------------------------------------
