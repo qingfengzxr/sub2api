@@ -22,6 +22,11 @@
               :options="statusFilterOptions"
               @update:model-value="onStatusFilterChange"
             />
+            <DateRangePicker
+              v-model:start-date="usageStartDate"
+              v-model:end-date="usageEndDate"
+              @change="onUsageDateRangeChange"
+            />
           </div>
           <EndpointPopover
             v-if="publicSettings?.api_base_url || (publicSettings?.custom_endpoints?.length ?? 0) > 0"
@@ -174,7 +179,7 @@
                 </span>
               </div>
               <div class="mt-0.5 flex items-center gap-1.5">
-                <span class="text-gray-500 dark:text-gray-400">{{ t('keys.total') }}:</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ usageRangeLabel }}:</span>
                 <span class="font-medium text-gray-900 dark:text-white">
                   ${{ (usageStats[row.id]?.total_actual_cost ?? 0).toFixed(4) }}
                 </span>
@@ -1090,6 +1095,7 @@ import TablePageLayout from '@/components/layout/TablePageLayout.vue'
 	import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 	import EmptyState from '@/components/common/EmptyState.vue'
 	import Select from '@/components/common/Select.vue'
+	import DateRangePicker from '@/components/common/DateRangePicker.vue'
 	import SearchInput from '@/components/common/SearchInput.vue'
 	import Icon from '@/components/icons/Icon.vue'
 	import UseKeyModal from '@/components/keys/UseKeyModal.vue'
@@ -1111,6 +1117,11 @@ const formatDateTimeLocal = (isoDate: string): string => {
   const date = new Date(isoDate)
   const pad = (n: number) => n.toString().padStart(2, '0')
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+const formatDateString = (date: Date): string => {
+  const pad = (n: number) => n.toString().padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
 }
 
 interface GroupOption {
@@ -1222,6 +1233,9 @@ const sortState = ref({
 const filterSearch = ref('')
 const filterStatus = ref('')
 const filterGroupId = ref<string | number>('')
+const usageEndDate = ref(formatDateString(new Date()))
+const usageStartDate = ref(formatDateString(new Date(Date.now() - 29 * 24 * 60 * 60 * 1000)))
+const usageRangePreset = ref<string | null>('30days')
 
 const showCreateModal = ref(false)
 const showEditModal = ref(false)
@@ -1336,6 +1350,40 @@ const onStatusFilterChange = (value: string | number | boolean | null) => {
   onFilterChange()
 }
 
+const usagePresetLabelKeys: Record<string, string> = {
+  today: 'dates.today',
+  yesterday: 'dates.yesterday',
+  last24Hours: 'dates.last24Hours',
+  '7days': 'dates.last7Days',
+  '14days': 'dates.last14Days',
+  '30days': 'dates.last30Days',
+  thisMonth: 'dates.thisMonth',
+  lastMonth: 'dates.lastMonth'
+}
+
+const formatUsageRangeDate = (date: string) => {
+  const parsed = new Date(`${date}T00:00:00`)
+  return parsed.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+}
+
+const usageRangeLabel = computed(() => {
+  if (usageRangePreset.value && usagePresetLabelKeys[usageRangePreset.value]) {
+    return t(usagePresetLabelKeys[usageRangePreset.value])
+  }
+  if (usageStartDate.value === usageEndDate.value) {
+    return formatUsageRangeDate(usageStartDate.value)
+  }
+  return `${formatUsageRangeDate(usageStartDate.value)} - ${formatUsageRangeDate(usageEndDate.value)}`
+})
+
+const onUsageDateRangeChange = (range: { startDate: string; endDate: string; preset: string | null }) => {
+  usageStartDate.value = range.startDate
+  usageEndDate.value = range.endDate
+  usageRangePreset.value = range.preset
+  usageStats.value = {}
+  loadApiKeys()
+}
+
 // Convert groups to Select options format with subscription type
 const groupOptions = computed(() =>
   groups.value.map((group) => ({
@@ -1407,7 +1455,11 @@ const loadApiKeys = async () => {
     if (response.items.length > 0) {
       const keyIds = response.items.map((k) => k.id)
       try {
-        const usageResponse = await usageAPI.getDashboardApiKeysUsage(keyIds, { signal })
+        const usageResponse = await usageAPI.getDashboardApiKeysUsage(keyIds, {
+          signal,
+          start_date: usageStartDate.value,
+          end_date: usageEndDate.value
+        })
         if (signal.aborted) return
         usageStats.value = usageResponse.stats
       } catch (e) {

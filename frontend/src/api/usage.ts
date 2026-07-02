@@ -340,12 +340,16 @@ export async function getDashboardApiKeysUsage(
   apiKeyIds: number[],
   options?: {
     signal?: AbortSignal
+    start_date?: string
+    end_date?: string
   }
 ): Promise<BatchApiKeysUsageResponse> {
   const { data } = await apiClient.post<BatchApiKeysUsageResponse>(
     '/usage/dashboard/api-keys-usage',
     {
-      api_key_ids: apiKeyIds
+      api_key_ids: apiKeyIds,
+      ...(options?.start_date ? { start_date: options.start_date } : {}),
+      ...(options?.end_date ? { end_date: options.end_date } : {})
     },
     {
       signal: options?.signal

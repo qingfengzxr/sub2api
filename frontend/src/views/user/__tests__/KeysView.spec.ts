@@ -49,7 +49,11 @@ const messages: Record<string, string> = {
   'keys.status.expired': 'Expired',
   'keys.status.inactive': 'Inactive',
   'keys.status.quota_exhausted': 'Quota exhausted',
+  'keys.today': 'Today',
+  'keys.total': 'Last 30d',
   'keys.usage': 'Usage',
+  'dates.last7Days': 'Last 7 days',
+  'dates.last30Days': 'Last 30 days',
 }
 
 vi.mock('@/api', () => ({
@@ -154,6 +158,7 @@ const DataTableStub = {
       <div data-test="columns">{{ columns.map((col) => col.key).join(',') }}</div>
       <div v-for="row in data" :key="row.id">
         <slot name="cell-name" :value="row.name" :row="row" />
+        <slot name="cell-usage" :row="row" />
       </div>
       <slot name="empty" />
     </div>
@@ -177,6 +182,19 @@ const IconStub = {
   template: '<span data-test="icon">{{ name }}</span>',
 }
 
+const DateRangePickerStub = {
+  props: ['startDate', 'endDate'],
+  emits: ['update:startDate', 'update:endDate', 'change'],
+  template: `
+    <button
+      data-test="date-range-picker"
+      @click="$emit('update:startDate', '2026-06-26'); $emit('update:endDate', '2026-07-02'); $emit('change', { startDate: '2026-06-26', endDate: '2026-07-02', preset: '7days' })"
+    >
+      {{ startDate }} - {{ endDate }}
+    </button>
+  `,
+}
+
 const mountView = async () => {
   const wrapper = mount(KeysView, {
     global: {
@@ -190,6 +208,7 @@ const mountView = async () => {
         EmptyState: true,
         Select: SelectStub,
         SearchInput: SearchInputStub,
+        DateRangePicker: DateRangePickerStub,
         Icon: IconStub,
         UseKeyModal: true,
         EndpointPopover: true,
@@ -302,5 +321,46 @@ describe('user KeysView column settings', () => {
     expect(columnMenuText).toContain('Rate Limit')
     expect(columnMenuText).not.toContain('Name')
     expect(columnMenuText).not.toContain('Actions')
+  })
+
+  it('loads API key usage with the default last 30 days range', async () => {
+    await mountView()
+
+    const payload = getDashboardApiKeysUsage.mock.calls[0]
+    expect(payload[0]).toEqual([1])
+    expect(payload[1]).toMatchObject({
+      start_date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+      end_date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+    })
+  })
+
+  it('reloads usage and updates the range label when date range changes', async () => {
+    getDashboardApiKeysUsage
+      .mockResolvedValueOnce({
+        stats: { 1: { api_key_id: 1, today_actual_cost: 0.5, total_actual_cost: 3 } },
+      })
+      .mockResolvedValueOnce({
+        stats: { 1: { api_key_id: 1, today_actual_cost: 0.5, total_actual_cost: 1.5 } },
+      })
+
+    const wrapper = await mountView()
+    expect(wrapper.text()).toContain('Last 30 days:')
+    expect(wrapper.text()).toContain('$3.0000')
+
+    await wrapper.get('[data-test="date-range-picker"]').trigger('click')
+    await flushPromises()
+    await nextTick()
+
+    expect(getDashboardApiKeysUsage).toHaveBeenLastCalledWith(
+      [1],
+      expect.objectContaining({
+        start_date: '2026-06-26',
+        end_date: '2026-07-02',
+      })
+    )
+    expect(wrapper.text()).toContain('Last 7 days:')
+    expect(wrapper.text()).toContain('Today:')
+    expect(wrapper.text()).toContain('$0.5000')
+    expect(wrapper.text()).toContain('$1.5000')
   })
 })

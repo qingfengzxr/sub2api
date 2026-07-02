@@ -623,6 +623,8 @@ func parseBoolQueryWithDefault(c *gin.Context, key string, fallback bool) (bool,
 // BatchAPIKeysUsageRequest represents the request for batch API keys usage
 type BatchAPIKeysUsageRequest struct {
 	APIKeyIDs []int64 `json:"api_key_ids" binding:"required"`
+	StartDate string  `json:"start_date,omitempty"`
+	EndDate   string  `json:"end_date,omitempty"`
 }
 
 // DashboardAPIKeysUsage handles getting usage stats for user's own API keys
@@ -651,6 +653,32 @@ func (h *UsageHandler) DashboardAPIKeysUsage(c *gin.Context) {
 		return
 	}
 
+	startDate := strings.TrimSpace(req.StartDate)
+	endDate := strings.TrimSpace(req.EndDate)
+	var startTime, endTime time.Time
+	if startDate != "" || endDate != "" {
+		if startDate == "" || endDate == "" {
+			response.BadRequest(c, "start_date and end_date are required together")
+			return
+		}
+		parsedStart, err := timezone.ParseInLocation("2006-01-02", startDate)
+		if err != nil {
+			response.BadRequest(c, "Invalid start_date format, use YYYY-MM-DD")
+			return
+		}
+		parsedEnd, err := timezone.ParseInLocation("2006-01-02", endDate)
+		if err != nil {
+			response.BadRequest(c, "Invalid end_date format, use YYYY-MM-DD")
+			return
+		}
+		if parsedEnd.Before(parsedStart) {
+			response.BadRequest(c, "end_date must be on or after start_date")
+			return
+		}
+		startTime = parsedStart
+		endTime = parsedEnd.AddDate(0, 0, 1)
+	}
+
 	validAPIKeyIDs, err := h.apiKeyService.VerifyOwnership(c.Request.Context(), subject.UserID, req.APIKeyIDs)
 	if err != nil {
 		response.ErrorFrom(c, err)
@@ -662,7 +690,7 @@ func (h *UsageHandler) DashboardAPIKeysUsage(c *gin.Context) {
 		return
 	}
 
-	stats, err := h.usageService.GetBatchAPIKeyUsageStats(c.Request.Context(), validAPIKeyIDs, time.Time{}, time.Time{})
+	stats, err := h.usageService.GetBatchAPIKeyUsageStats(c.Request.Context(), validAPIKeyIDs, startTime, endTime)
 	if err != nil {
 		response.ErrorFrom(c, err)
 		return

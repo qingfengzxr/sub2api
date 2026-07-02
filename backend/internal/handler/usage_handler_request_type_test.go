@@ -4,10 +4,12 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/pagination"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/timezone"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/usagestats"
 	middleware2 "github.com/Wei-Shaw/sub2api/internal/server/middleware"
 	"github.com/Wei-Shaw/sub2api/internal/service"
@@ -92,6 +94,112 @@ func newUserUsageRequestTypeTestRouter(repo *userUsageRepoCapture) *gin.Engine {
 	router.GET("/usage/dashboard/models", handler.DashboardModels)
 	router.GET("/usage/dashboard/snapshot-v2", handler.DashboardSnapshotV2)
 	return router
+}
+
+type userBatchAPIKeyUsageRepoCapture struct {
+	service.UsageLogRepository
+	called    bool
+	apiKeyIDs []int64
+	startTime time.Time
+	endTime   time.Time
+	stats     map[int64]*usagestats.BatchAPIKeyUsageStats
+}
+
+func (s *userBatchAPIKeyUsageRepoCapture) GetBatchAPIKeyUsageStats(ctx context.Context, apiKeyIDs []int64, startTime, endTime time.Time) (map[int64]*usagestats.BatchAPIKeyUsageStats, error) {
+	s.called = true
+	s.apiKeyIDs = append([]int64(nil), apiKeyIDs...)
+	s.startTime = startTime
+	s.endTime = endTime
+	if s.stats != nil {
+		return s.stats, nil
+	}
+	return map[int64]*usagestats.BatchAPIKeyUsageStats{}, nil
+}
+
+type userBatchAPIKeyUsageAPIKeyRepoStub struct {
+	service.APIKeyRepository
+	userID       int64
+	validIDs     []int64
+	requestedIDs []int64
+}
+
+func (s *userBatchAPIKeyUsageAPIKeyRepoStub) VerifyOwnership(ctx context.Context, userID int64, apiKeyIDs []int64) ([]int64, error) {
+	s.userID = userID
+	s.requestedIDs = append([]int64(nil), apiKeyIDs...)
+	return append([]int64(nil), s.validIDs...), nil
+}
+
+func newUserBatchAPIKeyUsageTestRouter(usageRepo *userBatchAPIKeyUsageRepoCapture, apiKeyRepo *userBatchAPIKeyUsageAPIKeyRepoStub) *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	usageSvc := service.NewUsageService(usageRepo, nil, nil, nil)
+	apiKeySvc := service.NewAPIKeyService(apiKeyRepo, nil, nil, nil, nil, nil, nil)
+	handler := NewUsageHandler(usageSvc, apiKeySvc, nil, nil, nil)
+	router := gin.New()
+	router.Use(func(c *gin.Context) {
+		c.Set(string(middleware2.ContextKeyUser), middleware2.AuthSubject{UserID: 42})
+		c.Next()
+	})
+	router.POST("/usage/dashboard/api-keys-usage", handler.DashboardAPIKeysUsage)
+	return router
+}
+
+func TestDashboardAPIKeysUsagePassesDateRangeToStats(t *testing.T) {
+	require.NoError(t, timezone.Init("Asia/Shanghai"))
+	usageRepo := &userBatchAPIKeyUsageRepoCapture{
+		stats: map[int64]*usagestats.BatchAPIKeyUsageStats{
+			7: {APIKeyID: 7, TodayActualCost: 3.21, TotalActualCost: 1.23},
+		},
+	}
+	apiKeyRepo := &userBatchAPIKeyUsageAPIKeyRepoStub{validIDs: []int64{7}}
+	router := newUserBatchAPIKeyUsageTestRouter(usageRepo, apiKeyRepo)
+
+	body := `{"api_key_ids":[7,99],"start_date":"2026-06-01","end_date":"2026-06-07"}`
+	req := httptest.NewRequest(http.MethodPost, "/usage/dashboard/api-keys-usage", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	require.Equal(t, int64(42), apiKeyRepo.userID)
+	require.Equal(t, []int64{7, 99}, apiKeyRepo.requestedIDs)
+	require.Equal(t, []int64{7}, usageRepo.apiKeyIDs)
+	loc := timezone.Location()
+	require.Equal(t, time.Date(2026, 6, 1, 0, 0, 0, 0, loc), usageRepo.startTime)
+	require.Equal(t, time.Date(2026, 6, 8, 0, 0, 0, 0, loc), usageRepo.endTime)
+	require.Contains(t, rec.Body.String(), `"total_actual_cost":1.23`)
+	require.Contains(t, rec.Body.String(), `"today_actual_cost":3.21`)
+}
+
+func TestDashboardAPIKeysUsageRejectsInvalidDateRange(t *testing.T) {
+	require.NoError(t, timezone.Init("Asia/Shanghai"))
+	usageRepo := &userBatchAPIKeyUsageRepoCapture{}
+	apiKeyRepo := &userBatchAPIKeyUsageAPIKeyRepoStub{validIDs: []int64{7}}
+	router := newUserBatchAPIKeyUsageTestRouter(usageRepo, apiKeyRepo)
+
+	body := `{"api_key_ids":[7],"start_date":"2026-06-08","end_date":"2026-06-07"}`
+	req := httptest.NewRequest(http.MethodPost, "/usage/dashboard/api-keys-usage", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	require.Equal(t, http.StatusBadRequest, rec.Code)
+	require.False(t, usageRepo.called)
+}
+
+func TestDashboardAPIKeysUsageKeepsDefaultRangeCompatibility(t *testing.T) {
+	usageRepo := &userBatchAPIKeyUsageRepoCapture{}
+	apiKeyRepo := &userBatchAPIKeyUsageAPIKeyRepoStub{validIDs: []int64{7}}
+	router := newUserBatchAPIKeyUsageTestRouter(usageRepo, apiKeyRepo)
+
+	req := httptest.NewRequest(http.MethodPost, "/usage/dashboard/api-keys-usage", strings.NewReader(`{"api_key_ids":[7]}`))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+	router.ServeHTTP(rec, req)
+
+	require.Equal(t, http.StatusOK, rec.Code)
+	require.True(t, usageRepo.called)
+	require.True(t, usageRepo.startTime.IsZero())
+	require.True(t, usageRepo.endTime.IsZero())
 }
 
 func TestUserUsageListRequestTypePriority(t *testing.T) {
