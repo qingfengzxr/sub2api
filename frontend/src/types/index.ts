@@ -1319,7 +1319,6 @@ export interface UsageLog {
 
   // User-Agent
   user_agent: string | null
-  ip_address?: string | null
 
   // 请求 IP
   ip_address?: string | null
