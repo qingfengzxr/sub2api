@@ -538,12 +538,13 @@ const positiveNumber = (value: unknown): number => {
   return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0
 }
 
-const billableTokenValue = (
+const billableOrRawTokenValue = (
   log: AdminUsageLog,
-  billableKey: keyof AdminUsageLog
+  billableKey: keyof AdminUsageLog,
+  rawKey: keyof AdminUsageLog
 ): number => {
   const billableValue = positiveNumber(log[billableKey])
-  return billableValue > 0 ? billableValue : 0
+  return billableValue > 0 ? billableValue : positiveNumber(log[rawKey])
 }
 
 const tokenBreakdown = (
@@ -582,21 +583,22 @@ const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
     rawCacheCreation5mTokens,
     rawCacheCreation1hTokens
   )
-  const billableCacheCreationTokens = billableTokenValue(log, 'billable_cache_creation_tokens')
+  const billableCacheCreationTokens = billableOrRawTokenValue(log, 'billable_cache_creation_tokens', 'cache_creation_tokens')
+  const hasBillableCacheCreationTokens = positiveNumber(log.billable_cache_creation_tokens) > 0
   const billableCacheCreation5mTokens =
-    rawCacheCreationTokens > 0 && billableCacheCreationTokens > 0 && rawCacheCreation5mTokens > 0
+    hasBillableCacheCreationTokens && rawCacheCreationTokens > 0 && rawCacheCreation5mTokens > 0
       ? Math.ceil((rawCacheCreation5mTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
-      : 0
+      : rawCacheCreation5mTokens
   const billableCacheCreation1hTokens =
-    rawCacheCreationTokens > 0 && billableCacheCreationTokens > 0 && rawCacheCreation1hTokens > 0
+    hasBillableCacheCreationTokens && rawCacheCreationTokens > 0 && rawCacheCreation1hTokens > 0
       ? Math.ceil((rawCacheCreation1hTokens / rawCacheCreationTokens) * billableCacheCreationTokens)
-      : 0
+      : rawCacheCreation1hTokens
   const billable = tokenBreakdown(
-    billableTokenValue(log, 'billable_input_tokens'),
-    billableTokenValue(log, 'billable_output_tokens'),
+    billableOrRawTokenValue(log, 'billable_input_tokens', 'input_tokens'),
+    billableOrRawTokenValue(log, 'billable_output_tokens', 'output_tokens'),
     billableCacheCreationTokens,
-    billableTokenValue(log, 'billable_cache_read_tokens'),
-    billableTokenValue(log, 'billable_image_output_tokens'),
+    billableOrRawTokenValue(log, 'billable_cache_read_tokens', 'cache_read_tokens'),
+    billableOrRawTokenValue(log, 'billable_image_output_tokens', 'image_output_tokens'),
     billableCacheCreation5mTokens,
     billableCacheCreation1hTokens
   )
@@ -647,15 +649,9 @@ const ipGeoBatchLoading = ref(false)
 
 function formatDisplayTokenPricePerMillion(row: AdminUsageLog, type: 'input' | 'output' | 'imageOutput'): string {
   if (!showBillingAuditDetails) {
-    if (type === 'input' && row.standard_input_price_per_million != null) {
-      return formatStandardPrice(row.standard_input_price_per_million)
-    }
-    if (type === 'output' && row.standard_output_price_per_million != null) {
-      return formatStandardPrice(row.standard_output_price_per_million)
-    }
-    if (type === 'imageOutput' && row.standard_image_output_price_per_million != null) {
-      return formatStandardPrice(row.standard_image_output_price_per_million)
-    }
+    if (type === 'input') return row.standard_input_price_per_million != null ? formatStandardPrice(row.standard_input_price_per_million) : '-'
+    if (type === 'output') return row.standard_output_price_per_million != null ? formatStandardPrice(row.standard_output_price_per_million) : '-'
+    return row.standard_image_output_price_per_million != null ? formatStandardPrice(row.standard_image_output_price_per_million) : '-'
   }
 
   if (type === 'input') return formatTokenPricePerMillion(row.input_cost, row.input_tokens)

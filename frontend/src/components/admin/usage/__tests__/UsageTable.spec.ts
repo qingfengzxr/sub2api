@@ -307,6 +307,63 @@ describe('admin UsageTable tooltip', () => {
     expect(text).not.toContain('2.50x')
   })
 
+  it('falls back to raw token details in user-facing tooltip when billable fields are absent', async () => {
+    const row = {
+      request_id: 'req-user-token-legacy',
+      actual_cost: 0.01,
+      total_cost: 0.01,
+      account_rate_multiplier: 1,
+      rate_multiplier: 1,
+      service_tier: null,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 12,
+      output_tokens: 5,
+      cache_creation_tokens: 0,
+      cache_read_tokens: 3,
+      image_output_tokens: 0,
+      billable_input_tokens: 0,
+      billable_output_tokens: 0,
+      billable_cache_creation_tokens: 0,
+      billable_cache_read_tokens: 0,
+      billable_image_output_tokens: 0,
+      billing_token_multiplier: 0,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+        showBillingAuditDetails: false,
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await wrapper.findAll('.group.relative')[0].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Token Breakdown')
+    expect(text).toContain('12')
+    expect(text).toContain('5')
+    expect(text).toContain('3')
+    expect(text).toContain('20')
+    expect(text).not.toContain('Raw Usage')
+    expect(text).not.toContain('Billable Usage')
+    expect(text).not.toContain('Multiplier Snapshot')
+  })
+
   it('shows user-facing cost details without rate and original audit rows', async () => {
     const row = {
       request_id: 'req-user-cost-1',
@@ -357,6 +414,51 @@ describe('admin UsageTable tooltip', () => {
     expect(text).not.toContain('Rate')
     expect(text).not.toContain('Original')
     expect(text).not.toContain('3.00x')
+  })
+
+  it('does not derive user-facing unit prices when standard prices are absent', async () => {
+    const row = {
+      request_id: 'req-user-cost-no-standard-price',
+      actual_cost: 0.03,
+      total_cost: 0.03,
+      account_rate_multiplier: 1,
+      rate_multiplier: 3,
+      service_tier: null,
+      input_cost: 0.01,
+      output_cost: 0.02,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 1000,
+      output_tokens: 1000,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+        showBillingAuditDetails: false,
+        showAccountBilling: false,
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    const tooltipTriggers = wrapper.findAll('.group.relative')
+    await tooltipTriggers[tooltipTriggers.length - 1].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('- / 1M tokens')
+    expect(text).not.toContain('$10.0000 / 1M tokens')
+    expect(text).not.toContain('$20.0000 / 1M tokens')
   })
 
   it('falls back to raw token details when admin billable fields are absent', async () => {
