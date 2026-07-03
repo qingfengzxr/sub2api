@@ -1,5 +1,21 @@
 <template>
   <div class="card overflow-hidden">
+    <div
+      v-if="showIpGeoToolbar"
+      class="flex items-center justify-end gap-2 border-b border-gray-200 px-4 py-2 dark:border-dark-700"
+    >
+      <span v-if="pendingIpCount > 0" class="text-xs text-gray-500 dark:text-gray-400">
+        {{ t('usage.ipGeo.pending', { count: pendingIpCount }) }}
+      </span>
+      <button
+        type="button"
+        class="inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-primary-600 transition-colors hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-primary-400 dark:hover:bg-primary-900/30"
+        :disabled="ipGeoBatchLoading || pendingIpCount === 0"
+        @click="handleBatchFetchIpGeo"
+      >
+        {{ ipGeoBatchLoading ? t('usage.ipGeo.batchFetching') : t('usage.ipGeo.batchFetch') }}
+      </button>
+    </div>
     <div class="overflow-auto">
       <DataTable
         :columns="columns"
@@ -137,6 +153,7 @@
             </div>
             <!-- Token Detail Tooltip -->
             <div
+              v-if="showBillingAuditDetails"
               class="group relative"
               @mouseenter="showTokenTooltip($event, row)"
               @mouseleave="hideTokenTooltip"
@@ -154,6 +171,7 @@
               <span class="font-medium text-green-600 dark:text-green-400">${{ row.actual_cost?.toFixed(6) || '0.000000' }}</span>
               <!-- Cost Detail Tooltip -->
               <div
+                v-if="showBillingAuditDetails"
                 class="group relative"
                 @mouseenter="showTooltip($event, row)"
                 @mouseleave="hideTooltip"
@@ -188,7 +206,10 @@
         </template>
 
         <template #cell-ip_address="{ row }">
-          <span v-if="row.ip_address" class="text-sm font-mono text-gray-600 dark:text-gray-400">{{ row.ip_address }}</span>
+          <div v-if="row.ip_address">
+            <span class="text-sm font-mono text-gray-600 dark:text-gray-400">{{ row.ip_address }}</span>
+            <IpGeoCell :ip="row.ip_address" />
+          </div>
           <span v-else class="text-sm text-gray-400 dark:text-gray-500">-</span>
         </template>
 
@@ -557,7 +578,9 @@ const buildAdminTokenBreakdown = (log: AdminUsageLog | null) => {
 
 import DataTable from '@/components/common/DataTable.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import IpGeoCell from '@/components/common/IpGeoCell.vue'
 import Icon from '@/components/icons/Icon.vue'
+import { fetchBatch, getEntry } from '@/utils/ipGeoLookup'
 import type { AdminUsageLog } from '@/types'
 import type { Column } from '@/components/common/types'
 
@@ -570,6 +593,7 @@ interface Props {
   defaultSortOrder?: 'asc' | 'desc'
   showAccountBilling?: boolean
   showUpstreamEndpoint?: boolean
+  showBillingAuditDetails?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -578,15 +602,43 @@ const props = withDefaults(defineProps<Props>(), {
   defaultSortKey: '',
   defaultSortOrder: 'asc',
   showAccountBilling: true,
-  showUpstreamEndpoint: true
+  showUpstreamEndpoint: true,
+  showBillingAuditDetails: true
 })
-defineEmits<{
+const emit = defineEmits<{
   userClick: [userID: number, email?: string]
   sort: [key: string, order: 'asc' | 'desc']
+  ipGeoBatchFailed: []
 }>()
 const { t } = useI18n()
 const showAccountBilling = props.showAccountBilling
 const showUpstreamEndpoint = props.showUpstreamEndpoint
+const showBillingAuditDetails = props.showBillingAuditDetails
+const ipGeoBatchLoading = ref(false)
+
+const showIpGeoToolbar = computed(() => props.columns.some((col) => col.key === 'ip_address'))
+
+const currentPageIps = computed(() =>
+  Array.from(new Set(props.data.map((row) => row.ip_address).filter((ip): ip is string => Boolean(ip))))
+)
+
+const pendingIpCount = computed(() => {
+  if (!showIpGeoToolbar.value) return 0
+  return currentPageIps.value.filter((ip) => {
+    const status = getEntry(ip).status
+    return status === 'idle' || status === 'error'
+  }).length
+})
+
+const handleBatchFetchIpGeo = async () => {
+  ipGeoBatchLoading.value = true
+  try {
+    const ok = await fetchBatch(currentPageIps.value)
+    if (!ok) emit('ipGeoBatchFailed')
+  } finally {
+    ipGeoBatchLoading.value = false
+  }
+}
 
 // Tooltip state - cost
 const tooltipVisible = ref(false)

@@ -95,6 +95,11 @@ vi.mock('vue-i18n', async () => {
 
 const simpleStub = { template: '<div><slot /></div>' }
 const chartStub = { template: '<div />' }
+const usageTableStub = {
+  name: 'UsageTable',
+  props: ['showBillingAuditDetails'],
+  template: '<div />',
+}
 
 const usageLog = {
   id: 1,
@@ -144,7 +149,7 @@ function mountUsageView() {
         DateRangePicker: true,
         Icon: true,
         UsageStatsCards: chartStub,
-        UsageTable: chartStub,
+        UsageTable: usageTableStub,
         ModelDistributionChart: chartStub,
         GroupDistributionChart: chartStub,
         EndpointDistributionChart: chartStub,
@@ -212,6 +217,13 @@ describe('user UsageView', () => {
     }))
     expect(list).toHaveBeenCalledWith(1, 100)
     expect(getAvailable).toHaveBeenCalled()
+  })
+
+  it('hides billing audit details in the shared usage table', async () => {
+    const wrapper = mountUsageView()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ name: 'UsageTable' }).props('showBillingAuditDetails')).toBe(false)
   })
 
   it('exports csv with current filters and without admin-only fields', async () => {
