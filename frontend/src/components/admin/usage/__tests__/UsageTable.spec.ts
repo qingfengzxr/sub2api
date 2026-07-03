@@ -234,18 +234,129 @@ describe('admin UsageTable tooltip', () => {
     expect(text).toContain('Raw Usage')
     expect(text).toContain('Input Tokens')
     expect(text).toContain('1,938')
-    expect(text).toContain('597')
+    expect(text).toContain('593')
     expect(text).toContain('235,904')
-    expect(text).toContain('238,443')
+    expect(text).toContain('238,439')
     expect(text).toContain('Billable Usage')
     expect(text).toContain('Billable Input Tokens')
     expect(text).toContain('4,845')
     expect(text).toContain('1,493')
     expect(text).toContain('589,760')
     expect(text).toContain('10')
-    expect(text).toContain('596,108')
+    expect(text).toContain('596,098')
     expect(text).toContain('Multiplier Snapshot')
     expect(text).toContain('2.50x')
+  })
+
+  it('shows user-facing token details without billing audit labels', async () => {
+    const row = {
+      request_id: 'req-user-token-1',
+      actual_cost: 0.113297,
+      total_cost: 0.102997,
+      account_rate_multiplier: 1,
+      rate_multiplier: 3,
+      service_tier: null,
+      input_cost: 0,
+      output_cost: 0,
+      cache_creation_cost: 0,
+      cache_read_cost: 0,
+      input_tokens: 1938,
+      output_tokens: 597,
+      cache_creation_tokens: 0,
+      cache_read_tokens: 235904,
+      image_output_tokens: 4,
+      billable_input_tokens: 4845,
+      billable_output_tokens: 1493,
+      billable_cache_creation_tokens: 0,
+      billable_cache_read_tokens: 589760,
+      billable_image_output_tokens: 10,
+      billing_token_multiplier: 2.5,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+        showBillingAuditDetails: false,
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    await wrapper.findAll('.group.relative')[0].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Token Breakdown')
+    expect(text).toContain('Input Tokens')
+    expect(text).toContain('4,845')
+    expect(text).toContain('1,493')
+    expect(text).toContain('589,760')
+    expect(text).toContain('596,098')
+    expect(text).not.toContain('Raw Usage')
+    expect(text).not.toContain('Billable Usage')
+    expect(text).not.toContain('Multiplier Snapshot')
+    expect(text).not.toContain('2.50x')
+  })
+
+  it('shows user-facing cost details without rate and original audit rows', async () => {
+    const row = {
+      request_id: 'req-user-cost-1',
+      actual_cost: 0.113297,
+      total_cost: 0.102997,
+      account_rate_multiplier: 1,
+      rate_multiplier: 3,
+      service_tier: 'priority',
+      input_cost: 0.020285,
+      output_cost: 0.00303,
+      cache_creation_cost: 0,
+      cache_read_cost: 0.069568,
+      input_tokens: 4057,
+      output_tokens: 101,
+      standard_input_price_per_million: 2.5,
+      standard_output_price_per_million: 15,
+      image_count: 0,
+    }
+
+    const wrapper = mount(UsageTable, {
+      props: {
+        data: [row],
+        loading: false,
+        columns: [],
+        showBillingAuditDetails: false,
+        showAccountBilling: false,
+      },
+      global: {
+        stubs: {
+          DataTable: DataTableStub,
+          EmptyState: true,
+          Icon: true,
+          Teleport: true,
+        },
+      },
+    })
+
+    const tooltipTriggers = wrapper.findAll('.group.relative')
+    await tooltipTriggers[tooltipTriggers.length - 1].trigger('mouseenter')
+    await nextTick()
+
+    const text = wrapper.text()
+    expect(text).toContain('Cost Breakdown')
+    expect(text).toContain('User billed')
+    expect(text).toContain('$0.113297')
+    expect(text).toContain('$2.5000 / 1M tokens')
+    expect(text).toContain('$15.0000 / 1M tokens')
+    expect(text).not.toContain('Rate')
+    expect(text).not.toContain('Original')
+    expect(text).not.toContain('3.00x')
   })
 
   it('falls back to raw token details when admin billable fields are absent', async () => {

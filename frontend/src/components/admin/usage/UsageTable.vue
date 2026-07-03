@@ -153,7 +153,6 @@
             </div>
             <!-- Token Detail Tooltip -->
             <div
-              v-if="showBillingAuditDetails"
               class="group relative"
               @mouseenter="showTokenTooltip($event, row)"
               @mouseleave="hideTokenTooltip"
@@ -171,7 +170,6 @@
               <span class="font-medium text-green-600 dark:text-green-400">${{ row.actual_cost?.toFixed(6) || '0.000000' }}</span>
               <!-- Cost Detail Tooltip -->
               <div
-                v-if="showBillingAuditDetails"
                 class="group relative"
                 @mouseenter="showTooltip($event, row)"
                 @mouseleave="hideTooltip"
@@ -230,7 +228,8 @@
     >
       <div class="whitespace-nowrap rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-xs text-white shadow-xl dark:border-gray-600 dark:bg-gray-800">
         <div v-if="adminTokenBreakdown" class="space-y-1.5">
-          <div class="border-b border-gray-700 pb-1.5">
+          <template v-if="showBillingAuditDetails">
+            <div class="border-b border-gray-700 pb-1.5">
             <div class="mb-1 text-xs font-semibold text-gray-300">{{ t('usage.rawTokenUsage') }}</div>
             <div v-if="adminTokenBreakdown.raw.inputTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('admin.usage.inputTokens') }}</span>
@@ -279,7 +278,7 @@
               <span class="font-semibold text-slate-200">{{ adminTokenBreakdown.raw.totalTokens.toLocaleString() }}</span>
             </div>
           </div>
-          <div>
+            <div>
             <div class="mb-1 text-xs font-semibold text-gray-300">{{ t('usage.billableTokenUsage') }}</div>
             <div v-if="adminTokenBreakdown.billable.inputTokens > 0" class="flex items-center justify-between gap-4">
               <span class="text-gray-400">{{ t('usage.billableInputTokens') }}</span>
@@ -335,6 +334,36 @@
               <span class="font-semibold text-blue-400">{{ adminTokenBreakdown.billable.totalTokens.toLocaleString() }}</span>
             </div>
           </div>
+          </template>
+          <template v-else>
+            <div>
+              <div class="mb-1 text-xs font-semibold text-gray-300">{{ t('usage.tokenDetails') }}</div>
+              <div v-if="adminTokenBreakdown.billable.inputTokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('admin.usage.inputTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.inputTokens.toLocaleString() }}</span>
+              </div>
+              <div v-if="adminTokenBreakdown.billable.outputTokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('admin.usage.outputTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.outputTokens.toLocaleString() }}</span>
+              </div>
+              <div v-if="adminTokenBreakdown.billable.cacheCreationTokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('admin.usage.cacheCreationTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheCreationTokens.toLocaleString() }}</span>
+              </div>
+              <div v-if="adminTokenBreakdown.billable.cacheReadTokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('admin.usage.cacheReadTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.cacheReadTokens.toLocaleString() }}</span>
+              </div>
+              <div v-if="adminTokenBreakdown.billable.imageOutputTokens > 0" class="flex items-center justify-between gap-4">
+                <span class="text-gray-400">{{ t('usage.imageOutputTokens') }}</span>
+                <span class="font-medium text-white">{{ adminTokenBreakdown.billable.imageOutputTokens.toLocaleString() }}</span>
+              </div>
+              <div class="flex items-center justify-between gap-6 border-t border-gray-700 pt-1.5">
+                <span class="text-gray-400">{{ t('usage.totalTokens') }}</span>
+                <span class="font-semibold text-blue-400">{{ adminTokenBreakdown.billable.totalTokens.toLocaleString() }}</span>
+              </div>
+            </div>
+          </template>
         </div>
         <div class="absolute right-full top-1/2 h-0 w-0 -translate-y-1/2 border-b-[6px] border-r-[6px] border-t-[6px] border-b-transparent border-r-gray-900 border-t-transparent dark:border-r-gray-800"></div>
       </div>
@@ -372,15 +401,15 @@
             <template v-if="tooltipData && !isImageUsage(tooltipData) && (!tooltipData.billing_mode || tooltipData.billing_mode === BILLING_MODE_TOKEN)">
               <div v-if="tooltipData && tooltipData.input_tokens > 0" class="flex items-center justify-between gap-4">
                 <span class="text-gray-400">{{ t('usage.inputTokenPrice') }}</span>
-                <span class="font-medium text-sky-300">{{ formatTokenPricePerMillion(tooltipData.input_cost, tooltipData.input_tokens) }} {{ t('usage.perMillionTokens') }}</span>
+                <span class="font-medium text-sky-300">{{ formatDisplayTokenPricePerMillion(tooltipData, 'input') }} {{ t('usage.perMillionTokens') }}</span>
               </div>
               <div v-if="tooltipData && tooltipData.output_cost > 0 && textOutputTokens(tooltipData) > 0" class="flex items-center justify-between gap-4">
                 <span class="text-gray-400">{{ t('usage.outputTokenPrice') }}</span>
-                <span class="font-medium text-violet-300">{{ formatTokenPricePerMillion(tooltipData.output_cost, textOutputTokens(tooltipData)) }} {{ t('usage.perMillionTokens') }}</span>
+                <span class="font-medium text-violet-300">{{ formatDisplayTokenPricePerMillion(tooltipData, 'output') }} {{ t('usage.perMillionTokens') }}</span>
               </div>
               <div v-if="tooltipData && hasImageOutputTokens(tooltipData)" class="flex items-center justify-between gap-4">
                 <span class="text-gray-400">{{ t('usage.imageOutputTokenPrice') }}</span>
-                <span class="font-medium text-pink-300">{{ formatTokenPricePerMillion(tooltipData.image_output_cost ?? 0, tooltipData.image_output_tokens) }} {{ t('usage.perMillionTokens') }}</span>
+                <span class="font-medium text-pink-300">{{ formatDisplayTokenPricePerMillion(tooltipData, 'imageOutput') }} {{ t('usage.perMillionTokens') }}</span>
               </div>
             </template>
             <template v-else-if="tooltipData && isImageUsage(tooltipData)">
@@ -435,11 +464,11 @@
             <span class="text-gray-400">{{ t('usage.serviceTier') }}</span>
             <span class="font-semibold text-cyan-300">{{ getUsageServiceTierLabel(tooltipData?.service_tier, t) }}</span>
           </div>
-          <div class="flex items-center justify-between gap-6">
+          <div v-if="showBillingAuditDetails" class="flex items-center justify-between gap-6">
             <span class="text-gray-400">{{ t('usage.rate') }}</span>
             <span class="font-semibold text-blue-400">{{ formatMultiplier(tooltipData?.rate_multiplier || 1) }}x</span>
           </div>
-          <div class="flex items-center justify-between gap-6">
+          <div v-if="showBillingAuditDetails" class="flex items-center justify-between gap-6">
             <span class="text-gray-400">{{ t('usage.original') }}</span>
             <span class="font-medium text-white">${{ tooltipData?.total_cost?.toFixed(6) || '0.000000' }}</span>
           </div>
@@ -476,7 +505,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { formatDateTime, formatReasoningEffort } from '@/utils/format'
 import { formatCacheTokens, formatMultiplier } from '@/utils/formatters'
-import { formatTokenPricePerMillion } from '@/utils/usagePricing'
+import { formatStandardPrice, formatTokenPricePerMillion } from '@/utils/usagePricing'
 import { getUsageServiceTierLabel } from '@/utils/usageServiceTier'
 import { resolveUsageRequestType } from '@/utils/usageRequestType'
 import {
@@ -615,6 +644,24 @@ const showAccountBilling = props.showAccountBilling
 const showUpstreamEndpoint = props.showUpstreamEndpoint
 const showBillingAuditDetails = props.showBillingAuditDetails
 const ipGeoBatchLoading = ref(false)
+
+function formatDisplayTokenPricePerMillion(row: AdminUsageLog, type: 'input' | 'output' | 'imageOutput'): string {
+  if (!showBillingAuditDetails) {
+    if (type === 'input' && row.standard_input_price_per_million != null) {
+      return formatStandardPrice(row.standard_input_price_per_million)
+    }
+    if (type === 'output' && row.standard_output_price_per_million != null) {
+      return formatStandardPrice(row.standard_output_price_per_million)
+    }
+    if (type === 'imageOutput' && row.standard_image_output_price_per_million != null) {
+      return formatStandardPrice(row.standard_image_output_price_per_million)
+    }
+  }
+
+  if (type === 'input') return formatTokenPricePerMillion(row.input_cost, row.input_tokens)
+  if (type === 'output') return formatTokenPricePerMillion(row.output_cost, textOutputTokens(row))
+  return formatTokenPricePerMillion(row.image_output_cost ?? 0, row.image_output_tokens)
+}
 
 const showIpGeoToolbar = computed(() => props.columns.some((col) => col.key === 'ip_address'))
 
