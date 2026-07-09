@@ -367,6 +367,7 @@ import { useAuthStore, useAppStore } from '@/stores'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { displaySiteName } from '@/utils/siteName'
+import { sanitizeUrl } from '@/utils/url'
 
 const { t, locale } = useI18n()
 
@@ -375,7 +376,7 @@ const appStore = useAppStore()
 
 // Site settings - directly from appStore (already initialized from injected config)
 const siteName = computed(() => displaySiteName(appStore.cachedPublicSettings?.site_name || appStore.siteName, locale.value))
-const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
+const siteLogo = computed(() => sanitizeUrl(appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const siteSubtitle = computed(() => {
   const subtitle = appStore.cachedPublicSettings?.site_subtitle?.trim()
   if (!subtitle || subtitle === 'Subscription to API Conversion Platform') {
@@ -383,7 +384,7 @@ const siteSubtitle = computed(() => {
   }
   return subtitle
 })
-const docUrl = computed(() => appStore.cachedPublicSettings?.doc_url || appStore.docUrl || '')
+const docUrl = computed(() => sanitizeUrl(appStore.cachedPublicSettings?.doc_url || appStore.docUrl || ''))
 const homeContent = computed(() => appStore.cachedPublicSettings?.home_content || '')
 
 const iconName = <T extends string>(name: T) => name as T
