@@ -301,6 +301,21 @@ func TestCalculateCost_OpenAIGPT54LongContextPolicyBelowThreshold(t *testing.T) 
 	require.InDelta(t, expectedOutput, cost.OutputCost, 1e-10)
 }
 
+func TestShouldApplySessionLongContextPricing_UsesPolicyThresholdAndCacheCreation(t *testing.T) {
+	svc := newTestBillingService()
+	pricing := &ModelPricing{
+		LongContextInputThreshold:   1000,
+		LongContextInputMultiplier:  2,
+		LongContextOutputMultiplier: 1.5,
+	}
+
+	require.True(t, svc.shouldApplySessionLongContextPricing(
+		UsageTokens{InputTokens: 50, CacheCreationTokens: 51},
+		pricing,
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: 100},
+	))
+}
+
 func TestCalculateCost_OpenAIGPT55ProUsesGPT55PricingPolicy(t *testing.T) {
 	svc := newTestBillingService()
 
@@ -309,7 +324,10 @@ func TestCalculateCost_OpenAIGPT55ProUsesGPT55PricingPolicy(t *testing.T) {
 		OutputTokens: 4000,
 	}
 
-	cost, err := svc.CalculateCost("gpt-5.5-pro", tokens, 1.0)
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"gpt-5.5-pro", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: DefaultLongContextPricingThresholdTokens},
+	)
 	require.NoError(t, err)
 
 	expectedInput := float64(tokens.InputTokens) * 2.5e-6 * 2.0
@@ -452,7 +470,10 @@ func TestCalculateCost_LongContextAppliesMultiplierToCacheCreation5mAnd1h(t *tes
 		OutputTokens:          1000,
 	}
 
-	cost, err := svc.CalculateCost("claude-sonnet-4", tokens, 1.0)
+	cost, err := svc.CalculateCostWithServiceTierAndLongContextPolicy(
+		"claude-sonnet-4", tokens, 1.0, "",
+		LongContextPricingPolicy{Enabled: true, ThresholdTokens: DefaultLongContextPricingThresholdTokens},
+	)
 	require.NoError(t, err)
 
 	expected5m := float64(tokens.CacheCreation5mTokens) * 4e-6 * 2.0
