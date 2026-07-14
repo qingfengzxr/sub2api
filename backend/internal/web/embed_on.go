@@ -112,7 +112,7 @@ func (s *FrontendServer) Middleware() gin.HandlerFunc {
 			return
 		}
 
-		// Serve static files normally
+		// Serve static files normally (hashed assets get long-lived cache headers)
 		setStaticAssetCacheHeaders(c, cleanPath)
 		s.fileServer.ServeHTTP(c.Writer, c.Request)
 		c.Abort()
@@ -308,8 +308,8 @@ func setStaticAssetCacheHeaders(c *gin.Context, cleanPath string) {
 	if filepath.Ext(cleanPath) == "" {
 		return
 	}
-	if strings.HasPrefix(cleanPath, "assets/") {
-		c.Header("Cache-Control", fingerprintedAssetCacheControl)
+	applyStaticAssetCacheHeaders(c.Writer.Header(), cleanPath)
+	if c.Writer.Header().Get("Cache-Control") != "" {
 		return
 	}
 	c.Header("Cache-Control", staticAssetCacheControl)
@@ -326,7 +326,9 @@ func shouldBypassEmbeddedFrontend(path string) bool {
 		trimmed == "/health" ||
 		trimmed == "/responses" ||
 		strings.HasPrefix(trimmed, "/responses/") ||
-		strings.HasPrefix(trimmed, "/images/")
+		trimmed == "/alpha/search" ||
+		strings.HasPrefix(trimmed, "/images/") ||
+		strings.HasPrefix(trimmed, "/videos/")
 }
 
 func serveIndexHTML(c *gin.Context, fsys fs.FS) {
