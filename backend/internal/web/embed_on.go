@@ -23,9 +23,6 @@ import (
 const (
 	// NonceHTMLPlaceholder is the placeholder for nonce in HTML script tags
 	NonceHTMLPlaceholder = "__CSP_NONCE_VALUE__"
-
-	fingerprintedAssetCacheControl = "public, max-age=31536000, immutable"
-	staticAssetCacheControl        = "public, max-age=604800"
 )
 
 //go:embed all:dist
@@ -113,7 +110,7 @@ func (s *FrontendServer) Middleware() gin.HandlerFunc {
 		}
 
 		// Serve static files normally (hashed assets get long-lived cache headers)
-		setStaticAssetCacheHeaders(c, cleanPath)
+		applyStaticAssetCacheHeaders(c.Writer.Header(), cleanPath)
 		s.fileServer.ServeHTTP(c.Writer, c.Request)
 		c.Abort()
 	}
@@ -139,7 +136,6 @@ func (s *FrontendServer) tryServeOverride(c *gin.Context, cleanPath string) bool
 	if err != nil || info.IsDir() {
 		return false
 	}
-	setStaticAssetCacheHeaders(c, cleanPath)
 	c.File(filePath)
 	c.Abort()
 	return true
@@ -278,7 +274,7 @@ func ServeEmbeddedFrontend() gin.HandlerFunc {
 			if tryServeOverrideFile(c, overrideDir, cleanPath) {
 				return
 			}
-			setStaticAssetCacheHeaders(c, cleanPath)
+			applyStaticAssetCacheHeaders(c.Writer.Header(), cleanPath)
 			fileServer.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 			return
@@ -298,21 +294,9 @@ func tryServeOverrideFile(c *gin.Context, overrideDir, cleanPath string) bool {
 	if err != nil || info.IsDir() {
 		return false
 	}
-	setStaticAssetCacheHeaders(c, cleanPath)
 	c.File(filePath)
 	c.Abort()
 	return true
-}
-
-func setStaticAssetCacheHeaders(c *gin.Context, cleanPath string) {
-	if filepath.Ext(cleanPath) == "" {
-		return
-	}
-	applyStaticAssetCacheHeaders(c.Writer.Header(), cleanPath)
-	if c.Writer.Header().Get("Cache-Control") != "" {
-		return
-	}
-	c.Header("Cache-Control", staticAssetCacheControl)
 }
 
 func shouldBypassEmbeddedFrontend(path string) bool {
@@ -324,6 +308,7 @@ func shouldBypassEmbeddedFrontend(path string) bool {
 		strings.HasPrefix(trimmed, "/antigravity/") ||
 		strings.HasPrefix(trimmed, "/setup/") ||
 		trimmed == "/health" ||
+		trimmed == "/models" ||
 		trimmed == "/responses" ||
 		strings.HasPrefix(trimmed, "/responses/") ||
 		trimmed == "/alpha/search" ||
