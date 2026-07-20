@@ -41,6 +41,8 @@ var usageLogInsertArgTypes = [...]string{
 	"integer",     // cache_creation_1h_tokens
 	"integer",     // image_output_tokens
 	"numeric",     // image_output_cost
+	"integer",     // image_input_tokens
+	"numeric",     // image_input_cost
 	"integer",     // billable_input_tokens
 	"integer",     // billable_output_tokens
 	"integer",     // billable_cache_creation_tokens
@@ -244,6 +246,8 @@ func (r *usageLogRepository) createSingle(ctx context.Context, sqlq sqlExecutor,
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -303,7 +307,8 @@ func (r *usageLogRepository) createSingle(ctx context.Context, sqlq sqlExecutor,
 			$40, $41, $42, $43, $44, $45,
 			$46, $47, $48, $49, $50, $51,
 			$52, $53, $54, $55, $56, $57,
-			$58, $59, $60, $61, $62, $63, $64
+			$58, $59, $60, $61, $62, $63,
+			$64, $65, $66
 		)
 		ON CONFLICT (request_id, api_key_id) DO NOTHING
 		RETURNING id, created_at
@@ -712,6 +717,8 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -807,6 +814,8 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 				cache_creation_1h_tokens,
 				image_output_tokens,
 				image_output_cost,
+				image_input_tokens,
+				image_input_cost,
 				billable_input_tokens,
 				billable_output_tokens,
 				billable_cache_creation_tokens,
@@ -873,6 +882,8 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 				cache_creation_1h_tokens,
 				image_output_tokens,
 				image_output_cost,
+				image_input_tokens,
+				image_input_cost,
 				billable_input_tokens,
 				billable_output_tokens,
 				billable_cache_creation_tokens,
@@ -979,6 +990,8 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -1071,6 +1084,8 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -1137,6 +1152,8 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -1211,6 +1228,8 @@ func execUsageLogInsertNoResult(ctx context.Context, sqlq sqlExecutor, prepared 
 			cache_creation_1h_tokens,
 			image_output_tokens,
 			image_output_cost,
+			image_input_tokens,
+			image_input_cost,
 			billable_input_tokens,
 			billable_output_tokens,
 			billable_cache_creation_tokens,
@@ -1270,7 +1289,8 @@ func execUsageLogInsertNoResult(ctx context.Context, sqlq sqlExecutor, prepared 
 			$40, $41, $42, $43, $44, $45,
 			$46, $47, $48, $49, $50, $51,
 			$52, $53, $54, $55, $56, $57,
-			$58, $59, $60, $61, $62, $63, $64
+			$58, $59, $60, $61, $62, $63,
+			$64, $65, $66
 		)
 		ON CONFLICT (request_id, api_key_id) DO NOTHING
 	`, prepared.args...)
@@ -1346,6 +1366,8 @@ func prepareUsageLogInsert(log *service.UsageLog) usageLogInsertPrepared {
 			log.CacheCreation1hTokens,
 			log.ImageOutputTokens,
 			log.ImageOutputCost,
+			log.ImageInputTokens,
+			log.ImageInputCost,
 			log.BillableInputTokens,
 			log.BillableOutputTokens,
 			log.BillableCacheCreationTokens,

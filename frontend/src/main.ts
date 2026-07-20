@@ -5,6 +5,7 @@ import router from './router'
 import i18n, { initI18n } from './i18n'
 import { useAppStore } from '@/stores/app'
 import { displaySiteName } from '@/utils/siteName'
+import { updateFavicon } from '@/utils/branding'
 import './style.css'
 
 function initThemeClass() {
@@ -30,6 +31,7 @@ async function bootstrap() {
 
   // Set document title immediately after config is loaded
   document.title = `${displaySiteName(appStore.siteName, i18n.global.locale.value)} - AI Infrastructure Platform`
+  updateFavicon(appStore.siteLogo)
 
   await initI18n()
 
