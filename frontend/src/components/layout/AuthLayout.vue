@@ -17,7 +17,7 @@
             <div class="relative">
               <div class="flex items-center gap-4">
                 <div class="flex h-14 w-14 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200 dark:bg-dark-800 dark:ring-dark-700">
-                  <img :src="siteLogo || '/logo.png'" alt="Logo" class="h-full w-full object-contain" />
+                  <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
                 </div>
                 <div class="min-w-0">
                   <p class="truncate text-xl font-bold tracking-normal text-slate-950 dark:text-white">
@@ -62,7 +62,7 @@
         <main class="flex w-full flex-col justify-center">
           <div class="mb-6 flex items-center gap-3 lg:hidden">
             <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200 dark:bg-dark-800 dark:ring-dark-700">
-              <img :src="siteLogo || '/logo.png'" alt="Logo" class="h-full w-full object-contain" />
+              <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
             </div>
             <div class="min-w-0">
               <p class="truncate text-lg font-bold text-slate-950 dark:text-white">{{ siteName }}</p>
