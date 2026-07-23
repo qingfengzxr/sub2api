@@ -29,6 +29,8 @@ const (
 	FieldRole = "role"
 	// FieldBalance holds the string denoting the balance field in the database.
 	FieldBalance = "balance"
+	// FieldOverdraftLimit holds the string denoting the overdraft_limit field in the database.
+	FieldOverdraftLimit = "overdraft_limit"
 	// FieldFrozenBalance holds the string denoting the frozen_balance field in the database.
 	FieldFrozenBalance = "frozen_balance"
 	// FieldConcurrency holds the string denoting the concurrency field in the database.
@@ -201,6 +203,7 @@ var Columns = []string{
 	FieldPasswordHash,
 	FieldRole,
 	FieldBalance,
+	FieldOverdraftLimit,
 	FieldFrozenBalance,
 	FieldConcurrency,
 	FieldStatus,
@@ -260,6 +263,10 @@ var (
 	RoleValidator func(string) error
 	// DefaultBalance holds the default value on creation for the "balance" field.
 	DefaultBalance float64
+	// DefaultOverdraftLimit holds the default value on creation for the "overdraft_limit" field.
+	DefaultOverdraftLimit float64
+	// OverdraftLimitValidator is a validator for the "overdraft_limit" field. It is called by the builders before save.
+	OverdraftLimitValidator func(float64) error
 	// DefaultFrozenBalance holds the default value on creation for the "frozen_balance" field.
 	DefaultFrozenBalance float64
 	// DefaultConcurrency holds the default value on creation for the "concurrency" field.
@@ -333,6 +340,11 @@ func ByRole(opts ...sql.OrderTermOption) OrderOption {
 // ByBalance orders the results by the balance field.
 func ByBalance(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldBalance, opts...).ToFunc()
+}
+
+// ByOverdraftLimit orders the results by the overdraft_limit field.
+func ByOverdraftLimit(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOverdraftLimit, opts...).ToFunc()
 }
 
 // ByFrozenBalance orders the results by the frozen_balance field.

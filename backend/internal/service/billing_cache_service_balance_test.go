@@ -63,6 +63,34 @@ func TestCheckBillingEligibility_AllowsBalanceAtMinimumReserve(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestCheckBillingEligibility_UsesUserOverdraftLimit(t *testing.T) {
+	tests := []struct {
+		name    string
+		balance float64
+		wantErr bool
+	}{
+		{name: "inside limit", balance: -99.99},
+		{name: "at reserve adjusted limit", balance: -99.99},
+		{name: "below reserve adjusted limit", balance: -99.991, wantErr: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cache := &balanceEligibilityCacheStub{balance: tt.balance}
+			cfg := &config.Config{}
+			cfg.Billing.MinimumBalanceReserve = 0.01
+			svc := NewBillingCacheService(cache, nil, nil, nil, nil, nil, cfg, nil)
+			t.Cleanup(svc.Stop)
+
+			err := svc.CheckBillingEligibility(context.Background(), &User{ID: 1, OverdraftLimit: 100}, nil, nil, nil, "")
+			if tt.wantErr {
+				require.ErrorIs(t, err, ErrInsufficientBalance)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestSyncBalanceCacheAfterDeduction_InvalidatesExhaustedBalance(t *testing.T) {
 	cache := &balanceEligibilityCacheStub{
 		balance:                  0.50,
@@ -119,6 +147,25 @@ func TestSyncBalanceCacheAfterDeduction_QueuesDeductWhenBalanceStillEligible(t *
 	syncBalanceCacheAfterDeduction(context.Background(), &postUsageBillingParams{
 		Cost: &CostBreakdown{ActualCost: 0.25},
 		User: &User{ID: 1},
+	}, &billingDeps{billingCacheService: svc}, &UsageBillingApplyResult{NewBalance: &newBalance})
+
+	require.Equal(t, int64(0), cache.invalidateCalls.Load())
+	require.Eventually(t, func() bool {
+		return cache.deductCalls.Load() == 1
+	}, 2*time.Second, 10*time.Millisecond)
+}
+
+func TestSyncBalanceCacheAfterDeduction_QueuesDeductInsideOverdraftLimit(t *testing.T) {
+	cache := &balanceEligibilityCacheStub{balance: 0.50}
+	cfg := &config.Config{}
+	cfg.Billing.MinimumBalanceReserve = 0.01
+	svc := NewBillingCacheService(cache, nil, nil, nil, nil, nil, cfg, nil)
+	t.Cleanup(svc.Stop)
+
+	newBalance := -0.25
+	syncBalanceCacheAfterDeduction(context.Background(), &postUsageBillingParams{
+		Cost: &CostBreakdown{ActualCost: 0.75},
+		User: &User{ID: 1, OverdraftLimit: 100},
 	}, &billingDeps{billingCacheService: svc}, &UsageBillingApplyResult{NewBalance: &newBalance})
 
 	require.Equal(t, int64(0), cache.invalidateCalls.Load())

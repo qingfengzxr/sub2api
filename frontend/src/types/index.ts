@@ -104,6 +104,7 @@ export interface User {
 export interface AdminUser extends User {
   // 管理员备注（普通用户接口不返回）
   notes: string
+  overdraft_limit?: number
   last_used_at?: string | null
   // 用户专属分组倍率配置 (group_id -> rate_multiplier)
   group_rates?: Record<number, number>
@@ -1765,6 +1766,7 @@ export interface UpdateUserRequest {
   notes?: string
   role?: 'admin' | 'user'
   balance?: number
+  overdraft_limit?: number
   concurrency?: number
   rpm_limit?: number
   status?: 'active' | 'disabled'

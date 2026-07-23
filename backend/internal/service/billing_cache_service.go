@@ -749,7 +749,7 @@ func (s *BillingCacheService) CheckBillingEligibility(ctx context.Context, user 
 			return err
 		}
 	} else {
-		if err := s.checkBalanceEligibility(ctx, user.ID); err != nil {
+		if err := s.checkBalanceEligibility(ctx, user); err != nil {
 			return err
 		}
 	}
@@ -867,29 +867,25 @@ func (s *BillingCacheService) minimumBalanceReserve() float64 {
 	return s.cfg.Billing.MinimumBalanceReserve
 }
 
-func (s *BillingCacheService) balanceBelowEligibilityThreshold(balance float64) bool {
-	if balance <= 0 {
-		return true
-	}
-	minimumReserve := s.minimumBalanceReserve()
-	return minimumReserve > 0 && balance < minimumReserve
+func (s *BillingCacheService) balanceBelowEligibilityThreshold(user *User, balance float64) bool {
+	return user == nil || !user.IsBalanceEligible(balance, s.minimumBalanceReserve())
 }
 
 // checkBalanceEligibility 检查余额模式资格
-func (s *BillingCacheService) checkBalanceEligibility(ctx context.Context, userID int64) error {
-	balance, err := s.GetUserBalance(ctx, userID)
+func (s *BillingCacheService) checkBalanceEligibility(ctx context.Context, user *User) error {
+	balance, err := s.GetUserBalance(ctx, user.ID)
 	if err != nil {
 		if s.circuitBreaker != nil {
 			s.circuitBreaker.OnFailure(err)
 		}
-		logger.LegacyPrintf("service.billing_cache", "ALERT: billing balance check failed for user %d: %v", userID, err)
+		logger.LegacyPrintf("service.billing_cache", "ALERT: billing balance check failed for user %d: %v", user.ID, err)
 		return ErrBillingServiceUnavailable.WithCause(err)
 	}
 	if s.circuitBreaker != nil {
 		s.circuitBreaker.OnSuccess()
 	}
 
-	if s.balanceBelowEligibilityThreshold(balance) {
+	if s.balanceBelowEligibilityThreshold(user, balance) {
 		return ErrInsufficientBalance
 	}
 

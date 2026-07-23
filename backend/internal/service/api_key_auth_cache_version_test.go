@@ -59,3 +59,36 @@ func TestAPIKeyService_RejectsV15AuthSnapshotWithoutReasoningEffortPolicy(t *tes
 		t.Fatalf("expected no API key from stale snapshot, got %#v", apiKey)
 	}
 }
+
+func TestAPIKeyService_RejectsV16AuthSnapshotWithoutOverdraftLimit(t *testing.T) {
+	svc := &APIKeyService{}
+
+	apiKey, ok, err := svc.applyAuthCacheEntry("k-legacy-overdraft", &APIKeyAuthCacheEntry{
+		Snapshot: &APIKeyAuthSnapshot{Version: 16},
+	})
+
+	if err != nil {
+		t.Fatalf("expected stale snapshot to be ignored without error, got %v", err)
+	}
+	if ok || apiKey != nil {
+		t.Fatalf("expected v16 auth snapshot to be rejected, got ok=%v apiKey=%#v", ok, apiKey)
+	}
+}
+
+func TestAPIKeyService_AuthSnapshotRoundTripsOverdraftLimit(t *testing.T) {
+	svc := &APIKeyService{}
+	original := &APIKey{
+		ID: 1, UserID: 2, Status: StatusActive,
+		User: &User{ID: 2, Status: StatusActive, Balance: -25, OverdraftLimit: 100},
+	}
+
+	snapshot := svc.snapshotFromAPIKey(t.Context(), original)
+	restored := svc.snapshotToAPIKey("k-overdraft", snapshot)
+
+	if snapshot.Version != apiKeyAuthSnapshotVersion {
+		t.Fatalf("expected snapshot version %d, got %d", apiKeyAuthSnapshotVersion, snapshot.Version)
+	}
+	if restored.User.OverdraftLimit != 100 {
+		t.Fatalf("expected overdraft limit 100, got %v", restored.User.OverdraftLimit)
+	}
+}

@@ -67,6 +67,25 @@ func TestUpdateUserRegularRoleSkipsStepUp(t *testing.T) {
 	require.Equal(t, http.StatusOK, rec.Code)
 }
 
+func TestUpdateUserSavesOverdraftLimit(t *testing.T) {
+	router, adminSvc := setupRoleStepUpRouter(t)
+
+	rec := doJSON(t, router, http.MethodPut, "/api/v1/admin/users/1", map[string]any{"overdraft_limit": 100})
+	require.Equal(t, http.StatusOK, rec.Code)
+	require.NotNil(t, adminSvc.lastUpdateUserInput)
+	require.NotNil(t, adminSvc.lastUpdateUserInput.OverdraftLimit)
+	require.Equal(t, 100.0, *adminSvc.lastUpdateUserInput.OverdraftLimit)
+	require.Contains(t, rec.Body.String(), `"overdraft_limit":100`)
+}
+
+func TestUpdateUserRejectsNegativeOverdraftLimit(t *testing.T) {
+	router, adminSvc := setupRoleStepUpRouter(t)
+
+	rec := doJSON(t, router, http.MethodPut, "/api/v1/admin/users/1", map[string]any{"overdraft_limit": -0.01})
+	require.Equal(t, http.StatusBadRequest, rec.Code)
+	require.Nil(t, adminSvc.lastUpdateUserInput)
+}
+
 func TestCreateAdminUserRequiresStepUp(t *testing.T) {
 	router, _ := setupRoleStepUpRouter(t)
 

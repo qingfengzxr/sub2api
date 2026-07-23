@@ -1427,6 +1427,24 @@ func TestAPIKeyAuthRejectsExhaustedBalance(t *testing.T) {
 	requireAPIKeyAuthError(t, w, "INSUFFICIENT_BALANCE", "Insufficient account balance")
 }
 
+func TestAPIKeyBalanceBelowAuthThreshold_UsesOverdraftLimit(t *testing.T) {
+	tests := []struct {
+		name    string
+		user    *service.User
+		rejects bool
+	}{
+		{name: "legacy zero balance", user: &service.User{Balance: 0}, rejects: true},
+		{name: "inside overdraft", user: &service.User{Balance: -99.99, OverdraftLimit: 100}},
+		{name: "at overdraft boundary", user: &service.User{Balance: -100, OverdraftLimit: 100}, rejects: true},
+		{name: "beyond overdraft", user: &service.User{Balance: -100.01, OverdraftLimit: 100}, rejects: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.rejects, apiKeyBalanceBelowAuthThreshold(tt.user))
+		})
+	}
+}
+
 func TestAPIKeyAuthOpenAIQuotaErrorFormat(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 

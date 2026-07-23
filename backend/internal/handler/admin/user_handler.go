@@ -73,16 +73,17 @@ type CreateUserRequest struct {
 // UpdateUserRequest represents admin update user request
 // 使用指针类型来区分"未提供"和"设置为0"
 type UpdateUserRequest struct {
-	Email         string   `json:"email" binding:"omitempty,email"`
-	Password      string   `json:"password" binding:"omitempty,min=6"`
-	Username      *string  `json:"username"`
-	Notes         *string  `json:"notes"`
-	Role          string   `json:"role" binding:"omitempty,oneof=admin user"`
-	Balance       *float64 `json:"balance"`
-	Concurrency   *int     `json:"concurrency"`
-	RPMLimit      *int     `json:"rpm_limit"`
-	Status        string   `json:"status" binding:"omitempty,oneof=active disabled"`
-	AllowedGroups *[]int64 `json:"allowed_groups"`
+	Email          string   `json:"email" binding:"omitempty,email"`
+	Password       string   `json:"password" binding:"omitempty,min=6"`
+	Username       *string  `json:"username"`
+	Notes          *string  `json:"notes"`
+	Role           string   `json:"role" binding:"omitempty,oneof=admin user"`
+	Balance        *float64 `json:"balance"`
+	OverdraftLimit *float64 `json:"overdraft_limit"`
+	Concurrency    *int     `json:"concurrency"`
+	RPMLimit       *int     `json:"rpm_limit"`
+	Status         string   `json:"status" binding:"omitempty,oneof=active disabled"`
+	AllowedGroups  *[]int64 `json:"allowed_groups"`
 	// GroupRates 用户专属分组倍率配置
 	// map[groupID]*rate，nil 表示删除该分组的专属倍率
 	GroupRates map[int64]*float64 `json:"group_rates"`
@@ -242,7 +243,6 @@ func (h *UserHandler) BindAuthIdentity(c *gin.Context) {
 		response.BadRequest(c, "Invalid request: "+err.Error())
 		return
 	}
-
 	input := service.AdminBindAuthIdentityInput{
 		ProviderType:    req.ProviderType,
 		ProviderKey:     req.ProviderKey,
@@ -317,6 +317,10 @@ func (h *UserHandler) Update(c *gin.Context) {
 		response.BadRequest(c, "Invalid request: "+err.Error())
 		return
 	}
+	if req.OverdraftLimit != nil && (*req.OverdraftLimit < 0 || math.IsNaN(*req.OverdraftLimit) || math.IsInf(*req.OverdraftLimit, 0)) {
+		response.BadRequest(c, "overdraft_limit must be a finite non-negative number")
+		return
+	}
 
 	// 防锁死保护：管理员不能把自己降级为普通用户(单管理员场景下会失去后台访问权)。
 	// 与既有"不能禁用/删除 admin"保护一致。降级其他管理员仍然允许。
@@ -342,18 +346,19 @@ func (h *UserHandler) Update(c *gin.Context) {
 
 	// 使用指针类型直接传递，nil 表示未提供该字段
 	user, err := h.adminService.UpdateUser(c.Request.Context(), userID, &service.UpdateUserInput{
-		Email:         req.Email,
-		Password:      req.Password,
-		Username:      req.Username,
-		Notes:         req.Notes,
-		Role:          req.Role,
-		Balance:       req.Balance,
-		Concurrency:   req.Concurrency,
-		RPMLimit:      req.RPMLimit,
-		Status:        req.Status,
-		AllowedGroups: req.AllowedGroups,
-		GroupRates:    req.GroupRates,
-		ActorAdminID:  getAdminIDFromContext(c),
+		Email:          req.Email,
+		Password:       req.Password,
+		Username:       req.Username,
+		Notes:          req.Notes,
+		Role:           req.Role,
+		Balance:        req.Balance,
+		OverdraftLimit: req.OverdraftLimit,
+		Concurrency:    req.Concurrency,
+		RPMLimit:       req.RPMLimit,
+		Status:         req.Status,
+		AllowedGroups:  req.AllowedGroups,
+		GroupRates:     req.GroupRates,
+		ActorAdminID:   getAdminIDFromContext(c),
 	})
 	if err != nil {
 		response.ErrorFrom(c, err)

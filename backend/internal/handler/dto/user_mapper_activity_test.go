@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -16,13 +17,14 @@ func TestUserFromServiceAdmin_MapsActivityTimestamps(t *testing.T) {
 	lastUsedAt := lastLoginAt.Add(45 * time.Minute)
 
 	out := UserFromServiceAdmin(&service.User{
-		ID:           42,
-		Email:        "admin@example.com",
-		Username:     "admin",
-		Role:         service.RoleAdmin,
-		Status:       service.StatusActive,
-		LastActiveAt: &lastActiveAt,
-		LastUsedAt:   &lastUsedAt,
+		ID:             42,
+		Email:          "admin@example.com",
+		Username:       "admin",
+		Role:           service.RoleAdmin,
+		Status:         service.StatusActive,
+		LastActiveAt:   &lastActiveAt,
+		LastUsedAt:     &lastUsedAt,
+		OverdraftLimit: 100,
 	})
 
 	require.NotNil(t, out)
@@ -30,4 +32,11 @@ func TestUserFromServiceAdmin_MapsActivityTimestamps(t *testing.T) {
 	require.NotNil(t, out.LastUsedAt)
 	require.WithinDuration(t, lastActiveAt, *out.LastActiveAt, time.Second)
 	require.WithinDuration(t, lastUsedAt, *out.LastUsedAt, time.Second)
+	require.Equal(t, 100.0, out.OverdraftLimit)
+}
+
+func TestUserFromService_DoesNotExposeOverdraftLimit(t *testing.T) {
+	payload, err := json.Marshal(UserFromService(&service.User{ID: 42, OverdraftLimit: 100}))
+	require.NoError(t, err)
+	require.NotContains(t, string(payload), "overdraft_limit")
 }

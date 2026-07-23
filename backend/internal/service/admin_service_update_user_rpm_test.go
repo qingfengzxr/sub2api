@@ -67,3 +67,28 @@ func TestAdminService_UpdateUser_NoInvalidateWhenRPMLimitUnchanged(t *testing.T)
 	require.NoError(t, err)
 	require.Empty(t, invalidator.userIDs, "只改 username 不应触发认证缓存失效")
 }
+
+func TestAdminService_UpdateUser_InvalidatesAuthCacheOnOverdraftLimitChange(t *testing.T) {
+	base := &userRepoStub{user: &User{ID: 42, Email: "u@example.com", OverdraftLimit: 10}}
+	repo := &rpmUserRepoStub{userRepoStub: base}
+	invalidator := &authCacheInvalidatorStub{}
+	svc := &adminServiceImpl{
+		userRepo:             repo,
+		redeemCodeRepo:       &redeemRepoStub{},
+		authCacheInvalidator: invalidator,
+	}
+
+	newLimit := 100.0
+	updated, err := svc.UpdateUser(context.Background(), 42, &UpdateUserInput{OverdraftLimit: &newLimit})
+	require.NoError(t, err)
+	require.Equal(t, 100.0, updated.OverdraftLimit)
+	require.Equal(t, []int64{42}, invalidator.userIDs)
+}
+
+func TestAdminService_UpdateUser_RejectsInvalidOverdraftLimit(t *testing.T) {
+	svc := &adminServiceImpl{}
+	invalid := -0.01
+
+	_, err := svc.UpdateUser(context.Background(), 42, &UpdateUserInput{OverdraftLimit: &invalid})
+	require.Error(t, err)
+}

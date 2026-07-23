@@ -29,6 +29,7 @@ type stubAdminService struct {
 	updatedProxies                      []*service.UpdateProxyInput
 	testedProxyIDs                      []int64
 	getUserErr                          error
+	lastUpdateUserInput                 *service.UpdateUserInput
 	createAccountErr                    error
 	createSparkShadowErr                error
 	updateAccountErr                    error
@@ -179,7 +180,11 @@ func (s *stubAdminService) CreateUser(ctx context.Context, input *service.Create
 }
 
 func (s *stubAdminService) UpdateUser(ctx context.Context, id int64, input *service.UpdateUserInput) (*service.User, error) {
+	s.lastUpdateUserInput = input
 	user := service.User{ID: id, Email: "updated@example.com", Status: service.StatusActive}
+	if input.OverdraftLimit != nil {
+		user.OverdraftLimit = *input.OverdraftLimit
+	}
 	return &user, nil
 }
 

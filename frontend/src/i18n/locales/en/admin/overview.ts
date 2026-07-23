@@ -509,8 +509,12 @@ export default {
         selectStatus: 'Select status',
         rpmLimit: 'Requests Per Minute (RPM)',
         rpmLimitPlaceholder: '0 = unlimited',
-        rpmLimitHint: 'Max requests per minute for this user; 0 = unlimited. Acts as a fallback only when the group has no rpm_limit set.'
+        rpmLimitHint: 'Max requests per minute for this user; 0 = unlimited. Acts as a fallback only when the group has no rpm_limit set.',
+        overdraftLimit: 'Allowed Overdraft',
+        overdraftLimitPlaceholder: '0 = no additional overdraft',
+        overdraftLimitHint: 'New requests stop at the negative limit; in-flight requests may exceed it.'
       },
+      overdraftLimitInvalid: 'Allowed overdraft must be a non-negative number',
       columns: {
         user: 'User',
         id: 'ID',

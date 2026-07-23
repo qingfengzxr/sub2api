@@ -42,8 +42,9 @@ type User struct {
 type AdminUser struct {
 	User
 
-	Notes      string     `json:"notes"`
-	LastUsedAt *time.Time `json:"last_used_at"`
+	Notes          string     `json:"notes"`
+	LastUsedAt     *time.Time `json:"last_used_at"`
+	OverdraftLimit float64    `json:"overdraft_limit"`
 	// GroupRates 用户专属分组倍率配置
 	// map[groupID]rateMultiplier
 	GroupRates map[int64]float64 `json:"group_rates,omitempty"`
