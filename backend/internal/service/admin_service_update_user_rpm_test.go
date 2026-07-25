@@ -79,10 +79,18 @@ func TestAdminService_UpdateUser_InvalidatesAuthCacheOnOverdraftLimitChange(t *t
 	}
 
 	newLimit := 100.0
-	updated, err := svc.UpdateUser(context.Background(), 42, &UpdateUserInput{OverdraftLimit: &newLimit})
+	audit := &UpdateUserAudit{}
+	updated, err := svc.UpdateUser(context.Background(), 42, &UpdateUserInput{
+		OverdraftLimit: &newLimit,
+		ActorAdminID:   7,
+		Audit:          audit,
+	})
 	require.NoError(t, err)
 	require.Equal(t, 100.0, updated.OverdraftLimit)
 	require.Equal(t, []int64{42}, invalidator.userIDs)
+	require.True(t, audit.OverdraftLimitChanged)
+	require.Equal(t, 10.0, audit.OldOverdraftLimit)
+	require.Equal(t, 100.0, audit.NewOverdraftLimit)
 }
 
 func TestAdminService_UpdateUser_RejectsInvalidOverdraftLimit(t *testing.T) {

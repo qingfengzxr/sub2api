@@ -194,6 +194,9 @@ func (s *adminServiceImpl) assignDefaultSubscriptions(ctx context.Context, userI
 }
 
 func (s *adminServiceImpl) UpdateUser(ctx context.Context, id int64, input *UpdateUserInput) (*User, error) {
+	if input.Audit != nil {
+		*input.Audit = UpdateUserAudit{}
+	}
 	if input.OverdraftLimit != nil && (*input.OverdraftLimit < 0 || math.IsNaN(*input.OverdraftLimit) || math.IsInf(*input.OverdraftLimit, 0)) {
 		return nil, errors.New("overdraft_limit must be a finite non-negative number")
 	}
@@ -276,6 +279,17 @@ func (s *adminServiceImpl) UpdateUser(ctx context.Context, id int64, input *Upda
 
 	if err := s.userRepo.Update(ctx, user); err != nil {
 		return nil, err
+	}
+
+	if user.OverdraftLimit != oldOverdraftLimit {
+		if input.Audit != nil {
+			input.Audit.OverdraftLimitChanged = true
+			input.Audit.OldOverdraftLimit = oldOverdraftLimit
+			input.Audit.NewOverdraftLimit = user.OverdraftLimit
+		}
+		logger.LegacyPrintf("service.admin",
+			"audit: user overdraft limit changed actor_admin_id=%d target_user_id=%d old_overdraft_limit=%.8f new_overdraft_limit=%.8f",
+			input.ActorAdminID, user.ID, oldOverdraftLimit, user.OverdraftLimit)
 	}
 
 	// 角色变更属权限敏感操作，落审计日志（含操作者），便于事后追溯。

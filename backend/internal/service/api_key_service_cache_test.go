@@ -3,8 +3,10 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"log/slog"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -128,6 +130,8 @@ type authCacheStub struct {
 	getAuthCache   func(ctx context.Context, key string) (*APIKeyAuthCacheEntry, error)
 	setAuthKeys    []string
 	deleteAuthKeys []string
+	deleteAuthErr  error
+	publishAuthErr error
 }
 
 func (s *authCacheStub) GetCreateAttemptCount(ctx context.Context, userID int64) (int, error) {
@@ -164,11 +168,11 @@ func (s *authCacheStub) SetAuthCache(ctx context.Context, key string, entry *API
 
 func (s *authCacheStub) DeleteAuthCache(ctx context.Context, key string) error {
 	s.deleteAuthKeys = append(s.deleteAuthKeys, key)
-	return nil
+	return s.deleteAuthErr
 }
 
 func (s *authCacheStub) PublishAuthCacheInvalidation(ctx context.Context, cacheKey string) error {
-	return nil
+	return s.publishAuthErr
 }
 
 func (s *authCacheStub) SubscribeAuthCacheInvalidation(ctx context.Context, handler func(cacheKey string)) error {
@@ -546,6 +550,33 @@ func TestAPIKeyService_InvalidateAuthCacheByKey(t *testing.T) {
 
 	svc.InvalidateAuthCacheByKey(context.Background(), "k1")
 	require.Len(t, cache.deleteAuthKeys, 1)
+}
+
+func TestAPIKeyService_AuthCacheInvalidationFailuresAreLogged(t *testing.T) {
+	var logs bytes.Buffer
+	previousLogger := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&logs, nil)))
+	defer slog.SetDefault(previousLogger)
+
+	cache := &authCacheStub{
+		deleteAuthErr:  errors.New("redis delete unavailable"),
+		publishAuthErr: errors.New("redis publish unavailable"),
+	}
+	repo := &authRepoStub{
+		listKeysByUserID: func(context.Context, int64) ([]string, error) {
+			return nil, errors.New("database unavailable")
+		},
+	}
+	svc := NewAPIKeyService(repo, nil, nil, nil, nil, cache, &config.Config{})
+
+	svc.InvalidateAuthCacheByUserID(context.Background(), 7)
+	svc.InvalidateAuthCacheByKey(context.Background(), "sk-must-not-appear")
+
+	output := logs.String()
+	require.Contains(t, output, "list API keys for auth cache invalidation failed")
+	require.Contains(t, output, "delete Redis auth cache failed")
+	require.Contains(t, output, "publish auth cache invalidation failed")
+	require.NotContains(t, output, "sk-must-not-appear")
 }
 
 func TestAPIKeyService_GetByKey_CachesNegativeOnRepoMiss(t *testing.T) {

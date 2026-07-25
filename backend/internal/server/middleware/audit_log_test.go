@@ -145,3 +145,25 @@ func TestPromptAuditMutationAuditRoutesHaveStableActionsAndOmitBodies(t *testing
 		require.Truef(t, omitted, "%s must not persist its credential or confirmation-bearing body", route)
 	}
 }
+
+func TestOverdraftAuditDetailsAreAllowlisted(t *testing.T) {
+	c, _ := gin.CreateTestContext(httptest.NewRecorder())
+	SetAuditAction(c, service.AuditActionUserOverdraftUpdate)
+	SetAuditExtra(c, map[string]any{
+		"target_user_id":      int64(42),
+		"old_overdraft_limit": 0.0,
+		"new_overdraft_limit": 100.0,
+	})
+
+	action, ok := c.Get(auditCtxKeyAction)
+	require.True(t, ok)
+	require.Equal(t, service.AuditActionUserOverdraftUpdate, action)
+
+	value, ok := c.Get(auditCtxKeyExtra)
+	require.True(t, ok)
+	extra, ok := value.(map[string]any)
+	require.True(t, ok)
+	require.EqualValues(t, 42, extra["target_user_id"])
+	require.Equal(t, 0.0, extra["old_overdraft_limit"])
+	require.Equal(t, 100.0, extra["new_overdraft_limit"])
+}

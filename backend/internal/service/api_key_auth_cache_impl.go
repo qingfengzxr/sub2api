@@ -261,9 +261,13 @@ func (s *APIKeyService) deleteAuthCache(ctx context.Context, cacheKey string) {
 	if s.cache == nil {
 		return
 	}
-	_ = s.cache.DeleteAuthCache(ctx, cacheKey)
+	if err := s.cache.DeleteAuthCache(ctx, cacheKey); err != nil {
+		slog.Error("delete Redis auth cache failed", "cache_key", cacheKey, "error", err)
+	}
 	// Publish invalidation message to other instances
-	_ = s.cache.PublishAuthCacheInvalidation(ctx, cacheKey)
+	if err := s.cache.PublishAuthCacheInvalidation(ctx, cacheKey); err != nil {
+		slog.Error("publish auth cache invalidation failed", "cache_key", cacheKey, "error", err)
+	}
 }
 
 func (s *APIKeyService) loadAuthCacheEntry(ctx context.Context, key, cacheKey string) (*APIKeyAuthCacheEntry, error) {

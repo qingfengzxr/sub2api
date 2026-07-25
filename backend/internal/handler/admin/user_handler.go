@@ -344,7 +344,9 @@ func (h *UserHandler) Update(c *gin.Context) {
 		}
 	}
 
-	// 使用指针类型直接传递，nil 表示未提供该字段
+	// 使用指针类型直接传递，nil 表示未提供该字段。
+	// auditSummary 由 service 在持久化成功后填充，确保旧值来自实际更新所读取的快照。
+	auditSummary := &service.UpdateUserAudit{}
 	user, err := h.adminService.UpdateUser(c.Request.Context(), userID, &service.UpdateUserInput{
 		Email:          req.Email,
 		Password:       req.Password,
@@ -359,10 +361,19 @@ func (h *UserHandler) Update(c *gin.Context) {
 		AllowedGroups:  req.AllowedGroups,
 		GroupRates:     req.GroupRates,
 		ActorAdminID:   getAdminIDFromContext(c),
+		Audit:          auditSummary,
 	})
 	if err != nil {
 		response.ErrorFrom(c, err)
 		return
+	}
+	if auditSummary.OverdraftLimitChanged {
+		middleware.SetAuditAction(c, service.AuditActionUserOverdraftUpdate)
+		middleware.SetAuditExtra(c, map[string]any{
+			"target_user_id":      user.ID,
+			"old_overdraft_limit": auditSummary.OldOverdraftLimit,
+			"new_overdraft_limit": auditSummary.NewOverdraftLimit,
+		})
 	}
 
 	response.Success(c, dto.UserFromServiceAdmin(user))

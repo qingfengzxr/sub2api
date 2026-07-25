@@ -1,6 +1,9 @@
 package service
 
-import "context"
+import (
+	"context"
+	"log/slog"
+)
 
 // InvalidateAuthCacheByKey 清除指定 API Key 的认证缓存
 func (s *APIKeyService) InvalidateAuthCacheByKey(ctx context.Context, key string) {
@@ -18,6 +21,11 @@ func (s *APIKeyService) InvalidateAuthCacheByUserID(ctx context.Context, userID 
 	}
 	keys, err := s.apiKeyRepo.ListKeysByUserID(ctx, userID)
 	if err != nil {
+		slog.Error("list API keys for auth cache invalidation failed",
+			"scope", "user",
+			"user_id", userID,
+			"error", err,
+		)
 		return
 	}
 	s.deleteAuthCacheByKeys(ctx, keys)
@@ -30,6 +38,11 @@ func (s *APIKeyService) InvalidateAuthCacheByGroupID(ctx context.Context, groupI
 	}
 	keys, err := s.apiKeyRepo.ListKeysByGroupID(ctx, groupID)
 	if err != nil {
+		slog.Error("list API keys for auth cache invalidation failed",
+			"scope", "group",
+			"group_id", groupID,
+			"error", err,
+		)
 		return
 	}
 	s.deleteAuthCacheByKeys(ctx, keys)

@@ -164,6 +164,14 @@ type UpdateUserInput struct {
 	GroupRates map[int64]*float64
 	// ActorAdminID 执行本次操作的管理员ID(来自JWT)，仅用于权限敏感操作的审计日志。
 	ActorAdminID int64
+	// Audit 可选地接收本次成功更新产生的精确变更摘要，供管理面审计中间件持久化。
+	Audit *UpdateUserAudit
+}
+
+type UpdateUserAudit struct {
+	OverdraftLimitChanged bool
+	OldOverdraftLimit     float64
+	NewOverdraftLimit     float64
 }
 
 type AdminBindAuthIdentityInput struct {
