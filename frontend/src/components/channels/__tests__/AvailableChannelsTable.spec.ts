@@ -84,7 +84,6 @@ const baseProps = {
   noPricingLabel: 'No pricing',
   noModelsLabel: 'No models',
   emptyLabel: 'No channels',
-  userGroupRates: { 1: 0.8 },
 }
 
 function mountTable(props = {}) {
@@ -95,11 +94,7 @@ function mountTable(props = {}) {
       stubs: {
         Icon: { props: ['name'], template: '<i :data-icon="name" />' },
         PlatformIcon: { template: '<i data-platform-icon />' },
-        GroupBadge: {
-          props: ['name', 'rateMultiplier', 'userRateMultiplier'],
-          template:
-            '<span data-group-badge>{{ name }}:{{ rateMultiplier }}:{{ userRateMultiplier }}</span>',
-        },
+        GroupBadge: { props: ['name'], template: '<span data-group-badge>{{ name }}</span>' },
         SupportedModelChip: {
           props: ['model', 'noPricingLabel'],
           template: '<span data-model-chip>{{ model.name }}:{{ noPricingLabel }}</span>',
@@ -125,7 +120,7 @@ describe('AvailableChannelsTable responsive surfaces', () => {
     expect(desktop.get('[data-model-chip]').text()).toContain('claude-test:No pricing')
   })
 
-  it('renders a mobile-only readable surface with groups, rates, peaks, and model pricing chips', () => {
+  it('renders a mobile-only readable surface with groups and model pricing chips', () => {
     const wrapper = mountTable()
     const mobile = wrapper.get('[data-testid="mobile-channels"]')
 
@@ -137,12 +132,8 @@ describe('AvailableChannelsTable responsive surfaces', () => {
     expect(mobile.text()).toContain('Models and pricing')
     expect(mobile.text()).toContain('availableChannels.exclusive')
     expect(mobile.text()).toContain('availableChannels.public')
-    expect(mobile.get('[data-group-badge]').text()).toBe('Exclusive Pro:1.2:0.8')
+    expect(mobile.get('[data-group-badge]').text()).toBe('Exclusive Pro')
     expect(mobile.findAll('[data-group-badge]')).toHaveLength(2)
-    expect(mobile.get('[data-icon="clock"]')).toBeTruthy()
-    expect(mobile.text()).toContain('08:00')
-    expect(mobile.text()).toContain('10:00')
-    expect(mobile.text()).toContain('×1.5')
     expect(mobile.get('[data-model-chip]').text()).toBe('claude-test:No pricing')
     expect(mobile.findAll('.max-w-full')).not.toHaveLength(0)
   })

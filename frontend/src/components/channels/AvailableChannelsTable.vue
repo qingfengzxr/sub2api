@@ -200,29 +200,15 @@
                       <Icon name="shield" size="xs" class="h-3 w-3" />
                       {{ t('availableChannels.exclusive') }}
                     </span>
-                    <div
+                    <GroupBadge
                       v-for="g in exclusiveGroups(section)"
                       :key="`mobile-ex-${g.id}`"
-                      class="inline-flex max-w-full min-w-0 flex-wrap items-center gap-1"
-                    >
-                      <GroupBadge
-                        class="max-w-full"
-                        :name="g.name"
-                        :platform="g.platform as GroupPlatform"
-                        :subscription-type="(g.subscription_type || 'standard') as SubscriptionType"
-                        :rate-multiplier="g.rate_multiplier"
-                        :user-rate-multiplier="userGroupRates[g.id] ?? null"
-                        always-show-rate
-                      />
-                      <span
-                        v-if="hasPeakRate(g)"
-                        class="inline-flex items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
-                        :title="peakRateTitle(g)"
-                      >
-                        <Icon name="clock" size="xs" class="h-3 w-3" />
-                        {{ peakRateLabel(g) }}
-                      </span>
-                    </div>
+                      class="max-w-full"
+                      :name="g.name"
+                      :platform="g.platform as GroupPlatform"
+                      :subscription-type="(g.subscription_type || 'standard') as SubscriptionType"
+                      :show-rate="false"
+                    />
                   </div>
                   <div
                     v-if="publicGroups(section).length > 0"
@@ -235,29 +221,15 @@
                       <Icon name="globe" size="xs" class="h-3 w-3" />
                       {{ t('availableChannels.public') }}
                     </span>
-                    <div
+                    <GroupBadge
                       v-for="g in publicGroups(section)"
                       :key="`mobile-pub-${g.id}`"
-                      class="inline-flex max-w-full min-w-0 flex-wrap items-center gap-1"
-                    >
-                      <GroupBadge
-                        class="max-w-full"
-                        :name="g.name"
-                        :platform="g.platform as GroupPlatform"
-                        :subscription-type="(g.subscription_type || 'standard') as SubscriptionType"
-                        :rate-multiplier="g.rate_multiplier"
-                        :user-rate-multiplier="userGroupRates[g.id] ?? null"
-                        always-show-rate
-                      />
-                      <span
-                        v-if="hasPeakRate(g)"
-                        class="inline-flex items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
-                        :title="peakRateTitle(g)"
-                      >
-                        <Icon name="clock" size="xs" class="h-3 w-3" />
-                        {{ peakRateLabel(g) }}
-                      </span>
-                    </div>
+                      class="max-w-full"
+                      :name="g.name"
+                      :platform="g.platform as GroupPlatform"
+                      :subscription-type="(g.subscription_type || 'standard') as SubscriptionType"
+                      :show-rate="false"
+                    />
                   </div>
                   <span v-if="section.groups.length === 0" class="text-xs text-gray-400">-</span>
                 </dd>
