@@ -25,6 +25,9 @@ ARG NPM_CONFIG_REGISTRY
 
 WORKDIR /app/frontend
 
+# Keep frontend compilation from exhausting small production hosts.
+ENV NODE_OPTIONS=--max-old-space-size=1536
+
 # Install pnpm (pinned to v9 to match CI and keep builds reproducible)
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
