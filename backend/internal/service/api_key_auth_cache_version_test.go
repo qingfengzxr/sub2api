@@ -75,6 +75,21 @@ func TestAPIKeyService_RejectsV16AuthSnapshotWithoutOverdraftLimit(t *testing.T)
 	}
 }
 
+func TestAPIKeyService_RejectsV18AuthSnapshotWithMissingOverdraftProjection(t *testing.T) {
+	svc := &APIKeyService{}
+
+	apiKey, ok, err := svc.applyAuthCacheEntry("k-missing-overdraft-projection", &APIKeyAuthCacheEntry{
+		Snapshot: &APIKeyAuthSnapshot{Version: 18},
+	})
+
+	if err != nil {
+		t.Fatalf("expected stale snapshot to be ignored without error, got %v", err)
+	}
+	if ok || apiKey != nil {
+		t.Fatalf("expected v18 auth snapshot to be rejected, got ok=%v apiKey=%#v", ok, apiKey)
+	}
+}
+
 func TestAPIKeyService_AuthSnapshotRoundTripsOverdraftLimit(t *testing.T) {
 	svc := &APIKeyService{}
 	original := &APIKey{

@@ -14,7 +14,7 @@ import (
 	"github.com/dgraph-io/ristretto"
 )
 
-const apiKeyAuthSnapshotVersion = 18 // v18: include overdraft limit and the OpenAI group Live gate
+const apiKeyAuthSnapshotVersion = 19 // v19: reload overdraft limit after fixing the auth query projection
 
 type apiKeyAuthCacheConfig struct {
 	l1Size        int

@@ -151,6 +151,7 @@ func (r *apiKeyRepository) GetByKeyForAuth(ctx context.Context, key string) (*se
 				user.FieldStatus,
 				user.FieldRole,
 				user.FieldBalance,
+				user.FieldOverdraftLimit,
 				user.FieldConcurrency,
 				user.FieldBalanceNotifyEnabled,
 				user.FieldBalanceNotifyThresholdType,
