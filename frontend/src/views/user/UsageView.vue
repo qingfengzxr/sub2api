@@ -608,8 +608,8 @@ const positiveNumber = (value: unknown): number =>
   typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0
 
 const billableOrRaw = (log: UsageLog, billableKey: keyof UsageLog, rawKey: keyof UsageLog): number => {
-  const billable = positiveNumber(log[billableKey])
-  return billable > 0 ? billable : positiveNumber(log[rawKey])
+	const billable = positiveNumber(log[billableKey])
+	return billable > 0 ? billable : positiveNumber(log[rawKey])
 }
 
 const exportTokenBreakdown = (log: UsageLog) => ({
