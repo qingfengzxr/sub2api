@@ -9,5 +9,6 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 docker build -t sub2api:latest \
     --build-arg GOPROXY=https://goproxy.cn,direct \
     --build-arg GOSUMDB=sum.golang.google.cn \
+    --build-arg NODE_MAX_OLD_SPACE_SIZE="${NODE_MAX_OLD_SPACE_SIZE:-4096}" \
     -f "${REPO_ROOT}/Dockerfile" \
     "${REPO_ROOT}"

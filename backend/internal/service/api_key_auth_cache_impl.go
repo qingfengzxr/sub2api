@@ -14,7 +14,7 @@ import (
 	"github.com/dgraph-io/ristretto"
 )
 
-const apiKeyAuthSnapshotVersion = 19 // v19: refresh overdraft limit and group media/search/audio billing fields
+const apiKeyAuthSnapshotVersion = 20 // v20: refresh profit control, overdraft, and group media/search/audio fields
 
 type apiKeyAuthCacheConfig struct {
 	l1Size        int
