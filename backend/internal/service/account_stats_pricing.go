@@ -69,7 +69,7 @@ func tryModelFilePricing(billingService *BillingService, model string, tokens Us
 	}
 	longContextPolicy := LongContextPricingPolicy{Enabled: true, ThresholdTokens: pricing.LongContextInputThreshold}
 	normalizedTier := normalizeBillingServiceTier(serviceTier)
-	if normalizedTier == "priority" || normalizedTier == "flex" ||
+	if normalizedTier == "priority" || normalizedTier == "fast" || normalizedTier == "flex" ||
 		billingService.shouldApplySessionLongContextPricing(tokens, pricing, longContextPolicy) {
 		breakdown, err := billingService.CalculateCostWithServiceTierAndLongContextPolicy(model, tokens, 1, normalizedTier, longContextPolicy)
 		if err != nil || breakdown == nil || breakdown.TotalCost <= 0 {
