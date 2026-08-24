@@ -38,7 +38,7 @@ vi.mock('@/composables/useStepUp', () => ({
   stepUpBlockReason: () => ''
 }))
 
-function mountModal(overdraftLimit?: number) {
+function mountModal(overdraftLimit?: number, concurrency = 1) {
   return mount(UserEditModal, {
     props: {
       show: true,
@@ -48,7 +48,7 @@ function mountModal(overdraftLimit?: number) {
         username: 'user',
         notes: '',
         role: 'user',
-        concurrency: 1,
+        concurrency,
         rpm_limit: 0,
         overdraft_limit: overdraftLimit
       } as any
@@ -95,5 +95,30 @@ describe('UserEditModal overdraft limit', () => {
 
     expect(updateUser).not.toHaveBeenCalled()
     expect(showError).toHaveBeenCalledWith('admin.users.overdraftLimitInvalid')
+  })
+})
+
+describe('UserEditModal concurrency', () => {
+  beforeEach(() => {
+    updateUser.mockReset()
+    updateUser.mockResolvedValue({})
+    showError.mockReset()
+  })
+
+  it('saves an unlimited (0) concurrency instead of blocking the form', async () => {
+    const wrapper = mountModal(undefined, 0)
+    await wrapper.find('form').trigger('submit')
+    await flushPromises()
+    expect(showError).not.toHaveBeenCalled()
+    expect(updateUser).toHaveBeenCalledWith(42, expect.objectContaining({ concurrency: 0 }))
+  })
+
+  it('still rejects a negative concurrency', async () => {
+    const wrapper = mountModal(undefined, 3)
+    await wrapper.find('[data-test="concurrency-input"]').setValue('-1')
+    await wrapper.find('form').trigger('submit')
+    await flushPromises()
+    expect(showError).toHaveBeenCalledWith('admin.users.concurrencyNonNegative')
+    expect(updateUser).not.toHaveBeenCalled()
   })
 })

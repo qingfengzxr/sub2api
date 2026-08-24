@@ -130,6 +130,16 @@
               <Icon name="book" size="md" />
             </a>
 
+            <router-link
+              v-if="showModelPlazaEntry"
+              to="/model-plaza"
+              class="inline-flex h-10 items-center gap-1.5 rounded-full border border-slate-900/10 bg-white/70 px-3 text-sm text-slate-700 backdrop-blur-md transition hover:bg-white dark:border-white/15 dark:bg-slate-950/35 dark:text-white/80 dark:hover:bg-white/15"
+              :title="t('nav.modelPlaza')"
+            >
+              <Icon name="grid" size="sm" />
+              <span class="hidden sm:inline">{{ t('nav.modelPlaza') }}</span>
+            </router-link>
+
             <button
               @click="toggleTheme"
               class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-900/10 bg-white/70 text-slate-700 backdrop-blur-md transition hover:border-slate-900/20 hover:bg-white hover:text-slate-950 dark:border-white/15 dark:bg-slate-950/35 dark:text-white/80 dark:hover:border-white/30 dark:hover:bg-white/15 dark:hover:text-white"
@@ -437,6 +447,7 @@ import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { displaySiteName } from '@/utils/siteName'
 import { sanitizeUrl } from '@/utils/url'
+import { FeatureFlags, isFeatureFlagEnabled } from '@/utils/featureFlags'
 
 const { t, locale } = useI18n()
 
@@ -457,6 +468,9 @@ const docUrl = computed(() => sanitizeUrl(appStore.cachedPublicSettings?.doc_url
 const homeContent = computed(() => appStore.cachedPublicSettings?.home_content || '')
 const hasHomeContent = computed(() => homeContent.value.trim().length > 0)
 const compactHomeEnabled = computed(() => appStore.cachedPublicSettings?.compact_home_enabled === true)
+const modelPlazaEnabled = computed(() => isFeatureFlagEnabled(FeatureFlags.modelPlaza))
+const modelPlazaRequiresAuth = computed(() => appStore.cachedPublicSettings?.model_plaza_require_auth === true)
+const showModelPlazaEntry = computed(() => modelPlazaEnabled.value && (isAuthenticated.value || !modelPlazaRequiresAuth.value))
 
 const iconName = <T extends string>(name: T) => name as T
 
