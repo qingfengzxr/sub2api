@@ -40,6 +40,15 @@
           >
             <Icon name="book" size="md" />
           </a>
+          <router-link
+            v-if="showModelPlazaEntry"
+            to="/model-plaza"
+            class="flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
+            :title="t('nav.modelPlaza')"
+          >
+            <Icon name="grid" size="md" />
+            <span class="hidden sm:inline">{{ t('nav.modelPlaza') }}</span>
+          </router-link>
           <button
             class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:text-dark-400 dark:hover:bg-dark-800"
             :title="isDark ? t('home.switchToLight') : t('home.switchToDark')"
@@ -129,6 +138,16 @@
             >
               <Icon name="book" size="md" />
             </a>
+
+            <router-link
+              v-if="showModelPlazaEntry"
+              to="/model-plaza"
+              class="inline-flex h-10 items-center gap-1.5 rounded-full border border-slate-900/10 bg-white/70 px-3 text-sm font-semibold text-slate-700 backdrop-blur-md transition hover:border-slate-900/20 hover:bg-white hover:text-slate-950 dark:border-white/15 dark:bg-slate-950/35 dark:text-white/80 dark:hover:border-white/30 dark:hover:bg-white/15 dark:hover:text-white"
+              :title="t('nav.modelPlaza')"
+            >
+              <Icon name="grid" size="md" />
+              <span class="hidden sm:inline">{{ t('nav.modelPlaza') }}</span>
+            </router-link>
 
             <button
               @click="toggleTheme"
@@ -437,6 +456,7 @@ import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { displaySiteName } from '@/utils/siteName'
 import { sanitizeUrl } from '@/utils/url'
+import { FeatureFlags, isFeatureFlagEnabled } from '@/utils/featureFlags'
 
 const { t, locale } = useI18n()
 
@@ -457,6 +477,7 @@ const docUrl = computed(() => sanitizeUrl(appStore.cachedPublicSettings?.doc_url
 const homeContent = computed(() => appStore.cachedPublicSettings?.home_content || '')
 const hasHomeContent = computed(() => homeContent.value.trim().length > 0)
 const compactHomeEnabled = computed(() => appStore.cachedPublicSettings?.compact_home_enabled === true)
+const modelPlazaEnabled = computed(() => isFeatureFlagEnabled(FeatureFlags.modelPlaza))
 
 const iconName = <T extends string>(name: T) => name as T
 
@@ -471,6 +492,12 @@ const isDark = ref(document.documentElement.classList.contains('dark'))
 
 // Auth state
 const isAuthenticated = computed(() => authStore.isAuthenticated)
+const modelPlazaRequiresAuth = computed(
+  () => appStore.cachedPublicSettings?.model_plaza_require_auth === true,
+)
+const showModelPlazaEntry = computed(
+  () => modelPlazaEnabled.value && (isAuthenticated.value || !modelPlazaRequiresAuth.value),
+)
 const isAdmin = computed(() => authStore.isAdmin)
 const dashboardPath = computed(() => isAdmin.value ? '/admin/dashboard' : '/dashboard')
 const userInitial = computed(() => {
