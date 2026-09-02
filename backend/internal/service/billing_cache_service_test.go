@@ -130,3 +130,16 @@ func TestBillingCacheServiceEnqueueAfterStopReturnsFalse(t *testing.T) {
 	})
 	require.False(t, enqueued)
 }
+
+func TestBillingCacheServiceEvaluateRateLimits30d(t *testing.T) {
+	svc := &BillingCacheService{}
+	activeStart := time.Now().Add(-29 * 24 * time.Hour)
+	key := &APIKey{ID: 1, RateLimit30d: 100}
+
+	err := svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &activeStart)
+	require.ErrorIs(t, err, ErrAPIKeyRateLimit30dExceeded)
+
+	expiredStart := time.Now().Add(-RateLimitWindow30d)
+	err = svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &expiredStart)
+	require.NoError(t, err)
+}

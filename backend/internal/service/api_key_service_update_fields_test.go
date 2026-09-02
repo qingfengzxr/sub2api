@@ -62,8 +62,8 @@ func TestAPIKeyUpdate_OnlyDeclaresRequestedColumns(t *testing.T) {
 			want: APIKeyUpdateFields{Quota: true},
 		},
 		{
-			name: "rate limit threshold only",
-			req:  UpdateAPIKeyRequest{RateLimit5h: &rateLimit},
+			name: "30-day rate limit threshold only",
+			req:  UpdateAPIKeyRequest{RateLimit30d: &rateLimit},
 			want: APIKeyUpdateFields{RateLimits: true},
 		},
 		{
@@ -100,12 +100,14 @@ func TestAPIKeyUpdate_DeclaresUsageColumnsOnExplicitReset(t *testing.T) {
 		ID: 1, UserID: 7, Key: "sk-test", Status: StatusActive, Quota: 100, QuotaUsed: 30, Usage5h: 12,
 	})
 
-	_, err := svc.Update(context.Background(), 1, 7, UpdateAPIKeyRequest{
+	updated, err := svc.Update(context.Background(), 1, 7, UpdateAPIKeyRequest{
 		ResetQuota:          &reset,
 		ResetRateLimitUsage: &reset,
 	})
 	require.NoError(t, err)
 	require.Equal(t, []APIKeyUpdateFields{{QuotaUsed: true, RateLimitUsage: true}}, repo.updateFields)
+	require.Zero(t, updated.Usage30d)
+	require.Nil(t, updated.Window30dStart)
 }
 
 // 配额扩容会顺带把 quota_exhausted 复活为 active，此时必须声明 status。

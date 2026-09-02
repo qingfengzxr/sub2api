@@ -71,6 +71,10 @@ func TestUsageBillingRepositoryApply_DeduplicatesBalanceBilling(t *testing.T) {
 	require.NoError(t, integrationDB.QueryRowContext(ctx, "SELECT usage_5h FROM api_keys WHERE id = $1", apiKey.ID).Scan(&usage5h))
 	require.InDelta(t, 1.25, usage5h, 0.000001)
 
+	var usage30d float64
+	require.NoError(t, integrationDB.QueryRowContext(ctx, "SELECT usage_30d FROM api_keys WHERE id = $1", apiKey.ID).Scan(&usage30d))
+	require.InDelta(t, 1.25, usage30d, 0.000001)
+
 	var status string
 	require.NoError(t, integrationDB.QueryRowContext(ctx, "SELECT status FROM api_keys WHERE id = $1", apiKey.ID).Scan(&status))
 	require.Equal(t, service.StatusAPIKeyQuotaExhausted, status)

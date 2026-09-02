@@ -3,11 +3,16 @@
 package repository
 
 import (
+	"context"
 	"math"
 	"testing"
 	"time"
 
+	"github.com/alicebob/miniredis/v2"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/require"
+
+	"github.com/Wei-Shaw/sub2api/internal/service"
 )
 
 func TestBillingBalanceKey(t *testing.T) {
@@ -44,6 +49,35 @@ func TestBillingBalanceKey(t *testing.T) {
 			require.Equal(t, tc.expected, got)
 		})
 	}
+}
+
+func TestBillingCacheRateLimit30dAccumulatesAndRestartsExpiredWindow(t *testing.T) {
+	ctx := context.Background()
+	server := miniredis.RunT(t)
+	cache := &billingCache{rdb: redis.NewClient(&redis.Options{Addr: server.Addr()})}
+	t.Cleanup(func() { require.NoError(t, cache.rdb.Close()) })
+
+	activeStart := time.Now().Add(-29 * 24 * time.Hour).Unix()
+	require.NoError(t, cache.SetAPIKeyRateLimit(ctx, 7, &service.APIKeyRateLimitCacheData{
+		Usage30d:  10,
+		Window30d: activeStart,
+	}))
+	require.NoError(t, cache.UpdateAPIKeyRateLimitUsage(ctx, 7, 2.5))
+	got, err := cache.GetAPIKeyRateLimit(ctx, 7)
+	require.NoError(t, err)
+	require.InDelta(t, 12.5, got.Usage30d, 1e-9)
+	require.Equal(t, activeStart, got.Window30d)
+
+	expiredStart := time.Now().Add(-31 * 24 * time.Hour).Unix()
+	require.NoError(t, cache.SetAPIKeyRateLimit(ctx, 7, &service.APIKeyRateLimitCacheData{
+		Usage30d:  90,
+		Window30d: expiredStart,
+	}))
+	require.NoError(t, cache.UpdateAPIKeyRateLimitUsage(ctx, 7, 3))
+	got, err = cache.GetAPIKeyRateLimit(ctx, 7)
+	require.NoError(t, err)
+	require.InDelta(t, 3, got.Usage30d, 1e-9)
+	require.Greater(t, got.Window30d, expiredStart)
 }
 
 func TestBillingSubKey(t *testing.T) {

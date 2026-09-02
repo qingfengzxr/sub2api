@@ -77,6 +77,7 @@ type APIKey struct {
 	RateLimit5h   float64    `json:"rate_limit_5h"`
 	RateLimit1d   float64    `json:"rate_limit_1d"`
 	RateLimit7d   float64    `json:"rate_limit_7d"`
+	RateLimit30d  float64    `json:"rate_limit_30d"`
 	Usage5h       float64    `json:"usage_5h"`
 	Usage1d       float64    `json:"usage_1d"`
 	Usage7d       float64    `json:"usage_7d"`
@@ -110,6 +111,7 @@ type UserAPIKey struct {
 	RateLimit5h   float64    `json:"rate_limit_5h"`
 	RateLimit1d   float64    `json:"rate_limit_1d"`
 	RateLimit7d   float64    `json:"rate_limit_7d"`
+	RateLimit30d  float64    `json:"rate_limit_30d"`
 	Usage5h       float64    `json:"usage_5h"`
 	Usage1d       float64    `json:"usage_1d"`
 	Usage7d       float64    `json:"usage_7d"`

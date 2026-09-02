@@ -726,6 +726,7 @@ export interface ApiKey {
   rate_limit_5h: number
   rate_limit_1d: number
   rate_limit_7d: number
+  rate_limit_30d: number
   usage_5h: number
   usage_1d: number
   usage_7d: number
@@ -762,6 +763,7 @@ export interface UpdateApiKeyRequest {
   rate_limit_5h?: number
   rate_limit_1d?: number
   rate_limit_7d?: number
+  rate_limit_30d?: number
   reset_rate_limit_usage?: boolean
 }
 

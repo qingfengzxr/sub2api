@@ -7,6 +7,7 @@ import KeysView from '../KeysView.vue'
 
 const {
   listKeys,
+  updateKey,
   getPublicSettings,
   getDashboardApiKeysUsage,
   getAvailableGroups,
@@ -18,6 +19,7 @@ const {
   nextStep,
 } = vi.hoisted(() => ({
   listKeys: vi.fn(),
+  updateKey: vi.fn(),
   getPublicSettings: vi.fn(),
   getDashboardApiKeysUsage: vi.fn(),
   getAvailableGroups: vi.fn(),
@@ -47,6 +49,7 @@ const messages: Record<string, string> = {
   'keys.lastUsedAt': 'Last Used',
   'keys.lastUsedIP': 'Last Used IP',
   'keys.rateLimitColumn': 'Rate Limit',
+  'keys.rateLimit30d': '30-Day Limit (USD)',
   'keys.searchPlaceholder': 'Search name or key...',
   'keys.status.active': 'Active',
   'keys.status.expired': 'Expired',
@@ -63,7 +66,7 @@ vi.mock('@/api', () => ({
   keysAPI: {
     list: listKeys,
     create: vi.fn(),
-    update: vi.fn(),
+    update: updateKey,
     delete: vi.fn(),
     toggleStatus: vi.fn(),
   },
@@ -129,6 +132,7 @@ const createApiKey = (): ApiKey => ({
   rate_limit_5h: 0,
   rate_limit_1d: 0,
   rate_limit_7d: 0,
+  rate_limit_30d: 0,
   usage_5h: 0,
   usage_1d: 0,
   usage_7d: 0,
@@ -220,6 +224,11 @@ const IconStub = {
   template: '<span data-test="icon">{{ name }}</span>',
 }
 
+const BaseDialogStub = {
+  props: ['show'],
+  template: '<div v-if="show"><slot /><slot name="footer" /></div>',
+}
+
 const DateRangePickerStub = {
   props: ['startDate', 'endDate'],
   emits: ['update:startDate', 'update:endDate', 'change'],
@@ -241,7 +250,7 @@ const mountView = async () => {
         TablePageLayout: TablePageLayoutStub,
         DataTable: DataTableStub,
         Pagination: PaginationStub,
-        BaseDialog: true,
+        BaseDialog: BaseDialogStub,
         ConfirmDialog: true,
         EmptyState: true,
         Select: SelectStub,
@@ -280,6 +289,7 @@ describe('user KeysView column settings', () => {
     localStorage.clear()
 
     listKeys.mockReset()
+    updateKey.mockReset()
     getPublicSettings.mockReset()
     getDashboardApiKeysUsage.mockReset()
     getAvailableGroups.mockReset()
@@ -297,6 +307,7 @@ describe('user KeysView column settings', () => {
       page_size: 20,
       pages: 1,
     })
+    updateKey.mockResolvedValue(createApiKey())
     getPublicSettings.mockResolvedValue({})
     getDashboardApiKeysUsage.mockResolvedValue({ stats: {} })
     getAvailableGroups.mockResolvedValue([])
@@ -336,6 +347,49 @@ describe('user KeysView column settings', () => {
       JSON.stringify(['id', 'last_used_at', 'last_used_ip'])
     )
     expect(localStorage.getItem('api-key-column-settings-version')).toBe('3')
+  })
+
+  it('loads and updates the fixed 30-day limit in edit mode', async () => {
+    const key = { ...createApiKey(), group_id: 1, rate_limit_30d: 100 }
+    listKeys.mockResolvedValueOnce({ items: [key], total: 1, page: 1, page_size: 20, pages: 1 })
+    const wrapper = await mountView()
+
+    ;(wrapper.vm as any).editKey(key)
+    await nextTick()
+
+    const input = wrapper.get('[data-test="rate-limit-30d-input"]')
+    expect((input.element as HTMLInputElement).value).toBe('100')
+    await input.setValue('120')
+    await wrapper.get('#key-form').trigger('submit')
+    await flushPromises()
+
+    expect(updateKey).toHaveBeenCalledWith(1, expect.objectContaining({ rate_limit_30d: 120 }))
+  })
+
+  it('submits all rate limits as zero when rate limiting is disabled', async () => {
+    const key = {
+      ...createApiKey(),
+      group_id: 1,
+      rate_limit_5h: 5,
+      rate_limit_1d: 10,
+      rate_limit_7d: 50,
+      rate_limit_30d: 100,
+    }
+    listKeys.mockResolvedValueOnce({ items: [key], total: 1, page: 1, page_size: 20, pages: 1 })
+    const wrapper = await mountView()
+
+    ;(wrapper.vm as any).editKey(key)
+    await nextTick()
+    await wrapper.get('[data-test="rate-limit-toggle"]').trigger('click')
+    await wrapper.get('#key-form').trigger('submit')
+    await flushPromises()
+
+    expect(updateKey).toHaveBeenCalledWith(1, expect.objectContaining({
+      rate_limit_5h: 0,
+      rate_limit_1d: 0,
+      rate_limit_7d: 0,
+      rate_limit_30d: 0,
+    }))
   })
 
   it('shows the API key ID column when toggled', async () => {

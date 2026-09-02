@@ -657,6 +657,7 @@
             <label class="input-label mb-0">{{ t('keys.rateLimitSection') }}</label>
             <button
               type="button"
+              data-test="rate-limit-toggle"
               @click="formData.enable_rate_limit = !formData.enable_rate_limit"
               :class="[
                 'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
@@ -812,8 +813,25 @@
               </div>
             </div>
 
+            <!-- 30-Day Limit (edit mode only) -->
+            <div v-if="showEditModal">
+              <label class="input-label">{{ t('keys.rateLimit30d') }}</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <input
+                  v-model.number="formData.rate_limit_30d"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  class="input pl-7"
+                  placeholder="0"
+                  data-test="rate-limit-30d-input"
+                />
+              </div>
+            </div>
+
             <!-- Reset Rate Limit button (edit mode only) -->
-            <div v-if="showEditModal && selectedKey && (selectedKey.rate_limit_5h > 0 || selectedKey.rate_limit_1d > 0 || selectedKey.rate_limit_7d > 0)">
+            <div v-if="showEditModal && selectedKey && (selectedKey.rate_limit_5h > 0 || selectedKey.rate_limit_1d > 0 || selectedKey.rate_limit_7d > 0 || selectedKey.rate_limit_30d > 0)">
               <button
                 type="button"
                 @click="confirmResetRateLimit"
@@ -1331,6 +1349,7 @@ const formData = ref({
   rate_limit_5h: null as number | null,
   rate_limit_1d: null as number | null,
   rate_limit_7d: null as number | null,
+  rate_limit_30d: null as number | null,
   enable_expiration: false,
   expiration_preset: '30' as '7' | '30' | '90' | 'custom',
   expiration_date: ''
@@ -1583,10 +1602,11 @@ const editKey = (key: ApiKey) => {
     ip_blacklist: (key.ip_blacklist || []).join('\n'),
     enable_quota: key.quota > 0,
     quota: key.quota > 0 ? key.quota : null,
-    enable_rate_limit: (key.rate_limit_5h > 0) || (key.rate_limit_1d > 0) || (key.rate_limit_7d > 0),
+    enable_rate_limit: (key.rate_limit_5h > 0) || (key.rate_limit_1d > 0) || (key.rate_limit_7d > 0) || (key.rate_limit_30d > 0),
     rate_limit_5h: key.rate_limit_5h || null,
     rate_limit_1d: key.rate_limit_1d || null,
     rate_limit_7d: key.rate_limit_7d || null,
+    rate_limit_30d: key.rate_limit_30d || null,
     enable_expiration: hasExpiration,
     expiration_preset: 'custom',
     expiration_date: key.expires_at ? formatDateTimeLocal(key.expires_at) : ''
@@ -1724,7 +1744,8 @@ const handleSubmit = async () => {
     rate_limit_5h: formData.value.rate_limit_5h && formData.value.rate_limit_5h > 0 ? formData.value.rate_limit_5h : 0,
     rate_limit_1d: formData.value.rate_limit_1d && formData.value.rate_limit_1d > 0 ? formData.value.rate_limit_1d : 0,
     rate_limit_7d: formData.value.rate_limit_7d && formData.value.rate_limit_7d > 0 ? formData.value.rate_limit_7d : 0,
-  } : { rate_limit_5h: 0, rate_limit_1d: 0, rate_limit_7d: 0 }
+    rate_limit_30d: formData.value.rate_limit_30d && formData.value.rate_limit_30d > 0 ? formData.value.rate_limit_30d : 0,
+  } : { rate_limit_5h: 0, rate_limit_1d: 0, rate_limit_7d: 0, rate_limit_30d: 0 }
 
   submitting.value = true
   try {
@@ -1739,6 +1760,7 @@ const handleSubmit = async () => {
         rate_limit_5h: rateLimitData.rate_limit_5h,
         rate_limit_1d: rateLimitData.rate_limit_1d,
         rate_limit_7d: rateLimitData.rate_limit_7d,
+        rate_limit_30d: rateLimitData.rate_limit_30d,
       }
       if (shouldSubmitEditStatus(selectedKey.value, formData.value.status)) {
         updates.status = formData.value.status
@@ -1813,6 +1835,7 @@ const closeModals = () => {
     rate_limit_5h: null,
     rate_limit_1d: null,
     rate_limit_7d: null,
+    rate_limit_30d: null,
     enable_expiration: false,
     expiration_preset: '30',
     expiration_date: ''

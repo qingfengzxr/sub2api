@@ -69,6 +69,7 @@ func (s *APIKeyRepoSuite) TestUpdate_DoesNotRevertConcurrentRateLimitUsage() {
 	s.Require().InDelta(42, got.Usage5h, 1e-9, "usage_5h must not be reverted by a stale key edit")
 	s.Require().InDelta(42, got.Usage1d, 1e-9, "usage_1d must not be reverted by a stale key edit")
 	s.Require().InDelta(42, got.Usage7d, 1e-9, "usage_7d must not be reverted by a stale key edit")
+	s.Require().InDelta(42, got.Usage30d, 1e-9, "usage_30d must not be reverted by a stale key edit")
 }
 
 // 显式重置仍然必须生效，避免收窄写入列时把功能改坏。
@@ -93,9 +94,11 @@ func (s *APIKeyRepoSuite) TestUpdate_StillResetsUsageWhenDeclared() {
 	current.Usage5h = 0
 	current.Usage1d = 0
 	current.Usage7d = 0
+	current.Usage30d = 0
 	current.Window5hStart = nil
 	current.Window1dStart = nil
 	current.Window7dStart = nil
+	current.Window30dStart = nil
 	s.Require().NoError(
 		s.repo.Update(s.ctx, current, service.APIKeyUpdateFields{QuotaUsed: true, RateLimitUsage: true}),
 		"Update",
@@ -107,5 +110,7 @@ func (s *APIKeyRepoSuite) TestUpdate_StillResetsUsageWhenDeclared() {
 	s.Require().Zero(got.Usage5h, "explicit rate limit reset must still apply")
 	s.Require().Zero(got.Usage1d)
 	s.Require().Zero(got.Usage7d)
+	s.Require().Zero(got.Usage30d)
 	s.Require().Nil(got.Window5hStart)
+	s.Require().Nil(got.Window30dStart)
 }

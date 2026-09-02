@@ -2425,7 +2425,7 @@ func billingErrorDetails(err error) (status int, code, message string, retryAfte
 		msg := pkgerrors.Message(err)
 		return http.StatusTooManyRequests, "rate_limit_exceeded", msg, 0
 	}
-	if errors.Is(err, service.ErrAPIKeyRateLimit7dExceeded) {
+	if errors.Is(err, service.ErrAPIKeyRateLimit7dExceeded) || errors.Is(err, service.ErrAPIKeyRateLimit30dExceeded) {
 		msg := pkgerrors.Message(err)
 		return http.StatusTooManyRequests, "rate_limit_exceeded", msg, 0
 	}
