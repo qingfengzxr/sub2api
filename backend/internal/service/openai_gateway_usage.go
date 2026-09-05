@@ -372,6 +372,7 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 		APIKeyID:                 apiKey.ID,
 		AccountID:                account.ID,
 		RequestID:                requestID,
+		UpstreamRequestID:        usageUpstreamRequestIDPtr(account, result.UpstreamHeaders, result.OpenAIWSMode),
 		Model:                    result.Model,
 		RequestedModel:           requestedModel,
 		UpstreamModel:            optionalTrimmedStringPtr(result.UpstreamModel),
@@ -618,6 +619,7 @@ func (s *OpenAIGatewayService) calculateOpenAIRecordUsageCost(
 				billableUsage,
 				pricingAt,
 				serviceTier,
+				optionalStringValue(result.ReasoningEffort),
 				longContextBillingGate,
 			)
 			if err == nil {
@@ -711,6 +713,7 @@ func (s *OpenAIGatewayService) calculateOpenAIRecordUsageTokenCost(
 	billableUsage BillableUsage,
 	pricingAt time.Time,
 	serviceTier string,
+	reasoningEffort string,
 	longContextBillingGate *bool,
 ) (*CostBreakdown, error) {
 	tokens := billableUsage.UsageTokens()
@@ -731,6 +734,7 @@ func (s *OpenAIGatewayService) calculateOpenAIRecordUsageTokenCost(
 			RateMultiplier:            multiplier,
 			PricingAt:                 pricingAt,
 			ServiceTier:               serviceTier,
+			ReasoningEffort:           reasoningEffort,
 			Resolver:                  s.resolver,
 			LongContextPricing:        longContextPolicy,
 			LongContextBillingEnabled: longContextBillingGate,
@@ -740,7 +744,10 @@ func (s *OpenAIGatewayService) calculateOpenAIRecordUsageTokenCost(
 		}
 		return cost, err
 	}
-	cost, err := s.billingService.CalculateCostWithServiceTierAndLongContextPolicy(billingModel, tokens, multiplier, serviceTier, longContextPolicy)
+	cost, err := s.billingService.calculateCostInternalWithPolicy(billingModel, tokens, multiplier, serviceTier, nil, longContextPolicy)
+	if err == nil {
+		applyCostBreakdownMultiplier(cost, maxReasoningEffortBillingMultiplier(billingModel, reasoningEffort, nil))
+	}
 	if cost != nil {
 		cost.BillableUsage = billableUsage
 	}
