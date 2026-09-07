@@ -695,15 +695,16 @@ func (r *usageLogRepository) GetStatsWithFilters(ctx context.Context, filters Us
 		args = append(args, *filters.EndTime)
 	}
 
+	tokens := usageTokenSQLFor("", filters.UseBillableTokens)
 	query := fmt.Sprintf(`
 		WITH scoped AS (
 			SELECT
 				COALESCE(NULLIF(TRIM(inbound_endpoint), ''), 'unknown') AS inbound_endpoint,
 				COALESCE(NULLIF(TRIM(upstream_endpoint), ''), 'unknown') AS upstream_endpoint,
-				input_tokens,
-				output_tokens,
-				cache_creation_tokens,
-				cache_read_tokens,
+				%s AS input_tokens,
+				%s AS output_tokens,
+				%s AS cache_creation_tokens,
+				%s AS cache_read_tokens,
 				total_cost,
 				actual_cost,
 				COALESCE(account_stats_cost, total_cost) * COALESCE(account_rate_multiplier, 1) AS account_cost,
@@ -732,7 +733,7 @@ func (r *usageLogRepository) GetStatsWithFilters(ctx context.Context, filters Us
 			(upstream_endpoint),
 			(inbound_endpoint, upstream_endpoint)
 		)
-	`, buildWhere(conditions))
+		`, tokens.input, tokens.output, tokens.cacheCreation, tokens.cacheRead, buildWhere(conditions))
 
 	stats := &UsageStats{}
 	var totalAccountCost float64

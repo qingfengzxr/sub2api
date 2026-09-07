@@ -692,6 +692,23 @@ func TestUsageLogRepositoryGetStatsWithFiltersRequestedModelSource(t *testing.T)
 	require.NoError(t, mock.ExpectationsWereMet())
 }
 
+func TestUsageLogRepositoryGetStatsWithFiltersUsesBillableTokens(t *testing.T) {
+	db, mock := newSQLMock(t)
+	repo := &usageLogRepository{sql: db}
+
+	mock.ExpectQuery("(?s)COALESCE\\(NULLIF\\(billable_input_tokens, 0\\), input_tokens\\) AS input_tokens.*COALESCE\\(NULLIF\\(billable_cache_read_tokens, 0\\), cache_read_tokens\\) AS cache_read_tokens.*GROUP BY GROUPING SETS").
+		WillReturnRows(sqlmock.NewRows([]string{
+			"inbound_grouped", "upstream_grouped", "inbound_endpoint", "upstream_endpoint",
+			"requests", "input_tokens", "output_tokens", "cache_creation_tokens", "cache_read_tokens",
+			"cost", "actual_cost", "account_cost", "avg_duration_ms",
+		}).AddRow(1, 1, nil, nil, int64(1), int64(20), int64(30), int64(10), int64(30), 1.2, 1.0, 1.2, 20.0))
+
+	stats, err := repo.GetStatsWithFilters(context.Background(), usagestats.UsageLogFilters{UseBillableTokens: true})
+	require.NoError(t, err)
+	require.Equal(t, int64(90), stats.TotalTokens)
+	require.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestUsageLogRepositoryGetStatsWithFiltersRequestTypePriority(t *testing.T) {
 	db, mock := newSQLMock(t)
 	repo := &usageLogRepository{sql: db}

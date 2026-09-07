@@ -895,6 +895,98 @@ func (s *UsageLogRepoSuite) TestGetUserDashboardStats() {
 	s.Require().Equal(int64(1), stats.TotalRequests)
 }
 
+func (s *UsageLogRepoSuite) TestUserFacingAggregatesUseBillableTokensAndAdminDefaultsToRaw() {
+	user := mustCreateUser(s.T(), s.client, &service.User{Email: "billable-aggregates@test.com"})
+	apiKey := mustCreateApiKey(s.T(), s.client, &service.APIKey{UserID: user.ID, Key: "sk-billable-aggregates", Name: "k"})
+	account := mustCreateAccount(s.T(), s.client, &service.Account{Name: "acc-billable-aggregates"})
+	group := mustCreateGroup(s.T(), s.client, &service.Group{Name: "group-billable-aggregates"})
+	now := time.Now()
+	groupID := group.ID
+
+	_, err := s.repo.Create(s.ctx, &service.UsageLog{
+		UserID:                      user.ID,
+		APIKeyID:                    apiKey.ID,
+		AccountID:                   account.ID,
+		GroupID:                     &groupID,
+		RequestID:                   uuid.NewString(),
+		Model:                       "billable-model",
+		InputTokens:                 10,
+		OutputTokens:                20,
+		CacheCreationTokens:         3,
+		CacheReadTokens:             4,
+		BillableInputTokens:         25,
+		BillableOutputTokens:        50,
+		BillableCacheCreationTokens: 8,
+		BillableCacheReadTokens:     10,
+		BillingTokenMultiplier:      2.5,
+		TotalCost:                   0.5,
+		ActualCost:                  0.5,
+		CreatedAt:                   now,
+	})
+	s.Require().NoError(err)
+
+	userDashboard, err := s.repo.GetUserDashboardStats(s.ctx, user.ID)
+	s.Require().NoError(err)
+	s.Require().Equal(int64(93), userDashboard.TotalTokens)
+	s.Require().Equal(int64(93), userDashboard.TodayTokens)
+	s.Require().Len(userDashboard.ByPlatform, 1)
+	s.Require().Equal(int64(93), userDashboard.ByPlatform[0].TotalTokens)
+	s.Require().Equal(int64(93), userDashboard.ByPlatform[0].TodayTokens)
+
+	apiKeyDashboard, err := s.repo.GetAPIKeyDashboardStats(s.ctx, apiKey.ID)
+	s.Require().NoError(err)
+	s.Require().Equal(int64(93), apiKeyDashboard.TotalTokens)
+	s.Require().Equal(int64(93), apiKeyDashboard.TodayTokens)
+
+	start, end := now.Add(-time.Hour), now.Add(time.Hour)
+	billableFilters := usagestats.UsageLogFilters{
+		UserID:            user.ID,
+		StartTime:         &start,
+		EndTime:           &end,
+		UseBillableTokens: true,
+	}
+
+	stats, err := s.repo.GetStatsWithFilters(s.ctx, billableFilters)
+	s.Require().NoError(err)
+	s.Require().Equal(int64(93), stats.TotalTokens)
+
+	trend, err := s.repo.GetUsageTrendWithUsageFilters(s.ctx, start, end, "hour", billableFilters)
+	s.Require().NoError(err)
+	s.Require().Len(trend, 1)
+	s.Require().Equal(int64(93), trend[0].TotalTokens)
+
+	models, err := s.repo.GetModelStatsWithUsageFiltersBySource(s.ctx, start, end, billableFilters, usagestats.ModelSourceRequested)
+	s.Require().NoError(err)
+	s.Require().Len(models, 1)
+	s.Require().Equal(int64(93), models[0].TotalTokens)
+
+	groups, err := s.repo.GetGroupStatsWithUsageFilters(s.ctx, start, end, billableFilters)
+	s.Require().NoError(err)
+	s.Require().Len(groups, 1)
+	s.Require().Equal(int64(93), groups[0].TotalTokens)
+
+	rawFilters := billableFilters
+	rawFilters.UseBillableTokens = false
+	rawStats, err := s.repo.GetStatsWithFilters(s.ctx, rawFilters)
+	s.Require().NoError(err)
+	s.Require().Equal(int64(37), rawStats.TotalTokens)
+
+	rawTrend, err := s.repo.GetUsageTrendWithUsageFilters(s.ctx, start, end, "hour", rawFilters)
+	s.Require().NoError(err)
+	s.Require().Len(rawTrend, 1)
+	s.Require().Equal(int64(37), rawTrend[0].TotalTokens)
+
+	rawModels, err := s.repo.GetModelStatsWithUsageFiltersBySource(s.ctx, start, end, rawFilters, usagestats.ModelSourceRequested)
+	s.Require().NoError(err)
+	s.Require().Len(rawModels, 1)
+	s.Require().Equal(int64(37), rawModels[0].TotalTokens)
+
+	rawGroups, err := s.repo.GetGroupStatsWithUsageFilters(s.ctx, start, end, rawFilters)
+	s.Require().NoError(err)
+	s.Require().Len(rawGroups, 1)
+	s.Require().Equal(int64(37), rawGroups[0].TotalTokens)
+}
+
 // --- GetAccountTodayStats ---
 
 func (s *UsageLogRepoSuite) TestGetAccountTodayStats() {

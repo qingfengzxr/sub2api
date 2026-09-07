@@ -392,6 +392,7 @@ func TestUserUsageStatsUsesScopedFilters(t *testing.T) {
 	require.Equal(t, int64(42), repo.statsFilters.UserID)
 	require.Equal(t, int64(9), repo.statsFilters.GroupID)
 	require.Equal(t, usagestats.ModelSourceRequested, repo.statsFilters.ModelFilterSource)
+	require.True(t, repo.statsFilters.UseBillableTokens)
 	require.NotNil(t, repo.statsFilters.RequestType)
 	require.Equal(t, int16(service.RequestTypeSync), *repo.statsFilters.RequestType)
 	require.Equal(t, "token", repo.statsFilters.BillingMode)

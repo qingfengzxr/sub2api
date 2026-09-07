@@ -285,6 +285,9 @@ type UsageLogFilters struct {
 	UpstreamModelMismatch *bool
 	StartTime             *time.Time
 	EndTime               *time.Time
+	// UseBillableTokens selects the user-facing, billable-first token projection.
+	// It is set by trusted handlers only and is not a client filter.
+	UseBillableTokens bool
 	// ExactTotal requests exact COUNT(*) for pagination. Default false for fast large-table paging.
 	ExactTotal bool
 }

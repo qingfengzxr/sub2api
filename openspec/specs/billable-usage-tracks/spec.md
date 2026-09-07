@@ -116,10 +116,12 @@
 - **WHEN** 用户或管理员查询 usage logs
 - **THEN** 每条日志必须包含现有 raw token 字段、billable token 字段、`billing_token_multiplier`、`total_cost` 和 `actual_cost`
 
-#### Scenario: dashboard token totals 保持 raw
-- **WHEN** dashboard、ranking 和 usage summaries 聚合 token 数量
-- **THEN** 默认 token 数量指标必须聚合 raw usage 字段
+#### Scenario: C 端账单相关统计使用 billable usage
+- **WHEN** 普通用户查看 Dashboard、Usage summaries、模型/分组/端点分布、Token 趋势或 KeyUsage 统计
+- **THEN** token 数量指标必须聚合 billable usage 字段，并对历史记录按 raw-compatible 语义回退
+- **THEN** 页面必须继续使用普通 Token 文案，不得展示 billable 定义或 `billing_token_multiplier`
 - **THEN** cost 指标必须聚合持久化 cost 字段
+- **THEN** 管理后台、ranking、account stats、限流和吞吐性能指标必须继续聚合 raw usage 字段
 
 #### Scenario: export 包含足够字段用于账单校验
 - **WHEN** 用户导出 usage logs

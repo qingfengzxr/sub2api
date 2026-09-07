@@ -26,7 +26,7 @@
             <p class="text-sm font-semibold">
               <span class="text-green-600 dark:text-green-400">${{ formatCost(log.actual_cost) }}</span>
             </p>
-            <p class="text-xs text-gray-500 dark:text-dark-400">{{ (log.input_tokens + log.output_tokens).toLocaleString() }} tokens</p>
+            <p class="text-xs text-gray-500 dark:text-dark-400">{{ displayTokens(log).toLocaleString() }} tokens</p>
           </div>
         </div>
 
@@ -53,4 +53,10 @@ defineProps<{
 }>()
 const { t } = useI18n()
 const formatCost = (c: number) => c.toFixed(4)
+const tokenValue = (billable: number | null | undefined, raw: number) => billable && billable > 0 ? billable : raw
+const displayTokens = (log: UsageLog) =>
+  tokenValue(log.billable_input_tokens, log.input_tokens) +
+  tokenValue(log.billable_output_tokens, log.output_tokens) +
+  tokenValue(log.billable_cache_creation_tokens, log.cache_creation_tokens) +
+  tokenValue(log.billable_cache_read_tokens, log.cache_read_tokens)
 </script>
