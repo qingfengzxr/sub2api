@@ -432,17 +432,6 @@
         <p class="text-sm text-slate-500 dark:text-slate-400">
           &copy; {{ currentYear }} {{ siteName }}. {{ t('home.footer.allRightsReserved') }}
         </p>
-        <div class="flex items-center gap-4">
-          <a
-            v-if="docUrl"
-            :href="docUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-sm text-slate-500 transition hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"
-          >
-            {{ t('home.docs') }}
-          </a>
-        </div>
       </div>
     </footer>
   </div>
