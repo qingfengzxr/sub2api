@@ -25,7 +25,7 @@ func TestBuildBillableUsage_DisabledKeepsRawCompatible(t *testing.T) {
 	require.Equal(t, 2, got.ImageOutputTokens)
 }
 
-func TestBuildBillableUsage_EnabledAppliesMultiplierAndCeil(t *testing.T) {
+func TestBuildBillableUsage_EnabledScalesOnlyInputOutputAndCeil(t *testing.T) {
 	raw := UsageTokens{
 		InputTokens:            101,
 		OutputTokens:           50,
@@ -45,28 +45,30 @@ func TestBuildBillableUsage_EnabledAppliesMultiplierAndCeil(t *testing.T) {
 	require.Equal(t, 2.5, got.BillingTokenMultiplier)
 	require.Equal(t, 253, got.InputTokens)
 	require.Equal(t, 125, got.OutputTokens)
-	require.Equal(t, 18, got.CacheCreationTokens)
-	require.Equal(t, 8, got.CacheReadTokens)
-	require.Equal(t, 5, got.CacheCreation5mTokens)
-	require.Equal(t, 3, got.CacheCreation1hTokens)
+	require.Equal(t, 7, got.CacheCreationTokens)
+	require.Equal(t, 3, got.CacheReadTokens)
+	require.Equal(t, 2, got.CacheCreation5mTokens)
+	require.Equal(t, 1, got.CacheCreation1hTokens)
 	require.Equal(t, 5, got.ImageOutputTokens)
 	require.Equal(t, 23, got.TextInputTokens)
-	require.Equal(t, 10, got.CachedTextInputTokens)
+	require.Equal(t, 4, got.CachedTextInputTokens)
 	require.Equal(t, 13, got.ImageInputTokens)
-	require.Equal(t, 3, got.CachedImageInputTokens)
+	require.Equal(t, 1, got.CachedImageInputTokens)
 }
 
 func TestBuildBillableUsage_TotalCostCanBeRecomputedFromBillableTokens(t *testing.T) {
-	raw := UsageTokens{InputTokens: 100, OutputTokens: 50}
+	raw := UsageTokens{InputTokens: 100, OutputTokens: 50, CacheCreationTokens: 7, CacheReadTokens: 3}
 	billable := BuildBillableUsage(raw, BillingTokenPolicy{Enabled: true, Multiplier: 2.5})
 
 	cost := (&BillingService{}).computeTokenBreakdown(&ModelPricing{
-		InputPricePerToken:  0.000001,
-		OutputPricePerToken: 0.000002,
+		InputPricePerToken:         0.000001,
+		OutputPricePerToken:        0.000002,
+		CacheCreationPricePerToken: 0.000003,
+		CacheReadPricePerToken:     0.0000001,
 	}, billable.UsageTokens(), 1.2, "", LongContextPricingPolicy{})
 
-	require.InDelta(t, 0.0005, cost.TotalCost, 1e-12)
-	require.InDelta(t, 0.0006, cost.ActualCost, 1e-12)
+	require.InDelta(t, 0.0005213, cost.TotalCost, 1e-12)
+	require.InDelta(t, 0.00062556, cost.ActualCost, 1e-12)
 }
 
 func TestBuildBillableUsage_ZeroUsageKeepsZerosAndEnabledMultiplierSnapshot(t *testing.T) {

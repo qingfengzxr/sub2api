@@ -1658,11 +1658,11 @@ func TestOpenAIGatewayServiceRecordUsage_TokenMultiplierBillingPersistsRawAndBil
 	require.Equal(t, 20, usageRepo.lastLog.CacheReadTokens)
 	require.Equal(t, 250, usageRepo.lastLog.BillableInputTokens)
 	require.Equal(t, 100, usageRepo.lastLog.BillableOutputTokens)
-	require.Equal(t, 50, usageRepo.lastLog.BillableCacheReadTokens)
+	require.Equal(t, 20, usageRepo.lastLog.BillableCacheReadTokens)
 	require.InDelta(t, 2.5, usageRepo.lastLog.BillingTokenMultiplier, 1e-12)
 	require.InDelta(t, groupRate, usageRepo.lastLog.RateMultiplier, 1e-12)
 
-	expectedTotal := float64(250)*2.5e-6 + float64(100)*15e-6 + float64(50)*0.25e-6
+	expectedTotal := float64(250)*2.5e-6 + float64(100)*15e-6 + float64(20)*0.25e-6
 	require.InDelta(t, expectedTotal, usageRepo.lastLog.TotalCost, 1e-12)
 	require.InDelta(t, expectedTotal*groupRate, usageRepo.lastLog.ActualCost, 1e-12)
 	require.NotNil(t, billingRepo.lastCmd)

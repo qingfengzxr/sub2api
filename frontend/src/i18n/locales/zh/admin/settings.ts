@@ -47,11 +47,11 @@ export default {
         },
         billableToken: {
           title: '计费用量放大',
-          description: '平台级控制 billable tokens。启用后，新 usage 的计费用量按这里的倍率从真实用量生成，金额侧分组/用户倍率仍按原逻辑叠加。',
+          description: '平台级控制计费用量。启用后，仅非缓存输入和输出用量按倍率放大，缓存读取和缓存写入用量保持原值，金额侧分组/用户倍率仍按原逻辑叠加。',
           enabled: '启用 billable token 计费',
           enabledHint: '关闭时计费用量与真实用量兼容，账单倍率快照记为 1。',
           multiplier: '平台级 token 放大倍率',
-          multiplierHint: '用于生成 billable tokens；total_cost = 官方单价 × billable tokens，actual_cost 可继续叠加金额侧倍率。',
+          multiplierHint: '仅放大非缓存输入和输出 token，不放大缓存用量；total_cost = 官方单价 × 计费用量，actual_cost 可继续叠加金额侧倍率。',
         },
         longContextPricing: {
           title: '长上下文加价',

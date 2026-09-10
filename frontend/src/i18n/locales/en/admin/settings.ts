@@ -47,11 +47,11 @@ export default {
         },
         billableToken: {
           title: 'Billable Token Usage',
-          description: 'Platform-level control for billable tokens. When enabled, new usage records derive billable usage from raw usage with this multiplier, while group/user amount multipliers still apply as before.',
+          description: 'Platform-level control for billable usage. When enabled, only non-cached input and output usage is scaled. Cache reads and writes keep their original quantities, while group/user amount multipliers still apply as before.',
           enabled: 'Enable billable token billing',
           enabledHint: 'When off, billable usage remains raw-compatible and the billing multiplier snapshot is 1.',
           multiplier: 'Platform token multiplier',
-          multiplierHint: 'Used to generate billable tokens; total_cost = official price × billable tokens, and actual_cost may still stack amount-side multipliers.',
+          multiplierHint: 'Scales only non-cached input and output tokens; cache quantities are unchanged. total_cost = official price × billable tokens, and actual_cost may still stack amount-side multipliers.',
         },
         longContextPricing: {
           title: 'Long-context Pricing',

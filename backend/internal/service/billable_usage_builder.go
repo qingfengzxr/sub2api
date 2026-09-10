@@ -22,6 +22,8 @@ type BillableUsage struct {
 	BillingTokenMultiplier float64
 }
 
+// BuildBillableUsage scales non-cached input and output only; cache usage keeps
+// its original quantity, including cache creation durations and modality details.
 func BuildBillableUsage(raw UsageTokens, policy BillingTokenPolicy) BillableUsage {
 	multiplier := normalizeBillableUsageMultiplier(policy.Multiplier)
 	if !policy.Enabled {
@@ -31,15 +33,15 @@ func BuildBillableUsage(raw UsageTokens, policy BillingTokenPolicy) BillableUsag
 	return BillableUsage{
 		InputTokens:            multiplyBillableTokens(raw.InputTokens, multiplier),
 		OutputTokens:           multiplyBillableTokens(raw.OutputTokens, multiplier),
-		CacheCreationTokens:    multiplyBillableTokens(raw.CacheCreationTokens, multiplier),
-		CacheReadTokens:        multiplyBillableTokens(raw.CacheReadTokens, multiplier),
-		CacheCreation5mTokens:  multiplyBillableTokens(raw.CacheCreation5mTokens, multiplier),
-		CacheCreation1hTokens:  multiplyBillableTokens(raw.CacheCreation1hTokens, multiplier),
+		CacheCreationTokens:    multiplyBillableTokens(raw.CacheCreationTokens, 1),
+		CacheReadTokens:        multiplyBillableTokens(raw.CacheReadTokens, 1),
+		CacheCreation5mTokens:  multiplyBillableTokens(raw.CacheCreation5mTokens, 1),
+		CacheCreation1hTokens:  multiplyBillableTokens(raw.CacheCreation1hTokens, 1),
 		ImageOutputTokens:      multiplyBillableTokens(raw.ImageOutputTokens, multiplier),
 		TextInputTokens:        multiplyBillableTokens(raw.TextInputTokens, multiplier),
-		CachedTextInputTokens:  multiplyBillableTokens(raw.CachedTextInputTokens, multiplier),
+		CachedTextInputTokens:  multiplyBillableTokens(raw.CachedTextInputTokens, 1),
 		ImageInputTokens:       multiplyBillableTokens(raw.ImageInputTokens, multiplier),
-		CachedImageInputTokens: multiplyBillableTokens(raw.CachedImageInputTokens, multiplier),
+		CachedImageInputTokens: multiplyBillableTokens(raw.CachedImageInputTokens, 1),
 		BillingTokenMultiplier: multiplier,
 	}
 }
