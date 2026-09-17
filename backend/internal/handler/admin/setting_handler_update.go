@@ -352,6 +352,9 @@ type UpdateSettingsRequest struct {
 	LongContextPricingEnabled         *bool `json:"long_context_pricing_enabled"`
 	LongContextPricingThresholdTokens *int  `json:"long_context_pricing_threshold_tokens"`
 
+	// Subscription feature switch (user-facing subscription surface; see SettingKeySubscriptionEnabled)
+	SubscriptionEnabled *bool `json:"subscription_enabled"`
+
 	// Model Plaza feature switches + description
 	ModelPlazaEnabled     *bool   `json:"model_plaza_enabled"`
 	ModelPlazaRequireAuth *bool   `json:"model_plaza_require_auth"`
@@ -1969,6 +1972,12 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.LongContextPricingThresholdTokens
 		}(),
+		SubscriptionEnabled: func() bool {
+			if req.SubscriptionEnabled != nil {
+				return *req.SubscriptionEnabled
+			}
+			return previousSettings.SubscriptionEnabled
+		}(),
 		ModelPlazaEnabled: func() bool {
 			if req.ModelPlazaEnabled != nil {
 				return *req.ModelPlazaEnabled
@@ -2416,6 +2425,7 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		BillingTokenMultiplier:            updatedSettings.BillingTokenMultiplier,
 		LongContextPricingEnabled:         updatedSettings.LongContextPricingEnabled,
 		LongContextPricingThresholdTokens: updatedSettings.LongContextPricingThresholdTokens,
+		SubscriptionEnabled:               updatedSettings.SubscriptionEnabled,
 
 		ModelPlazaEnabled:       updatedSettings.ModelPlazaEnabled,
 		ModelPlazaRequireAuth:   updatedSettings.ModelPlazaRequireAuth,

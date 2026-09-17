@@ -387,6 +387,7 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		BillingTokenMultiplier:            settings.BillingTokenMultiplier,
 		LongContextPricingEnabled:         settings.LongContextPricingEnabled,
 		LongContextPricingThresholdTokens: settings.LongContextPricingThresholdTokens,
+		SubscriptionEnabled:               settings.SubscriptionEnabled,
 
 		ModelPlazaEnabled:       settings.ModelPlazaEnabled,
 		ModelPlazaRequireAuth:   settings.ModelPlazaRequireAuth,
