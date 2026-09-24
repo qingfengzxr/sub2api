@@ -24,6 +24,7 @@ func TestCalculateCostUnified_CustomLongContextWithMaxEffort(t *testing.T) {
 			bs.fallbackPrices["claude-fable-5-1"] = &ModelPricing{
 				InputPricePerToken: 1e-6, OutputPricePerToken: 2e-6,
 				CacheReadPricePerToken:     0.1e-6,
+				ReasoningEffortMultipliers: map[string]float64{"max": 3},
 				LongContextInputThreshold:  1000,
 				LongContextInputMultiplier: 2, LongContextOutputMultiplier: 1.5,
 			}
@@ -85,14 +86,14 @@ func TestOpenAIRecordUsageTokenCost_PreservesBillableUsageWithMaxEffort(t *testi
 			channelService := NewChannelService(&mergeBillingChannelRepository{pricing: []ChannelModelPricing{{
 				Platform: PlatformOpenAI, Models: []string{"claude-fable-5-1"}, BillingMode: BillingModeToken,
 				InputPrice: &inputPrice, OutputPrice: &outputPrice,
-				MaxReasoningEffortMultiplier: &configuredMax,
-			}}}, nil, nil, nil)
+				ReasoningEffortMultipliers: map[string]float64{"max": configuredMax},
+			}}}, nil, nil, nil, nil)
 			resolver := NewModelPricingResolver(channelService, bs)
 			bs.fallbackPrices["claude-fable-5-1"] = &ModelPricing{
 				InputPricePerToken: 1e-6, OutputPricePerToken: 2e-6,
 			}
 			svc := &OpenAIGatewayService{billingService: bs}
-			maxMultiplier := 3.0
+			maxMultiplier := 1.0
 			if withResolver {
 				svc.resolver = resolver
 				maxMultiplier = configuredMax
