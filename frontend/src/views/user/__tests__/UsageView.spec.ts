@@ -118,7 +118,7 @@ const simpleStub = { template: '<div><slot /></div>' }
 const chartStub = { template: '<div />' }
 const usageTableStub = {
   name: 'UsageTable',
-  props: ['showBillingAuditDetails'],
+  props: ['showBillingAuditDetails', 'columns'],
   template: '<div />',
 }
 
@@ -229,9 +229,10 @@ describe('user UsageView', () => {
   })
 
   it('loads logs, stats, model stats, and snapshot on first render', async () => {
-    mountUsageView()
+    const wrapper = mountUsageView()
     await flushPromises()
 
+    expect(wrapper.findComponent(UsageTable).props('columns').map((column: { key: string }) => column.key)).toContain('latency')
     expect(query).toHaveBeenCalled()
     expect(getStats).toHaveBeenCalled()
     expect(getDashboardModels).toHaveBeenCalled()
