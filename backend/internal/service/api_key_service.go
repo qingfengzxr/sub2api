@@ -131,6 +131,8 @@ type apiKeyAllByUserIDLister interface {
 
 // APIKeyRateLimitData holds rate limit usage and window state for an API key.
 type APIKeyRateLimitData struct {
+	// QuotaUsed 是总额度已用量（quota_used）。
+	QuotaUsed      float64
 	Usage5h        float64
 	Usage1d        float64
 	Usage7d        float64
@@ -163,6 +165,14 @@ func (d *APIKeyRateLimitData) EffectiveUsage7d() float64 {
 		return 0
 	}
 	return d.Usage7d
+}
+
+// EffectiveUsage30d returns the 30d window usage, or 0 if the window has expired.
+func (d *APIKeyRateLimitData) EffectiveUsage30d() float64 {
+	if IsWindowExpired(d.Window30dStart, RateLimitWindow30d) {
+		return 0
+	}
+	return d.Usage30d
 }
 
 // APIKeyQuotaUsageState captures the latest quota fields after an atomic quota update.

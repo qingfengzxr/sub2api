@@ -131,7 +131,7 @@ func TestCalculateRecordUsageCost_MediaReasoningPricing(t *testing.T) {
 					}
 					var err error
 					cost, err = svc.calculateOpenAIRecordUsageCost(context.Background(), result, apiKey,
-						[]string{model}, 0.5, 0.5, 0.5, 0.5, BillableUsage{}, "", nil, time.Time{})
+						[]string{model}, 0.5, 0.5, 0.5, 0.5, BillableUsage{}, "", nil, false, time.Time{})
 					require.NoError(t, err)
 				}
 				require.NotNil(t, cost)

@@ -464,6 +464,10 @@ func (s *APIKeyRepoSuite) TestIncrementQuotaUsed_Basic() {
 	newQuota, err = s.repo.IncrementQuotaUsed(s.ctx, key.ID, 2.5)
 	s.Require().NoError(err, "IncrementQuotaUsed second")
 	s.Require().Equal(4.0, newQuota, "第二次递增后应为 4.0")
+
+	data, err := s.repo.GetRateLimitData(s.ctx, key.ID)
+	s.Require().NoError(err, "GetRateLimitData")
+	s.Require().Equal(4.0, data.QuotaUsed, "用量读取带回总额度已用量")
 }
 
 func (s *APIKeyRepoSuite) TestIncrementQuotaUsed_NotFound() {
@@ -603,4 +607,23 @@ func (s *APIKeyRepoSuite) TestDeleteWithAudit_RepeatIsIdempotent() {
 func (s *APIKeyRepoSuite) TestDeleteWithAudit_NotFound() {
 	err := s.repo.DeleteWithAudit(s.ctx, 999999)
 	s.Require().ErrorIs(err, service.ErrAPIKeyNotFound)
+}
+
+func (s *APIKeyRepoSuite) TestGetRateLimitDataIncludesQuotaAnd30d() {
+	user := s.mustCreateUser("rate-data-merge@test.com")
+	key := s.mustCreateApiKey(user.ID, "sk-rate-data-merge", "Rate data", nil)
+	_, err := s.repo.IncrementQuotaUsed(s.ctx, key.ID, 9.5)
+	s.Require().NoError(err)
+	s.Require().NoError(s.repo.IncrementRateLimitUsage(s.ctx, key.ID, 2.5))
+	data, err := s.repo.GetRateLimitData(s.ctx, key.ID)
+	s.Require().NoError(err)
+	s.Require().Equal(9.5, data.QuotaUsed)
+	s.Require().Equal(2.5, data.Usage5h)
+	s.Require().Equal(2.5, data.Usage1d)
+	s.Require().Equal(2.5, data.Usage7d)
+	s.Require().Equal(2.5, data.Usage30d)
+	s.Require().NotNil(data.Window5hStart)
+	s.Require().NotNil(data.Window1dStart)
+	s.Require().NotNil(data.Window7dStart)
+	s.Require().NotNil(data.Window30dStart)
 }

@@ -136,10 +136,52 @@ func TestBillingCacheServiceEvaluateRateLimits30d(t *testing.T) {
 	activeStart := time.Now().Add(-29 * 24 * time.Hour)
 	key := &APIKey{ID: 1, RateLimit30d: 100}
 
-	err := svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &activeStart)
+	err := svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &activeStart, 0)
 	require.ErrorIs(t, err, ErrAPIKeyRateLimit30dExceeded)
 
 	expiredStart := time.Now().Add(-RateLimitWindow30d)
-	err = svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &expiredStart)
+	err = svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, 100, nil, nil, nil, &expiredStart, 0)
 	require.NoError(t, err)
+}
+
+func TestBillingCacheServiceEvaluateRateLimits30dWithPending(t *testing.T) {
+	svc := &BillingCacheService{}
+	active := time.Now()
+	expired := active.Add(-RateLimitWindow30d)
+	key := &APIKey{ID: 1, RateLimit30d: 100}
+	for _, tc := range []struct {
+		name           string
+		usage, pending float64
+		start          *time.Time
+		wantErr        bool
+	}{
+		{"below", 90, 9, &active, false},
+		{"exact", 90, 10, &active, false},
+		{"pending exceeds", 90, 11, &active, true},
+		{"already exhausted", 100, 0, &active, true},
+		{"expired usage", 100, 1, &expired, false},
+		{"pending alone exceeds", 100, 101, &expired, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			err := svc.evaluateRateLimits(context.Background(), key, 0, 0, 0, tc.usage, &active, &active, &active, tc.start, tc.pending)
+			if tc.wantErr {
+				require.ErrorIs(t, err, ErrAPIKeyRateLimit30dExceeded)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestFixedChargeAPIKey30dUsesDatabaseUsage(t *testing.T) {
+	start := time.Now()
+	data := &APIKeyRateLimitData{QuotaUsed: 50, Usage30d: 90, Window30dStart: &start}
+	svc := &BillingCacheService{apiKeyRateLimitLoader: &simpleModeRateLimitLoaderStub{data: data}}
+	key := &APIKey{ID: 1, Quota: 200, RateLimit30d: 100}
+	require.NoError(t, svc.checkFixedChargeAPIKey(context.Background(), key, 10))
+	require.ErrorIs(t, svc.checkFixedChargeAPIKey(context.Background(), key, 11), ErrAPIKeyRateLimit30dExceeded)
+	start = start.Add(-RateLimitWindow30d)
+	require.NoError(t, svc.checkFixedChargeAPIKey(context.Background(), key, 11))
+	require.ErrorIs(t, svc.checkFixedChargeAPIKey(context.Background(), key, 101), ErrAPIKeyRateLimit30dExceeded)
+	require.ErrorIs(t, svc.checkFixedChargeAPIKey(context.Background(), key, 151), ErrAPIKeyQuotaExhausted)
 }
