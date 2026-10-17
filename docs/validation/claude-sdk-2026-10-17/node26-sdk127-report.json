@@ -1,0 +1,1104 @@
+{
+  "sdk_version": "0.127.0",
+  "runtime": {
+    "node": "26.3.0",
+    "openssl": "3.5.6",
+    "undici": "8.3.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "source_hashes": {
+    "src/client.ts": "3c40bda2c0d2f6941edbe73f66b8435e8d427625319461184110a7d6fd7fb5b6",
+    "src/internal/headers.ts": "47c81c65e74a768bdcdae66b9b494f2b7271626edd03b8d06d6513ed904cb947",
+    "src/internal/detect-platform.ts": "bd92d9853b9a865756dedb3ffc831d8d6a809673b3208b4b3f4fcd8a30820f87",
+    "src/internal/shims.ts": "9e4c2c8622b16a1223cada7f5e327093b22b25bcd196be3f948bc457d112cb5e"
+  },
+  "source_kind": "Official API SDK, not CLI; simulated platform tests do not establish physical platform transport behavior",
+  "cli_reference": {
+    "binary": {
+      "version": "2.1.301 (Claude Code)",
+      "sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+      "system": "Darwin",
+      "release": "23.6.0",
+      "machine": "arm64",
+      "captured_at": "2026-10-17T07:37:00+0800"
+    },
+    "headers": [
+      [
+        "Accept",
+        "application/json"
+      ],
+      [
+        "Content-Type",
+        "application/json"
+      ],
+      [
+        "User-Agent",
+        "claude-cli/2.1.301 (external, sdk-cli)"
+      ],
+      [
+        "X-Claude-Code-Session-Id",
+        "2dc6ed65-24ba-4da8-910b-f90825573a2a"
+      ],
+      [
+        "X-Stainless-Arch",
+        "arm64"
+      ],
+      [
+        "X-Stainless-Lang",
+        "js"
+      ],
+      [
+        "X-Stainless-OS",
+        "MacOS"
+      ],
+      [
+        "X-Stainless-Package-Version",
+        "0.128.0"
+      ],
+      [
+        "X-Stainless-Retry-Count",
+        "0"
+      ],
+      [
+        "X-Stainless-Runtime",
+        "node"
+      ],
+      [
+        "X-Stainless-Runtime-Version",
+        "v26.3.0"
+      ],
+      [
+        "X-Stainless-Timeout",
+        "600"
+      ],
+      [
+        "anthropic-beta",
+        "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31"
+      ],
+      [
+        "anthropic-dangerous-direct-browser-access",
+        "true"
+      ],
+      [
+        "anthropic-version",
+        "2023-06-01"
+      ],
+      [
+        "x-app",
+        "cli"
+      ],
+      [
+        "Connection",
+        "keep-alive"
+      ],
+      [
+        "Host",
+        "127.0.0.1:50138"
+      ],
+      [
+        "Accept-Encoding",
+        "gzip, deflate, br, zstd"
+      ],
+      [
+        "Content-Length",
+        "6940"
+      ]
+    ],
+    "body_sha256": "9fa1a27b6fb149b310acd803e6a2d0ef16fcf3a92ca122ef8aba60cf4257dfe7"
+  },
+  "http_cases": [
+    {
+      "name": "sdk-default",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63556"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 200,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "sdk-with-cli-specific-headers",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63558"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Timeout",
+              "600"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "User-Agent",
+              "claude-cli/2.1.301 (external, sdk-cli)"
+            ],
+            [
+              "X-Claude-Code-Session-Id",
+              "2dc6ed65-24ba-4da8-910b-f90825573a2a"
+            ],
+            [
+              "anthropic-beta",
+              "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31"
+            ],
+            [
+              "anthropic-dangerous-direct-browser-access",
+              "true"
+            ],
+            [
+              "x-app",
+              "cli"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "6940"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Reply OK\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.301.a3d; cc_entrypoint=sdk-cli;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"CWD: /private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\\nDate: 2026-10-17\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"aae51ef1b26b67e6c108b9e13a2e6d4697c3ad419a97ef632a7cf66ed329d768\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"2dc6ed65-24ba-4da8-910b-f90825573a2a\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"adaptive\",\"display\":\"omitted\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"safeguards\":[{\"type\":\"dangerous_tool_use\",\"classifier_context\":{\"v\":1,\"permission_mode\":\"auto\",\"platform\":\"macos\",\"live_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"home_dir\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1/home\",\"rule_roots\":{\"userSettings\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1/config\",\"projectSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"localSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"flagSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"policySettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"cliArg\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"command\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"session\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"toolsNarrowing\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"mcpServerPolicy\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"hostCredential\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\"},\"trusted_directories\":{\"primary\":{\"path\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"resolved\":[\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\"]},\"additional\":[],\"network\":[],\"block_reads_outside_working_directories\":false},\"rules\":{\"allow\":[],\"deny\":[{\"rule\":\"Agent\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Bash\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Edit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"NotebookEdit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_list\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebFetch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TodoWrite\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReportFindings\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebSearch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskStop\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AskUserQuestion\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFeedback\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Skill\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"DesignSync\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Projects\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskGet\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskUpdate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Artifact\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactComments\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactData\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactCheck\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AppifactRepl\",\"source\":\"toolsNarrowing\"},{\"rule\":\"LSP\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListAgents\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShareOnboardingGuide\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Poll\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Workflow\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronDelete\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ScheduleWakeup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"RemoteTrigger\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchMcpRegistry\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShowOnboardingRolePicker\",\"source\":\"toolsNarrowing\"},{\"rule\":\"OfferChromeSetup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadNotifications\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__claude-in-chrome\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__Claude_Browser\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"request_computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestPluginInstall\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Monitor\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"propose_skills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ProposeGoal\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PublishPlugin\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PushNotification\",\"source\":\"toolsNarrowing\"},{\"rule\":\"FetchInboxMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EndConversation\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListMcpResourcesTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceDirTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WaitForMcpServers\",\"source\":\"toolsNarrowing\"},{\"rule\":\"GetTask\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Glob\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Grep\",\"source\":\"toolsNarrowing\"}],\"ask\":[]},\"auto_mode\":{\"allow\":[],\"soft_deny\":[],\"hard_deny\":[],\"environment\":[]},\"artifact_consent_holdback\":false,\"case_insensitive_paths\":false,\"restricted\":false,\"is_remote_mode\":false,\"classify_all_shell\":false,\"user_identity\":null,\"git_state\":{\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-wer8lnz1\",\"root\":null,\"branch\":null,\"default_branch\":null,\"status\":null,\"visibility\":{\"origin\":null,\"push_remote\":null,\"remotes\":[],\"visibility_cache\":[]},\"error\":\"not_a_repo\"}}}],\"output_config\":{\"effort\":\"high\"},\"stream\":true}",
+          "body_sha256": "9fa1a27b6fb149b310acd803e6a2d0ef16fcf3a92ca122ef8aba60cf4257dfe7",
+          "status": 200,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "sdk-inner-retry",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63560"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 429,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63560"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "1"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 200,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "sdk-inner-retry-503",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63562"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 503,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63562"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "1"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 200,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "caller-outer-retry",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63564"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 429,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63564"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 200,
+          "authentication": {
+            "api_key_present": true,
+            "bearer_present": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "sdk-static-bearer",
+      "records": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "headers": [
+            [
+              "host",
+              "127.0.0.1:63567"
+            ],
+            [
+              "connection",
+              "keep-alive"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "Anthropic/JS 0.127.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.127.0"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "accept-language",
+              "*"
+            ],
+            [
+              "sec-fetch-mode",
+              "cors"
+            ],
+            [
+              "accept-encoding",
+              "gzip, deflate"
+            ],
+            [
+              "content-length",
+              "105"
+            ]
+          ],
+          "body": "{\"model\":\"claude-sonnet-4-6\",\"max_tokens\":1,\"messages\":[{\"role\":\"user\",\"content\":\"Synthetic SDK probe\"}]}",
+          "body_sha256": "f8d2642ac0220e3ea2135dfee8825f9ceb9d037ba6d4ba2316ffacace0362719",
+          "status": 200,
+          "authentication": {
+            "api_key_present": false,
+            "bearer_present": true
+          }
+        }
+      ]
+    }
+  ],
+  "header_merge": [
+    [
+      "x-example",
+      "override"
+    ],
+    [
+      "x-stainless-helper",
+      "first, second"
+    ]
+  ],
+  "simulated_platform_cases": [
+    {
+      "simulated_platform": "darwin",
+      "simulated_arch": "arm64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "MacOS",
+        "X-Stainless-Arch": "arm64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    },
+    {
+      "simulated_platform": "darwin",
+      "simulated_arch": "x64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "MacOS",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    },
+    {
+      "simulated_platform": "linux",
+      "simulated_arch": "x64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "Linux",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    },
+    {
+      "simulated_platform": "linux",
+      "simulated_arch": "aarch64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "Linux",
+        "X-Stainless-Arch": "arm64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    },
+    {
+      "simulated_platform": "win32",
+      "simulated_arch": "x64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "Windows",
+        "X-Stainless-Arch": "x64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    },
+    {
+      "simulated_platform": "win32",
+      "simulated_arch": "arm64",
+      "headers": {
+        "X-Stainless-Lang": "js",
+        "X-Stainless-Package-Version": "0.127.0",
+        "X-Stainless-OS": "Windows",
+        "X-Stainless-Arch": "arm64",
+        "X-Stainless-Runtime": "node",
+        "X-Stainless-Runtime-Version": "v26.3.0"
+      }
+    }
+  ],
+  "client_hello": {
+    "legacy_version": 771,
+    "cipher_suites": [
+      4866,
+      4867,
+      4865,
+      49199,
+      49195,
+      49200,
+      49196,
+      158,
+      49191,
+      103,
+      49192,
+      107,
+      163,
+      159,
+      52393,
+      52392,
+      52394,
+      49325,
+      49311,
+      49245,
+      49249,
+      49239,
+      49235,
+      162,
+      49324,
+      49310,
+      49244,
+      49248,
+      49238,
+      49234,
+      49188,
+      106,
+      49187,
+      64,
+      49162,
+      49172,
+      57,
+      56,
+      49161,
+      49171,
+      51,
+      50,
+      157,
+      49309,
+      49233,
+      156,
+      49308,
+      49232,
+      61,
+      60,
+      53,
+      47
+    ],
+    "extensions": [
+      65281,
+      0,
+      11,
+      10,
+      35,
+      16,
+      22,
+      23,
+      13,
+      43,
+      45,
+      51
+    ],
+    "groups": [
+      4588,
+      29,
+      23,
+      30,
+      24,
+      25,
+      256,
+      257
+    ],
+    "signature_algorithms": [
+      2309,
+      2310,
+      2308,
+      1027,
+      1283,
+      1539,
+      2055,
+      2056,
+      2074,
+      2075,
+      2076,
+      2057,
+      2058,
+      2059,
+      2052,
+      2053,
+      2054,
+      1025,
+      1281,
+      1537,
+      771,
+      769,
+      770,
+      1026,
+      1282,
+      1538
+    ],
+    "alpn": [
+      "http/1.1",
+      "h2"
+    ],
+    "supported_versions": [
+      772,
+      771
+    ],
+    "key_shares": [
+      4588,
+      29
+    ],
+    "point_formats": [
+      0,
+      1,
+      2
+    ],
+    "psk_modes": [
+      1
+    ]
+  }
+}

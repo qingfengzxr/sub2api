@@ -1,5 +1,7 @@
 # Claude CLI 本机验证记录：2026-10-17
 
+本文件记录第一轮验证快照。后续固定版本SDK核对及新增HTTP/HTTPS代理实采见 [SDK与CLI核对报告](CLAUDE_SDK_SOURCE_VERIFICATION_2026-10-17.md)。
+
 本批已执行真实 CLI 抓取、后缀差分、入口准入、实际 HTTP 出站、TLS ClientHello 对比与 handler 回退测试，修复了三个问题。**仍不能宣称整个网络指纹与 Claude CLI 完全一致，也不能由格式检查证明请求来自官方客户端。**
 
 ## 执行范围与证据

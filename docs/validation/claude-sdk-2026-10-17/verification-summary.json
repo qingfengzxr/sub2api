@@ -1,0 +1,15 @@
+{
+  "sdk_configurations": 3,
+  "http_scenarios": 18,
+  "http_requests": 27,
+  "simulated_platform_cases_per_configuration": 6,
+  "tls_package_race_repetitions": 3,
+  "tls_package_result": "PASS",
+  "probe_sha256": "cfa420a6d128ba6e6a6b1c9bb7c4be301200a08d410ca6f42fb080fbfba10402",
+  "limits": [
+    "Loopback HTTP responses are synthetic",
+    "Platform cases simulate process properties, not physical OS network behavior",
+    "No real OAuth flow",
+    "CLI proxy results cover parsed target ClientHello fields, not project proxy end-to-end behavior"
+  ]
+}

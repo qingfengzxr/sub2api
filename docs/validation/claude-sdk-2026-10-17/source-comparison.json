@@ -1,0 +1,30 @@
+[
+  {
+    "file": "src/client.ts",
+    "sha256": "3c40bda2c0d2f6941edbe73f66b8435e8d427625319461184110a7d6fd7fb5b6",
+    "same_as_0_127_0": true,
+    "github_commit_source_matches_package": true,
+    "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/1926adb4d292090975e6b5d19ebafe2274d2469e/src/client.ts"
+  },
+  {
+    "file": "src/internal/headers.ts",
+    "sha256": "47c81c65e74a768bdcdae66b9b494f2b7271626edd03b8d06d6513ed904cb947",
+    "same_as_0_127_0": true,
+    "github_commit_source_matches_package": true,
+    "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/1926adb4d292090975e6b5d19ebafe2274d2469e/src/internal/headers.ts"
+  },
+  {
+    "file": "src/internal/detect-platform.ts",
+    "sha256": "bd92d9853b9a865756dedb3ffc831d8d6a809673b3208b4b3f4fcd8a30820f87",
+    "same_as_0_127_0": true,
+    "github_commit_source_matches_package": true,
+    "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/1926adb4d292090975e6b5d19ebafe2274d2469e/src/internal/detect-platform.ts"
+  },
+  {
+    "file": "src/internal/shims.ts",
+    "sha256": "9e4c2c8622b16a1223cada7f5e327093b22b25bcd196be3f948bc457d112cb5e",
+    "same_as_0_127_0": true,
+    "github_commit_source_matches_package": true,
+    "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/1926adb4d292090975e6b5d19ebafe2274d2469e/src/internal/shims.ts"
+  }
+]

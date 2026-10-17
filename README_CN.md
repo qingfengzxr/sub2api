@@ -806,6 +806,8 @@ Anthropic 推理入口强制校验 Claude Code 请求特征，包含普通分组
 
 2026-10-17 的本机样本验证修复了已准入 CLI 的 billing 后缀误改、无效 UTF-8 准入，以及内置 TLS profile 与实测 ClientHello 的差异。HTTP 头顺序/大小写、未启用 TLS profile 及 HTTPS 代理路径仍不能声称与 CLI 一致。详细结果与剩余覆盖项见 [验证报告](docs/CLAUDE_CLI_VALIDATION_RESULTS_2026-10-17.md)。
 
+后续[固定版本 SDK 核对](docs/CLAUDE_SDK_SOURCE_VERIFICATION_2026-10-17.md)确认：公开 SDK 0.128.0 搭配 Node 26.3.0 的默认网络行为仍不同于原生 CLI。SDK源码可解释部分头部与重试规则，不能替代CLI实采；新增本地HTTP/HTTPS代理测试仅确认CLI侧目标ClientHello的已测字段一致。
+
 ## 项目结构
 
 ```

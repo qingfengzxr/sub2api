@@ -1,0 +1,64 @@
+{
+  "baseline_commit": "0ebdb8adb",
+  "sdk_versions": [
+    {
+      "version": "0.128.0",
+      "tarball": "https://registry.npmjs.org/@anthropic-ai/sdk/-/sdk-0.128.0.tgz",
+      "integrity": "sha512-tl5cBFZC1jVFrTuQyvQObA4WmuNgcYVeXfriqOumgtLAHUm4gPUj18YnszBW60v0PrjDB8nBDOC6wd9CmHQFlA==",
+      "sha256": "53b1dccb6c16a4c7baf33673f96b830378538f0c492a568fdd16d5f2c0d916b8"
+    },
+    {
+      "version": "0.127.0",
+      "tarball": "https://registry.npmjs.org/@anthropic-ai/sdk/-/sdk-0.127.0.tgz",
+      "integrity": "sha512-OKiVbG9LHCxjn4fBJZJFy/Bz3hqE1RYpwaeSEDNheQnvz0XNKmGT/Lhkz2Sf1a27Ldt3vVv+BkU81I0U/8EpoQ==",
+      "sha256": "af491bf734d9bc23ed08a6122c7dd74ce88a1310cd29d23a24e4021f73ca05bc"
+    }
+  ],
+  "cli": {
+    "version": "2.1.301",
+    "binary_path": "/opt/homebrew/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+    "binary_sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+    "package": {
+      "name": "@anthropic-ai/claude-code",
+      "version": "2.1.301",
+      "bin": {
+        "claude": "bin/claude.exe"
+      },
+      "scripts": {
+        "postinstall": "node install.cjs",
+        "prepare": "node -e \"if (!process.env.AUTHORIZED) { console.error('ERROR: Direct publishing is not allowed.\\nPlease see the release workflow documentation to publish this package.'); process.exit(1); }\""
+      },
+      "engines": {
+        "node": ">=22.0.0"
+      },
+      "type": "module",
+      "author": "Anthropic <support@anthropic.com>",
+      "license": "SEE LICENSE IN README.md",
+      "description": "Use Claude, Anthropic's AI assistant, right from your terminal. Claude can understand your codebase, edit files, run terminal commands, and handle entire workflows for you.",
+      "homepage": "https://github.com/anthropics/claude-code",
+      "bugs": {
+        "url": "https://github.com/anthropics/claude-code/issues"
+      },
+      "dependencies": {},
+      "optionalDependencies": {
+        "@anthropic-ai/claude-code-darwin-arm64": "2.1.301",
+        "@anthropic-ai/claude-code-darwin-x64": "2.1.301",
+        "@anthropic-ai/claude-code-linux-x64": "2.1.301",
+        "@anthropic-ai/claude-code-linux-arm64": "2.1.301",
+        "@anthropic-ai/claude-code-linux-x64-musl": "2.1.301",
+        "@anthropic-ai/claude-code-linux-arm64-musl": "2.1.301",
+        "@anthropic-ai/claude-code-win32-x64": "2.1.301",
+        "@anthropic-ai/claude-code-win32-arm64": "2.1.301"
+      },
+      "files": [
+        "bin/claude.exe",
+        "install.cjs",
+        "cli-wrapper.cjs",
+        "sdk-tools.d.ts"
+      ]
+    },
+    "installer_sha256": "32a7b2429d7447c5aa043e383bcf9a72e0b233dff66336ea4b5b32531da981ad"
+  },
+  "source_commit_from_published_provenance": "1926adb4d292090975e6b5d19ebafe2274d2469e",
+  "verification": "npm tarball SHA512 compared with registry dist.integrity; four source files compared byte-for-byte with the referenced GitHub commit; not an attestation-signature validation"
+}

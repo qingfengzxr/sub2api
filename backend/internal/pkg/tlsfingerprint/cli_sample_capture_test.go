@@ -231,7 +231,7 @@ func captureSampleHello(t *testing.T, run func(context.Context, string) error) s
 	}
 }
 
-func readSampleClientHello(conn net.Conn) (sampleClientHello, error) {
+func readSampleClientHello(conn io.Reader) (sampleClientHello, error) {
 	var handshake []byte
 	for {
 		var header [5]byte

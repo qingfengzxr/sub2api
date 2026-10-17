@@ -1,0 +1,221 @@
+{
+  "builtin_profile_matches_cli": true,
+  "go_default_matches_cli": false,
+  "measurement": "ClientHello only; handshakes deliberately stopped before authentication",
+  "measurements": {
+    "builtin_profile": {
+      "legacy_version": 771,
+      "cipher_suites": [
+        4865,
+        4866,
+        4867,
+        49195,
+        49199,
+        49196,
+        49200,
+        52393,
+        52392,
+        49161,
+        49171,
+        49162,
+        49172,
+        156,
+        157,
+        47,
+        53
+      ],
+      "extensions": [
+        0,
+        23,
+        65281,
+        10,
+        11,
+        35,
+        16,
+        5,
+        13,
+        18,
+        51,
+        45,
+        43
+      ],
+      "groups": [
+        4588,
+        29,
+        23,
+        24
+      ],
+      "signature_algorithms": [
+        1027,
+        2052,
+        1025,
+        1283,
+        2053,
+        1281,
+        2054,
+        1537,
+        513
+      ],
+      "alpn": [
+        "http/1.1"
+      ],
+      "supported_versions": [
+        772,
+        771
+      ],
+      "key_shares": [
+        4588,
+        29
+      ],
+      "point_formats": [
+        0
+      ],
+      "psk_modes": [
+        1
+      ]
+    },
+    "cli": {
+      "legacy_version": 771,
+      "cipher_suites": [
+        4865,
+        4866,
+        4867,
+        49195,
+        49199,
+        49196,
+        49200,
+        52393,
+        52392,
+        49161,
+        49171,
+        49162,
+        49172,
+        156,
+        157,
+        47,
+        53
+      ],
+      "extensions": [
+        0,
+        23,
+        65281,
+        10,
+        11,
+        35,
+        16,
+        5,
+        13,
+        18,
+        51,
+        45,
+        43
+      ],
+      "groups": [
+        4588,
+        29,
+        23,
+        24
+      ],
+      "signature_algorithms": [
+        1027,
+        2052,
+        1025,
+        1283,
+        2053,
+        1281,
+        2054,
+        1537,
+        513
+      ],
+      "alpn": [
+        "http/1.1"
+      ],
+      "supported_versions": [
+        772,
+        771
+      ],
+      "key_shares": [
+        4588,
+        29
+      ],
+      "point_formats": [
+        0
+      ],
+      "psk_modes": [
+        1
+      ]
+    },
+    "go_default": {
+      "legacy_version": 771,
+      "cipher_suites": [
+        49195,
+        49199,
+        49196,
+        49200,
+        52393,
+        52392,
+        49161,
+        49171,
+        49162,
+        49172,
+        4865,
+        4866,
+        4867
+      ],
+      "extensions": [
+        0,
+        11,
+        65281,
+        23,
+        18,
+        5,
+        10,
+        13,
+        50,
+        16,
+        43,
+        51
+      ],
+      "groups": [
+        4588,
+        4587,
+        4589,
+        29,
+        23,
+        24,
+        25
+      ],
+      "signature_algorithms": [
+        2308,
+        2309,
+        2310,
+        2052,
+        1027,
+        2055,
+        2053,
+        2054,
+        1025,
+        1281,
+        1537,
+        1283,
+        1539
+      ],
+      "alpn": [
+        "h2",
+        "http/1.1"
+      ],
+      "supported_versions": [
+        772,
+        771
+      ],
+      "key_shares": [
+        4588,
+        29
+      ],
+      "point_formats": [
+        0
+      ],
+      "psk_modes": null
+    }
+  }
+}
