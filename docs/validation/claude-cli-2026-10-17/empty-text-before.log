@@ -1,0 +1,40 @@
+2026/10/16 23:51:23 Timezone initialized: UTC (UTC offset: +00:00)
+=== RUN   TestClaudeCLIRecordedSamples
+=== RUN   TestClaudeCLIRecordedSamples/compact-workflow
+=== RUN   TestClaudeCLIRecordedSamples/normal-reminder-moved
+    claude_cli_recorded_samples_test.go:62: CLI injected reminder blocks: validate suffix against captured original input; preserve billing on forwarding
+=== RUN   TestClaudeCLIRecordedSamples/stream-empty-text
+    claude_cli_recorded_samples_test.go:62: 
+        	Error Trace:	/Users/cooper/Programming/git_home/sub2api/backend/internal/service/claude_cli_recorded_samples_test.go:100
+        	            				/Users/cooper/Programming/git_home/sub2api/backend/internal/service/claude_cli_recorded_samples_test.go:62
+        	Error:      	Not equal: 
+        	            	expected: "cc_version=2.1.301.fc8"
+        	            	actual  : "cc_version=2.1.301.eca"
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1 +1 @@
+        	            	-cc_version=2.1.301.fc8
+        	            	+cc_version=2.1.301.eca
+        	Test:       	TestClaudeCLIRecordedSamples/stream-empty-text
+        	Messages:   	request 0
+=== RUN   TestClaudeCLIRecordedSamples/stream-image-first
+=== RUN   TestClaudeCLIRecordedSamples/stream-image-last
+=== RUN   TestClaudeCLIRecordedSamples/stream-multiple-text
+=== RUN   TestClaudeCLIRecordedSamples/stream-repeat-ten
+=== RUN   TestClaudeCLIRecordedSamples/stream-three-turns
+=== RUN   TestClaudeCLIRecordedSamples/tool-error
+--- FAIL: TestClaudeCLIRecordedSamples (0.03s)
+    --- PASS: TestClaudeCLIRecordedSamples/compact-workflow (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/normal-reminder-moved (0.00s)
+    --- FAIL: TestClaudeCLIRecordedSamples/stream-empty-text (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-image-first (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-image-last (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-multiple-text (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-repeat-ten (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-three-turns (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/tool-error (0.00s)
+FAIL
+FAIL	github.com/Wei-Shaw/sub2api/internal/service	1.147s
+FAIL

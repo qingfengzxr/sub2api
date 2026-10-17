@@ -1,0 +1,318 @@
+{
+  "case": {
+    "name": "compact-workflow",
+    "prompt": "0123456789ABCDEFGHIJKLMNO",
+    "matrix_ids": [
+      "MSG-13",
+      "CLI-14"
+    ],
+    "input_messages": [
+      "0123456789ABCDEFGHIJKLMNO",
+      "/compact",
+      "After compact."
+    ],
+    "enable_commands": true
+  },
+  "binary": {
+    "version": "2.1.301 (Claude Code)",
+    "sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+    "capture_script_sha256": "edc682b4df59f56129ca218f0bf0e8a513d1a9647dc595c0d3988ef3d88506b5",
+    "system": "Darwin",
+    "release": "23.6.0",
+    "machine": "arm64",
+    "captured_at": "2026-10-17T07:50:53+0800"
+  },
+  "invocation": [
+    "/opt/homebrew/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+    "--bare",
+    "-p",
+    "--no-session-persistence",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--model",
+    "claude-sonnet-4-6",
+    "--tools",
+    "",
+    "--input-format",
+    "stream-json",
+    "--output-format",
+    "stream-json",
+    "--verbose"
+  ],
+  "duration_seconds": 0.265,
+  "exit_code": 0,
+  "timed_out": false,
+  "status": "captured",
+  "requests": [
+    {
+      "sequence": 0,
+      "path": "/v1/messages?beta=true",
+      "method": "POST",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "User-Agent",
+          "claude-cli/2.1.301 (external, sdk-cli)"
+        ],
+        [
+          "X-Claude-Code-Session-Id",
+          "761f3462-21a9-4ff1-92a7-6902bd818eff"
+        ],
+        [
+          "X-Stainless-Arch",
+          "arm64"
+        ],
+        [
+          "X-Stainless-Lang",
+          "js"
+        ],
+        [
+          "X-Stainless-OS",
+          "MacOS"
+        ],
+        [
+          "X-Stainless-Package-Version",
+          "0.128.0"
+        ],
+        [
+          "X-Stainless-Retry-Count",
+          "0"
+        ],
+        [
+          "X-Stainless-Runtime",
+          "node"
+        ],
+        [
+          "X-Stainless-Runtime-Version",
+          "v26.3.0"
+        ],
+        [
+          "X-Stainless-Timeout",
+          "600"
+        ],
+        [
+          "anthropic-beta",
+          "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,thinking-display-updates-2026-08-18,afk-mode-2026-01-31"
+        ],
+        [
+          "anthropic-dangerous-direct-browser-access",
+          "true"
+        ],
+        [
+          "anthropic-version",
+          "2023-06-01"
+        ],
+        [
+          "x-app",
+          "cli"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "Host",
+          "127.0.0.1:53869"
+        ],
+        [
+          "Accept-Encoding",
+          "gzip, deflate, br, zstd"
+        ],
+        [
+          "Content-Length",
+          "6957"
+        ]
+      ],
+      "body": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"0123456789ABCDEFGHIJKLMNO\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.301.fc8; cc_entrypoint=sdk-cli;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"CWD: /private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\\nDate: 2026-10-17\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"64ca92dbbbe7a50c486b97c75c2c3df82c38c1284101918b7aaca86dca5fcebd\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"761f3462-21a9-4ff1-92a7-6902bd818eff\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"adaptive\",\"display\":\"updates\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"safeguards\":[{\"type\":\"dangerous_tool_use\",\"classifier_context\":{\"v\":1,\"permission_mode\":\"auto\",\"platform\":\"macos\",\"live_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"home_dir\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol/home\",\"rule_roots\":{\"userSettings\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol/config\",\"projectSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"localSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"flagSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"policySettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"cliArg\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"command\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"session\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"toolsNarrowing\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"mcpServerPolicy\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"hostCredential\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\"},\"trusted_directories\":{\"primary\":{\"path\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"resolved\":[\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\"]},\"additional\":[],\"network\":[],\"block_reads_outside_working_directories\":false},\"rules\":{\"allow\":[],\"deny\":[{\"rule\":\"Agent\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Bash\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Edit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"NotebookEdit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_list\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebFetch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TodoWrite\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReportFindings\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebSearch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskStop\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AskUserQuestion\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFeedback\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Skill\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"DesignSync\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Projects\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskGet\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskUpdate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Artifact\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactComments\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactData\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactCheck\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AppifactRepl\",\"source\":\"toolsNarrowing\"},{\"rule\":\"LSP\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListAgents\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShareOnboardingGuide\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Poll\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Workflow\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronDelete\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ScheduleWakeup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"RemoteTrigger\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchMcpRegistry\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShowOnboardingRolePicker\",\"source\":\"toolsNarrowing\"},{\"rule\":\"OfferChromeSetup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadNotifications\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__claude-in-chrome\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__Claude_Browser\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"request_computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestPluginInstall\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Monitor\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"propose_skills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ProposeGoal\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PublishPlugin\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PushNotification\",\"source\":\"toolsNarrowing\"},{\"rule\":\"FetchInboxMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EndConversation\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListMcpResourcesTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceDirTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WaitForMcpServers\",\"source\":\"toolsNarrowing\"},{\"rule\":\"GetTask\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Glob\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Grep\",\"source\":\"toolsNarrowing\"}],\"ask\":[]},\"auto_mode\":{\"allow\":[],\"soft_deny\":[],\"hard_deny\":[],\"environment\":[]},\"artifact_consent_holdback\":false,\"case_insensitive_paths\":false,\"restricted\":false,\"is_remote_mode\":false,\"classify_all_shell\":false,\"user_identity\":null,\"git_state\":{\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"root\":null,\"branch\":null,\"default_branch\":null,\"status\":null,\"visibility\":{\"origin\":null,\"push_remote\":null,\"remotes\":[],\"visibility_cache\":[]},\"error\":\"not_a_repo\"}}}],\"output_config\":{\"effort\":\"high\"},\"stream\":true}",
+      "body_sha256": "a0a01675fe06adb970567fc9159ff7b90eb44724fa849f023cfe2337b544ac3f"
+    },
+    {
+      "sequence": 1,
+      "path": "/v1/messages?beta=true",
+      "method": "POST",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "User-Agent",
+          "claude-cli/2.1.301 (external, sdk-cli)"
+        ],
+        [
+          "X-Claude-Code-Session-Id",
+          "761f3462-21a9-4ff1-92a7-6902bd818eff"
+        ],
+        [
+          "X-Stainless-Arch",
+          "arm64"
+        ],
+        [
+          "X-Stainless-Lang",
+          "js"
+        ],
+        [
+          "X-Stainless-OS",
+          "MacOS"
+        ],
+        [
+          "X-Stainless-Package-Version",
+          "0.128.0"
+        ],
+        [
+          "X-Stainless-Retry-Count",
+          "0"
+        ],
+        [
+          "X-Stainless-Runtime",
+          "node"
+        ],
+        [
+          "X-Stainless-Runtime-Version",
+          "v26.3.0"
+        ],
+        [
+          "X-Stainless-Timeout",
+          "600"
+        ],
+        [
+          "anthropic-beta",
+          "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,thinking-display-updates-2026-08-18"
+        ],
+        [
+          "anthropic-dangerous-direct-browser-access",
+          "true"
+        ],
+        [
+          "anthropic-version",
+          "2023-06-01"
+        ],
+        [
+          "x-app",
+          "cli"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "Host",
+          "127.0.0.1:53869"
+        ],
+        [
+          "Accept-Encoding",
+          "gzip, deflate, br, zstd"
+        ],
+        [
+          "Content-Length",
+          "7497"
+        ]
+      ],
+      "body": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":\"0123456789ABCDEFGHIJKLMNO\"},{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"OK\",\"cache_control\":{\"type\":\"ephemeral\"}}]},{\"role\":\"user\",\"content\":\"CRITICAL: Respond with TEXT ONLY. Do NOT call any tools.\\n\\n- Do NOT use Read, Bash, Grep, Glob, Edit, Write, or ANY other tool.\\n- You already have all the context you need in the conversation above.\\n- Tool calls will be REJECTED and will waste your only turn \u2014 you will fail the task.\\n- Your entire response must be plain text: an <analysis> block followed by a <summary> block.\\n\\nYour task is to create a detailed summary of the conversation so far, paying close attention to the user's explicit requests and your previous actions.\\nThis summary should be thorough in capturing technical details, code patterns, and architectural decisions that would be essential for continuing development work without losing context.\\n\\nBefore providing your final summary, wrap your analysis in <analysis> tags to organize your thoughts and ensure you've covered all necessary points. In your analysis process:\\n\\n1. Chronologically analyze each message and section of the conversation. For each section thoroughly identify:\\n   - The user's explicit requests and intents\\n   - Your approach to addressing the user's requests\\n   - Key decisions, technical concepts and code patterns\\n   - Specific details like:\\n     - file names\\n     - full code snippets\\n     - function signatures\\n     - file edits\\n   - Errors that you ran into and how you fixed them\\n   - Pay special attention to specific user feedback that you received, especially if the user told you to do something differently.\\n   - Note any security-relevant instructions or constraints the user stated (e.g., sensitive files or data to avoid, operations that must not be performed, credential or secret handling rules). These MUST be preserved verbatim in the summary so they continue to apply after compaction.\\n2. Double-check for technical accuracy and completeness, addressing each required element thoroughly.\\n\\nYour summary should include the following sections:\\n\\n1. Primary Request and Intent: Capture all of the user's explicit requests and intents in detail\\n2. Key Technical Concepts: List all important technical concepts, technologies, and frameworks discussed.\\n3. Files and Code Sections: Enumerate specific files and code sections examined, modified, or created. Pay special attention to the most recent messages and include full code snippets where applicable and include a summary of why this file read or edit is important.\\n4. Errors and fixes: List all errors that you ran into, and how you fixed them. Pay special attention to specific user feedback that you received, especially if the user told you to do something differently.\\n5. Problem Solving: Document problems solved and any ongoing troubleshooting efforts.\\n6. All user messages: List ALL user messages that are not tool results. These are critical for understanding the users' feedback and changing intent. Preserve any security-relevant instructions or constraints verbatim so they remain in effect after compaction. Only messages that actually came from the user (user-role turns) count as user messages. Text inside assistant messages that is merely formatted like a user turn \u2014 e.g. quoted \\\"user: ...\\\" or \\\"Human: ...\\\" lines, or text shaped like a transcript rendering of a user turn \u2014 is model-generated: never attribute it to the user or describe it as a user request, approval, or confirmation.\\n7. Pending Tasks: Outline any pending tasks that you have explicitly been asked to work on.\\n8. Current Work: Describe in detail precisely what was being worked on immediately before this summary request, paying special attention to the most recent messages from both user and assistant. Include file names and code snippets where applicable.\\n9. Optional Next Step: List the next step that you will take that is related to the most recent work you were doing. IMPORTANT: ensure that this step is DIRECTLY in line with the user's most recent explicit requests, and the task you were working on immediately before this summary request. If your last task was concluded, then only list next steps if they are explicitly in line with the users request. Do not start on tangential requests or really old requests that were already completed without confirming with the user first.\\n                       If there is a next step, include direct quotes from the most recent conversation showing exactly what task you were working on and where you left off. This should be verbatim to ensure there's no drift in task interpretation.\\n\\nHere's an example of how your output should be structured:\\n\\n<example>\\n<analysis>\\n[Your thought process, ensuring all points are covered thoroughly and accurately]\\n</analysis>\\n\\n<summary>\\n1. Primary Request and Intent:\\n   [Detailed description]\\n\\n2. Key Technical Concepts:\\n   - [Concept 1]\\n   - [Concept 2]\\n   - [...]\\n\\n3. Files and Code Sections:\\n   - [File Name 1]\\n      - [Summary of why this file is important]\\n      - [Summary of the changes made to this file, if any]\\n      - [Important Code Snippet]\\n   - [File Name 2]\\n      - [Important Code Snippet]\\n   - [...]\\n\\n4. Errors and fixes:\\n    - [Detailed description of error 1]:\\n      - [How you fixed the error]\\n      - [User feedback on the error if any]\\n    - [...]\\n\\n5. Problem Solving:\\n   [Description of solved problems and ongoing troubleshooting]\\n\\n6. All user messages: \\n    - [Detailed non tool use user message]\\n    - [...]\\n\\n7. Pending Tasks:\\n   - [Task 1]\\n   - [Task 2]\\n   - [...]\\n\\n8. Current Work:\\n   [Precise description of current work]\\n\\n9. Optional Next Step:\\n   [Optional Next step to take]\\n\\n</summary>\\n</example>\\n\\nPlease provide your summary based on the conversation so far, following this structure and ensuring precision and thoroughness in your response. \\n\\nThere may be additional summarization instructions provided in the included context. If so, remember to follow these instructions when creating the above summary. Examples of instructions include:\\n<example>\\n## Compact Instructions\\nWhen summarizing the conversation focus on typescript code changes and also remember the mistakes you made and how you fixed them.\\n</example>\\n\\n<example>\\n# Summary instructions\\nWhen you are using compact - please focus on test output and code changes. Include file reads verbatim.\\n</example>\\n\\n\\nREMINDER: Do NOT call any tools. Respond with plain text only \u2014 an <analysis> block followed by a <summary> block. Tool calls will be rejected and you will fail the task.\"}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.301.fc8; cc_entrypoint=sdk-cli;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"CWD: /private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\\nDate: 2026-10-17\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"64ca92dbbbe7a50c486b97c75c2c3df82c38c1284101918b7aaca86dca5fcebd\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"761f3462-21a9-4ff1-92a7-6902bd818eff\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"adaptive\",\"display\":\"updates\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"output_config\":{\"effort\":\"high\"},\"stream\":true}",
+      "body_sha256": "40d5a4cf2d1489919330241435da706d0a2fa8e59d1a2f10c3b7dc3b46706a57"
+    },
+    {
+      "sequence": 2,
+      "path": "/v1/messages?beta=true",
+      "method": "POST",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "User-Agent",
+          "claude-cli/2.1.301 (external, sdk-cli)"
+        ],
+        [
+          "X-Claude-Code-Session-Id",
+          "761f3462-21a9-4ff1-92a7-6902bd818eff"
+        ],
+        [
+          "X-Stainless-Arch",
+          "arm64"
+        ],
+        [
+          "X-Stainless-Lang",
+          "js"
+        ],
+        [
+          "X-Stainless-OS",
+          "MacOS"
+        ],
+        [
+          "X-Stainless-Package-Version",
+          "0.128.0"
+        ],
+        [
+          "X-Stainless-Retry-Count",
+          "0"
+        ],
+        [
+          "X-Stainless-Runtime",
+          "node"
+        ],
+        [
+          "X-Stainless-Runtime-Version",
+          "v26.3.0"
+        ],
+        [
+          "X-Stainless-Timeout",
+          "600"
+        ],
+        [
+          "anthropic-beta",
+          "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,thinking-display-updates-2026-08-18,afk-mode-2026-01-31"
+        ],
+        [
+          "anthropic-dangerous-direct-browser-access",
+          "true"
+        ],
+        [
+          "anthropic-version",
+          "2023-06-01"
+        ],
+        [
+          "x-app",
+          "cli"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "Host",
+          "127.0.0.1:53869"
+        ],
+        [
+          "Accept-Encoding",
+          "gzip, deflate, br, zstd"
+        ],
+        [
+          "Content-Length",
+          "1906"
+        ]
+      ],
+      "body": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\\n\\nOK\\nContinue the conversation from where it left off without asking the user any further questions. Resume directly \u2014 do not acknowledge the summary, do not recap what was happening, do not preface with \\\"I'll continue\\\" or similar. Pick up the last task as if the break never happened.\\n\"},{\"type\":\"text\",\"text\":\"<local-command-caveat>The command below was run directly in Claude Code, not sent to you as a request, and its output goes straight to the user. It's recorded here as context for later messages.</local-command-caveat>\\n\"},{\"type\":\"text\",\"text\":\"<command-name>/compact</command-name>\\n            <command-message>compact</command-message>\\n            <command-args></command-args>\\n\"},{\"type\":\"text\",\"text\":\"<local-command-stdout>Compacted </local-command-stdout>\\n\"},{\"type\":\"text\",\"text\":\"After compact.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.301.fb5; cc_entrypoint=sdk-cli;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"CWD: /private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\\nDate: 2026-10-17\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"64ca92dbbbe7a50c486b97c75c2c3df82c38c1284101918b7aaca86dca5fcebd\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"761f3462-21a9-4ff1-92a7-6902bd818eff\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"adaptive\",\"display\":\"updates\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"output_config\":{\"effort\":\"high\"},\"stream\":true}",
+      "body_sha256": "9eab755a15a25934710bd6650f4dec3fd4cbea05dd42382f72bec58e61ad1189"
+    }
+  ],
+  "stdout": "{\"type\":\"system\",\"subtype\":\"ui_invalidate\",\"event\":\"ui.render\",\"uuid\":\"e78710a6-6987-4983-b1a7-4a3f1fde81ad\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\"}\n{\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"tools\":[],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"auto\",\"slash_commands\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\",\"agents\",\"auto-mode-setup\",\"autocompact\",\"clear\",\"color\",\"compact\",\"config\",\"output-style\",\"context\",\"effort\",\"fast\",\"focus\",\"heapdump\",\"init\",\"mcp\",\"model\",\"__remote-workflow\",\"workflow-launch-exec\",\"reload-plugins\",\"reload-skills\",\"rename\",\"security-review\",\"usage\",\"insights\",\"recap\",\"goal\",\"list-agents\",\"team-onboarding\"],\"terminal_slash_commands\":[\"doctor\",\"color\",\"focus\",\"reload-plugins\"],\"apiKeySource\":\"ANTHROPIC_API_KEY\",\"claude_code_version\":\"2.1.301\",\"output_style\":\"default\",\"agents\":[\"claude\",\"Explore\",\"general-purpose\",\"Plan\",\"statusline-setup\"],\"skills\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\"],\"plugins\":[{\"name\":\"cc-plugin-agents-md\",\"path\":\"builtin\",\"source\":\"cc-plugin-agents-md@builtin\"},{\"name\":\"cc-plugin-plugin-authoring\",\"path\":\"builtin\",\"source\":\"cc-plugin-plugin-authoring@builtin\"}],\"capabilities\":[\"interrupt_receipt_v1\",\"interrupt_cancel_queued_v1\",\"interrupt_send_now_v1\",\"msg_lifecycle_v1\",\"request_marker_lists_v1\",\"sdk_mcp_tools_list_changed\",\"sdk_mcp_manifests\",\"mcp_read_resource_v1\",\"mcp_tool_ui_meta_v1\",\"ui_surface_v1\",\"mcp_call_result_not_for_model_v1\"],\"analytics_disabled\":true,\"product_feedback_disabled\":true,\"uuid\":\"931c042e-61ff-4c32-8c98-8d7dbb6b5b61\",\"original_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"additional_directories\":[],\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"per_turn_effort_active\":false,\"view_mode\":\"default\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"msg_local_sample\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-6\",\"content\":[{\"type\":\"text\",\"text\":\"OK\"}],\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":20,\"output_tokens\":2},\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"uuid\":\"ec04eb6c-c3d9-4f06-868a-6abd57fa8cf4\",\"timestamp\":\"2026-10-16T23:51:03.181Z\",\"request_id\":\"req_local_sample\"}\n{\"type\":\"system\",\"subtype\":\"informational\",\"content\":\"We're changing auto mode to no longer charge for classifier requests in Claude Code. However, this session isn't eligible because your requests go through 127.0.0.1:53869, which isn't compatible with this update. Nothing breaks: auto mode keeps working, and its classifier requests are billed as before. To fix it and access the new version of auto mode, ask your gateway to implement: https://code.claude.com/docs/en/auto-mode-classifier-billing\",\"isMeta\":false,\"timestamp\":\"2026-10-16T23:51:03.188Z\",\"uuid\":\"cec1a9cf-4ef4-4d5b-9a6a-bdcd827246c8\",\"level\":\"warning\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\"}\n{\"duration_api_ms\":9,\"stop_reason\":\"end_turn\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"total_cost_usd\":0.00009,\"usage\":{\"input_tokens\":20,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":2,\"output_tokens_details\":{\"thinking_tokens\":0},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\",\"fallback_credit\":null},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":20,\"outputTokens\":2,\"cacheReadInputTokens\":0,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.00009,\"contextWindow\":200000,\"maxOutputTokens\":32000,\"thinkingTokens\":0,\"canonicalModel\":\"claude-sonnet-4-6\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"safety_stops\":0,\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"OK\",\"ttft_ms\":37,\"type\":\"result\",\"duration_ms\":41,\"uuid\":\"ee89a175-af74-4735-980c-aab20f6346db\",\"ttft_stream_ms\":36,\"time_to_request_ms\":33,\"first_content_frame_ms\":36,\"queued_turn_count\":0,\"result_index\":0}\n{\"type\":\"system\",\"subtype\":\"status\",\"status\":\"compacting\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"uuid\":\"440f09a8-0c76-49d2-bd27-7a17f714d637\"}\n{\"type\":\"system\",\"subtype\":\"status\",\"status\":null,\"compact_result\":\"success\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"uuid\":\"fc039602-08c1-45af-ba1a-70de82b6950e\"}\n{\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"tools\":[],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"auto\",\"slash_commands\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\",\"agents\",\"auto-mode-setup\",\"autocompact\",\"clear\",\"color\",\"compact\",\"config\",\"output-style\",\"context\",\"effort\",\"fast\",\"focus\",\"heapdump\",\"init\",\"mcp\",\"model\",\"__remote-workflow\",\"workflow-launch-exec\",\"reload-plugins\",\"reload-skills\",\"rename\",\"security-review\",\"usage\",\"insights\",\"recap\",\"goal\",\"list-agents\",\"team-onboarding\"],\"terminal_slash_commands\":[\"doctor\",\"color\",\"focus\",\"reload-plugins\"],\"apiKeySource\":\"ANTHROPIC_API_KEY\",\"claude_code_version\":\"2.1.301\",\"output_style\":\"default\",\"agents\":[\"claude\",\"Explore\",\"general-purpose\",\"Plan\",\"statusline-setup\"],\"skills\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\"],\"plugins\":[{\"name\":\"cc-plugin-agents-md\",\"path\":\"builtin\",\"source\":\"cc-plugin-agents-md@builtin\"},{\"name\":\"cc-plugin-plugin-authoring\",\"path\":\"builtin\",\"source\":\"cc-plugin-plugin-authoring@builtin\"}],\"capabilities\":[\"interrupt_receipt_v1\",\"interrupt_cancel_queued_v1\",\"interrupt_send_now_v1\",\"msg_lifecycle_v1\",\"request_marker_lists_v1\",\"sdk_mcp_tools_list_changed\",\"sdk_mcp_manifests\",\"mcp_read_resource_v1\",\"mcp_tool_ui_meta_v1\",\"ui_surface_v1\",\"mcp_call_result_not_for_model_v1\"],\"analytics_disabled\":true,\"product_feedback_disabled\":true,\"uuid\":\"2044315e-27c5-47ed-b155-134af661bf08\",\"original_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"additional_directories\":[],\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"per_turn_effort_active\":false,\"view_mode\":\"default\"}\n{\"type\":\"system\",\"subtype\":\"compact_boundary\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"uuid\":\"76affa91-5362-4fab-9fdb-3070024dba35\",\"compact_metadata\":{\"trigger\":\"manual\",\"pre_tokens\":22,\"post_tokens\":109,\"cumulative_dropped_tokens\":0,\"duration_ms\":8},\"logical_parent_uuid\":\"ec04eb6c-c3d9-4f06-868a-6abd57fa8cf4\"}\n{\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":\"This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\\n\\nOK\\nContinue the conversation from where it left off without asking the user any further questions. Resume directly \u2014 do not acknowledge the summary, do not recap what was happening, do not preface with \\\"I'll continue\\\" or similar. Pick up the last task as if the break never happened.\"},\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"parent_tool_use_id\":null,\"uuid\":\"cbcaa345-a78b-475b-9e1e-518856cc82b7\",\"timestamp\":\"2026-10-16T23:51:03.200Z\",\"isReplay\":false,\"isSynthetic\":true}\n{\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":\"<local-command-stdout>Compacted </local-command-stdout>\"},\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"parent_tool_use_id\":null,\"uuid\":\"684dcced-e6fa-436c-a632-6cf7853c94bd\",\"timestamp\":\"2026-10-16T23:51:03.302Z\",\"isReplay\":true}\n{\"is_error\":false,\"duration_api_ms\":0,\"num_turns\":0,\"stop_reason\":null,\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"total_cost_usd\":0.00018,\"usage\":{\"output_tokens_details\":{\"thinking_tokens\":0},\"input_tokens\":0,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":0,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\",\"fallback_credit\":null},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":40,\"outputTokens\":4,\"cacheReadInputTokens\":0,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.00018,\"contextWindow\":200000,\"maxOutputTokens\":32000,\"thinkingTokens\":0,\"canonicalModel\":\"claude-sonnet-4-6\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"safety_stops\":0,\"subtype\":\"success\",\"result\":\"\",\"local_command\":\"compact\",\"type\":\"result\",\"duration_ms\":14,\"uuid\":\"a9d12ee4-648f-4e47-9a3e-5271ef68a3d9\",\"queued_turn_count\":0,\"result_index\":1}\n{\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"tools\":[],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"auto\",\"slash_commands\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\",\"agents\",\"auto-mode-setup\",\"autocompact\",\"clear\",\"color\",\"compact\",\"config\",\"output-style\",\"context\",\"effort\",\"fast\",\"focus\",\"heapdump\",\"init\",\"mcp\",\"model\",\"__remote-workflow\",\"workflow-launch-exec\",\"reload-plugins\",\"reload-skills\",\"rename\",\"security-review\",\"usage\",\"insights\",\"recap\",\"goal\",\"list-agents\",\"team-onboarding\"],\"terminal_slash_commands\":[\"doctor\",\"color\",\"focus\",\"reload-plugins\"],\"apiKeySource\":\"ANTHROPIC_API_KEY\",\"claude_code_version\":\"2.1.301\",\"output_style\":\"default\",\"agents\":[\"claude\",\"Explore\",\"general-purpose\",\"Plan\",\"statusline-setup\"],\"skills\":[\"deep-research\",\"dataviz\",\"update-config\",\"verify\",\"debug\",\"code-review\",\"simplify\",\"batch\",\"fewer-permission-prompts\",\"doctor\",\"loop\",\"claude-api\",\"workflow-authoring\",\"run\",\"run-skill-generator\",\"plugin-authoring\"],\"plugins\":[{\"name\":\"cc-plugin-agents-md\",\"path\":\"builtin\",\"source\":\"cc-plugin-agents-md@builtin\"},{\"name\":\"cc-plugin-plugin-authoring\",\"path\":\"builtin\",\"source\":\"cc-plugin-plugin-authoring@builtin\"}],\"capabilities\":[\"interrupt_receipt_v1\",\"interrupt_cancel_queued_v1\",\"interrupt_send_now_v1\",\"msg_lifecycle_v1\",\"request_marker_lists_v1\",\"sdk_mcp_tools_list_changed\",\"sdk_mcp_manifests\",\"mcp_read_resource_v1\",\"mcp_tool_ui_meta_v1\",\"ui_surface_v1\",\"mcp_call_result_not_for_model_v1\"],\"analytics_disabled\":true,\"product_feedback_disabled\":true,\"uuid\":\"8c58e392-4a49-4fe1-89e9-c588ad06db7c\",\"original_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-ebhtkwol\",\"additional_directories\":[],\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"per_turn_effort_active\":false,\"view_mode\":\"default\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"msg_local_sample\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-6\",\"content\":[{\"type\":\"text\",\"text\":\"OK\"}],\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":20,\"output_tokens\":2},\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"uuid\":\"b3c83cf3-f00d-4908-8e34-427907af8ffc\",\"timestamp\":\"2026-10-16T23:51:03.213Z\",\"request_id\":\"req_local_sample\"}\n{\"duration_api_ms\":15,\"stop_reason\":\"end_turn\",\"session_id\":\"761f3462-21a9-4ff1-92a7-6902bd818eff\",\"total_cost_usd\":0.00027,\"usage\":{\"input_tokens\":20,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":2,\"output_tokens_details\":{\"thinking_tokens\":0},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\",\"fallback_credit\":null},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":60,\"outputTokens\":6,\"cacheReadInputTokens\":0,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.00027,\"contextWindow\":200000,\"maxOutputTokens\":32000,\"thinkingTokens\":0,\"canonicalModel\":\"claude-sonnet-4-6\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"safety_stops\":0,\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"OK\",\"ttft_ms\":7,\"type\":\"result\",\"duration_ms\":9,\"uuid\":\"7a0e692f-f27a-4ee9-8945-9c36d5b3909d\",\"ttft_stream_ms\":7,\"time_to_request_ms\":6,\"first_content_frame_ms\":7,\"queued_turn_count\":0,\"result_index\":2}\n",
+  "stderr": ""
+}

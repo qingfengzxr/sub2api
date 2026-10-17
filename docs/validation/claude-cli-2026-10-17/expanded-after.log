@@ -1,0 +1,879 @@
+2026/10/17 00:00:41 Timezone initialized: UTC (UTC offset: +00:00)
+=== RUN   TestClaudeCLIRecordedSamples
+=== RUN   TestClaudeCLIRecordedSamples/arabic
+=== RUN   TestClaudeCLIRecordedSamples/ascii
+=== RUN   TestClaudeCLIRecordedSamples/chinese
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-00
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-01
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-02
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-03
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-04
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-05
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-06
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-07
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-08
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-09
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-10
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-11
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-12
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-13
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-14
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-15
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-16
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-17
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-18
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-19
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-20
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-21
+=== RUN   TestClaudeCLIRecordedSamples/chinese-at-22
+=== RUN   TestClaudeCLIRecordedSamples/compact-workflow
+=== RUN   TestClaudeCLIRecordedSamples/controls
+=== RUN   TestClaudeCLIRecordedSamples/crlf
+=== RUN   TestClaudeCLIRecordedSamples/custom-beta
+=== RUN   TestClaudeCLIRecordedSamples/devanagari
+=== RUN   TestClaudeCLIRecordedSamples/effort-high
+=== RUN   TestClaudeCLIRecordedSamples/effort-low
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-00
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-01
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-02
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-03
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-04
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-05
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-06
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-07
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-08
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-09
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-10
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-11
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-12
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-13
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-14
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-15
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-16
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-17
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-18
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-19
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-20
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-21
+=== RUN   TestClaudeCLIRecordedSamples/emoji-at-22
+=== RUN   TestClaudeCLIRecordedSamples/emoji-zwj
+=== RUN   TestClaudeCLIRecordedSamples/escapes
+=== RUN   TestClaudeCLIRecordedSamples/haiku
+=== RUN   TestClaudeCLIRecordedSamples/hebrew
+=== RUN   TestClaudeCLIRecordedSamples/invisible
+=== RUN   TestClaudeCLIRecordedSamples/japanese
+=== RUN   TestClaudeCLIRecordedSamples/korean
+=== RUN   TestClaudeCLIRecordedSamples/length-00
+    claude_cli_recorded_samples_test.go:64: CLI did not produce a request; inspect capture status
+=== RUN   TestClaudeCLIRecordedSamples/length-01
+=== RUN   TestClaudeCLIRecordedSamples/length-02
+=== RUN   TestClaudeCLIRecordedSamples/length-03
+=== RUN   TestClaudeCLIRecordedSamples/length-04
+=== RUN   TestClaudeCLIRecordedSamples/length-05
+=== RUN   TestClaudeCLIRecordedSamples/length-06
+=== RUN   TestClaudeCLIRecordedSamples/length-07
+=== RUN   TestClaudeCLIRecordedSamples/length-08
+=== RUN   TestClaudeCLIRecordedSamples/length-09
+=== RUN   TestClaudeCLIRecordedSamples/length-10
+=== RUN   TestClaudeCLIRecordedSamples/length-11
+=== RUN   TestClaudeCLIRecordedSamples/length-12
+=== RUN   TestClaudeCLIRecordedSamples/length-13
+=== RUN   TestClaudeCLIRecordedSamples/length-14
+=== RUN   TestClaudeCLIRecordedSamples/length-15
+=== RUN   TestClaudeCLIRecordedSamples/length-16
+=== RUN   TestClaudeCLIRecordedSamples/length-17
+=== RUN   TestClaudeCLIRecordedSamples/length-18
+=== RUN   TestClaudeCLIRecordedSamples/length-19
+=== RUN   TestClaudeCLIRecordedSamples/length-20
+=== RUN   TestClaudeCLIRecordedSamples/length-21
+=== RUN   TestClaudeCLIRecordedSamples/length-22
+=== RUN   TestClaudeCLIRecordedSamples/length-23
+=== RUN   TestClaudeCLIRecordedSamples/length-24
+=== RUN   TestClaudeCLIRecordedSamples/long-ascii
+=== RUN   TestClaudeCLIRecordedSamples/long-unicode
+=== RUN   TestClaudeCLIRecordedSamples/mixed
+=== RUN   TestClaudeCLIRecordedSamples/mutation-00
+=== RUN   TestClaudeCLIRecordedSamples/mutation-01
+=== RUN   TestClaudeCLIRecordedSamples/mutation-02
+=== RUN   TestClaudeCLIRecordedSamples/mutation-03
+=== RUN   TestClaudeCLIRecordedSamples/mutation-04
+=== RUN   TestClaudeCLIRecordedSamples/mutation-05
+=== RUN   TestClaudeCLIRecordedSamples/mutation-06
+=== RUN   TestClaudeCLIRecordedSamples/mutation-07
+=== RUN   TestClaudeCLIRecordedSamples/mutation-08
+=== RUN   TestClaudeCLIRecordedSamples/mutation-09
+=== RUN   TestClaudeCLIRecordedSamples/mutation-10
+=== RUN   TestClaudeCLIRecordedSamples/mutation-11
+=== RUN   TestClaudeCLIRecordedSamples/mutation-12
+=== RUN   TestClaudeCLIRecordedSamples/mutation-13
+=== RUN   TestClaudeCLIRecordedSamples/mutation-14
+=== RUN   TestClaudeCLIRecordedSamples/mutation-15
+=== RUN   TestClaudeCLIRecordedSamples/mutation-16
+=== RUN   TestClaudeCLIRecordedSamples/mutation-17
+=== RUN   TestClaudeCLIRecordedSamples/mutation-18
+=== RUN   TestClaudeCLIRecordedSamples/mutation-19
+=== RUN   TestClaudeCLIRecordedSamples/mutation-20
+=== RUN   TestClaudeCLIRecordedSamples/mutation-21
+=== RUN   TestClaudeCLIRecordedSamples/mutation-22
+=== RUN   TestClaudeCLIRecordedSamples/mutation-23
+=== RUN   TestClaudeCLIRecordedSamples/mutation-24
+=== RUN   TestClaudeCLIRecordedSamples/nfc
+=== RUN   TestClaudeCLIRecordedSamples/nfd
+=== RUN   TestClaudeCLIRecordedSamples/normal-config
+    claude_cli_recorded_samples_test.go:72: CLI changed message blocks after billing: validate suffix against captured original input; preserve billing on forwarding
+=== RUN   TestClaudeCLIRecordedSamples/normal-reminder-moved
+    claude_cli_recorded_samples_test.go:72: CLI changed message blocks after billing: validate suffix against captured original input; preserve billing on forwarding
+=== RUN   TestClaudeCLIRecordedSamples/output-json
+=== RUN   TestClaudeCLIRecordedSamples/output-stream-json
+=== RUN   TestClaudeCLIRecordedSamples/positions
+=== RUN   TestClaudeCLIRecordedSamples/repeat-00
+=== RUN   TestClaudeCLIRecordedSamples/repeat-01
+=== RUN   TestClaudeCLIRecordedSamples/repeat-02
+=== RUN   TestClaudeCLIRecordedSamples/repeat-03
+=== RUN   TestClaudeCLIRecordedSamples/repeat-04
+=== RUN   TestClaudeCLIRecordedSamples/repeat-05
+=== RUN   TestClaudeCLIRecordedSamples/repeat-06
+=== RUN   TestClaudeCLIRecordedSamples/repeat-07
+=== RUN   TestClaudeCLIRecordedSamples/repeat-08
+=== RUN   TestClaudeCLIRecordedSamples/repeat-09
+=== RUN   TestClaudeCLIRecordedSamples/retry-429
+=== RUN   TestClaudeCLIRecordedSamples/retry-503
+=== RUN   TestClaudeCLIRecordedSamples/stdin-text
+=== RUN   TestClaudeCLIRecordedSamples/stream-empty-text
+    claude_cli_recorded_samples_test.go:72: CLI changed message blocks after billing: validate suffix against captured original input; preserve billing on forwarding
+=== RUN   TestClaudeCLIRecordedSamples/stream-image-first
+=== RUN   TestClaudeCLIRecordedSamples/stream-image-last
+=== RUN   TestClaudeCLIRecordedSamples/stream-multiple-text
+=== RUN   TestClaudeCLIRecordedSamples/stream-repeat-ten
+=== RUN   TestClaudeCLIRecordedSamples/stream-three-turns
+=== RUN   TestClaudeCLIRecordedSamples/suffix-a
+=== RUN   TestClaudeCLIRecordedSamples/suffix-b
+=== RUN   TestClaudeCLIRecordedSamples/surrogate-paired
+=== RUN   TestClaudeCLIRecordedSamples/surrogate-single
+=== RUN   TestClaudeCLIRecordedSamples/system-appended
+=== RUN   TestClaudeCLIRecordedSamples/system-replaced
+=== RUN   TestClaudeCLIRecordedSamples/tool-error
+=== RUN   TestClaudeCLIRecordedSamples/tool-roundtrip
+=== RUN   TestClaudeCLIRecordedSamples/tools-default
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-000
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-001
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-002
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-003
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-004
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-005
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-006
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-007
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-008
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-009
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-010
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-011
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-012
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-013
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-014
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-015
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-016
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-017
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-018
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-019
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-020
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-021
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-022
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-023
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-024
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-025
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-026
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-027
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-028
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-029
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-030
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-031
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-032
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-033
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-034
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-035
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-036
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-037
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-038
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-039
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-040
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-041
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-042
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-043
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-044
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-045
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-046
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-047
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-048
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-049
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-050
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-051
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-052
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-053
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-054
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-055
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-056
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-057
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-058
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-059
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-060
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-061
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-062
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-063
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-064
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-065
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-066
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-067
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-068
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-069
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-070
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-071
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-072
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-073
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-074
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-075
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-076
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-077
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-078
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-079
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-080
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-081
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-082
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-083
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-084
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-085
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-086
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-087
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-088
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-089
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-090
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-091
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-092
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-093
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-094
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-095
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-096
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-097
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-098
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-099
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-100
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-101
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-102
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-103
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-104
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-105
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-106
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-107
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-108
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-109
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-110
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-111
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-112
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-113
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-114
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-115
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-116
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-117
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-118
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-119
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-120
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-121
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-122
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-123
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-124
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-125
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-126
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-127
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-128
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-129
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-130
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-131
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-132
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-133
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-134
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-135
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-136
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-137
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-138
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-139
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-140
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-141
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-142
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-143
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-144
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-145
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-146
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-147
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-148
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-149
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-150
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-151
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-152
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-153
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-154
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-155
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-156
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-157
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-158
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-159
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-160
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-161
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-162
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-163
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-164
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-165
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-166
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-167
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-168
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-169
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-170
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-171
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-172
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-173
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-174
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-175
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-176
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-177
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-178
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-179
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-180
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-181
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-182
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-183
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-184
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-185
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-186
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-187
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-188
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-189
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-190
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-191
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-192
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-193
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-194
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-195
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-196
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-197
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-198
+=== RUN   TestClaudeCLIRecordedSamples/unicode-random-199
+=== RUN   TestClaudeCLIRecordedSamples/whitespace
+--- PASS: TestClaudeCLIRecordedSamples (0.57s)
+    --- PASS: TestClaudeCLIRecordedSamples/arabic (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/ascii (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-00 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-01 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-02 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-03 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-04 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-05 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-06 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-07 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-08 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-09 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-10 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-11 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-12 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-13 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-14 (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-15 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-16 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-17 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-18 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-19 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-20 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-21 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/chinese-at-22 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/compact-workflow (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/controls (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/crlf (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/custom-beta (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/devanagari (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/effort-high (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/effort-low (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-00 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-01 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-02 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-03 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-04 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-05 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-06 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-07 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-08 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-09 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-10 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-11 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-12 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-13 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-14 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-15 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-16 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-17 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-18 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-19 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-20 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-21 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-at-22 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/emoji-zwj (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/escapes (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/haiku (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/hebrew (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/invisible (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/japanese (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/korean (0.00s)
+    --- SKIP: TestClaudeCLIRecordedSamples/length-00 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-01 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-02 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-03 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-04 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-05 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-06 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-07 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-08 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-09 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-10 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-11 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-12 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-13 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-14 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-15 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-16 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-17 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-18 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-19 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-20 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-21 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-22 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-23 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/length-24 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/long-ascii (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/long-unicode (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mixed (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-00 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-01 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-02 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-03 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-04 (0.02s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-05 (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-06 (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-07 (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-08 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-09 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-10 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-11 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-12 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-13 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-14 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-15 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-16 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-17 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-18 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-19 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-20 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-21 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-22 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-23 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/mutation-24 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/nfc (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/nfd (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/normal-config (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/normal-reminder-moved (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/output-json (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/output-stream-json (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/positions (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-00 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-01 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-02 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-03 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-04 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-05 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-06 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-07 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-08 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/repeat-09 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/retry-429 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/retry-503 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stdin-text (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-empty-text (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-image-first (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-image-last (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-multiple-text (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-repeat-ten (0.01s)
+    --- PASS: TestClaudeCLIRecordedSamples/stream-three-turns (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/suffix-a (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/suffix-b (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/surrogate-paired (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/surrogate-single (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/system-appended (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/system-replaced (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/tool-error (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/tool-roundtrip (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/tools-default (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-000 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-001 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-002 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-003 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-004 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-005 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-006 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-007 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-008 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-009 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-010 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-011 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-012 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-013 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-014 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-015 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-016 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-017 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-018 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-019 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-020 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-021 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-022 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-023 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-024 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-025 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-026 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-027 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-028 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-029 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-030 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-031 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-032 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-033 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-034 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-035 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-036 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-037 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-038 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-039 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-040 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-041 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-042 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-043 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-044 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-045 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-046 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-047 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-048 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-049 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-050 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-051 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-052 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-053 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-054 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-055 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-056 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-057 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-058 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-059 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-060 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-061 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-062 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-063 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-064 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-065 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-066 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-067 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-068 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-069 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-070 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-071 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-072 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-073 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-074 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-075 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-076 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-077 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-078 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-079 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-080 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-081 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-082 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-083 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-084 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-085 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-086 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-087 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-088 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-089 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-090 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-091 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-092 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-093 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-094 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-095 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-096 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-097 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-098 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-099 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-100 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-101 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-102 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-103 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-104 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-105 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-106 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-107 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-108 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-109 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-110 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-111 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-112 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-113 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-114 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-115 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-116 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-117 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-118 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-119 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-120 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-121 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-122 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-123 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-124 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-125 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-126 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-127 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-128 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-129 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-130 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-131 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-132 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-133 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-134 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-135 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-136 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-137 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-138 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-139 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-140 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-141 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-142 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-143 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-144 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-145 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-146 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-147 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-148 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-149 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-150 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-151 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-152 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-153 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-154 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-155 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-156 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-157 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-158 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-159 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-160 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-161 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-162 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-163 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-164 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-165 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-166 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-167 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-168 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-169 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-170 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-171 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-172 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-173 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-174 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-175 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-176 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-177 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-178 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-179 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-180 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-181 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-182 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-183 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-184 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-185 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-186 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-187 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-188 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-189 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-190 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-191 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-192 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-193 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-194 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-195 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-196 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-197 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-198 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/unicode-random-199 (0.00s)
+    --- PASS: TestClaudeCLIRecordedSamples/whitespace (0.00s)
+=== RUN   TestClaudeCLIRecordedRawHTTPHeaders
+    claude_cli_recorded_samples_test.go:266: {
+          "allowed_differences": "destination Host/Content-Length and OAuth beta; remaining order/casing/transport-added fields are measured discrepancies",
+          "cli_headers": [
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "Content-Type",
+              "application/json"
+            ],
+            [
+              "User-Agent",
+              "claude-cli/2.1.301 (external, sdk-cli)"
+            ],
+            [
+              "X-Claude-Code-Session-Id",
+              "2dc6ed65-24ba-4da8-910b-f90825573a2a"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.128.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "X-Stainless-Timeout",
+              "600"
+            ],
+            [
+              "anthropic-beta",
+              "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31"
+            ],
+            [
+              "anthropic-dangerous-direct-browser-access",
+              "true"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "x-app",
+              "cli"
+            ],
+            [
+              "Connection",
+              "keep-alive"
+            ],
+            [
+              "Host",
+              "127.0.0.1:50138"
+            ],
+            [
+              "Accept-Encoding",
+              "gzip, deflate, br, zstd"
+            ],
+            [
+              "Content-Length",
+              "6940"
+            ]
+          ],
+          "exact_sequence_equal": false,
+          "forwarded_headers": [
+            [
+              "Host",
+              "api.anthropic.com"
+            ],
+            [
+              "User-Agent",
+              "claude-cli/2.1.301 (external, sdk-cli)"
+            ],
+            [
+              "Content-Length",
+              "6940"
+            ],
+            [
+              "Accept",
+              "application/json"
+            ],
+            [
+              "Accept-Encoding",
+              "gzip, deflate, br, zstd"
+            ],
+            [
+              "X-Claude-Code-Session-Id",
+              "2dc6ed65-24ba-4da8-910b-f90825573a2a"
+            ],
+            [
+              "X-Stainless-Arch",
+              "arm64"
+            ],
+            [
+              "X-Stainless-Lang",
+              "js"
+            ],
+            [
+              "X-Stainless-OS",
+              "MacOS"
+            ],
+            [
+              "X-Stainless-Package-Version",
+              "0.128.0"
+            ],
+            [
+              "X-Stainless-Retry-Count",
+              "0"
+            ],
+            [
+              "X-Stainless-Runtime",
+              "node"
+            ],
+            [
+              "X-Stainless-Runtime-Version",
+              "v26.3.0"
+            ],
+            [
+              "X-Stainless-Timeout",
+              "600"
+            ],
+            [
+              "anthropic-beta",
+              "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31"
+            ],
+            [
+              "anthropic-dangerous-direct-browser-access",
+              "true"
+            ],
+            [
+              "anthropic-version",
+              "2023-06-01"
+            ],
+            [
+              "content-type",
+              "application/json"
+            ],
+            [
+              "x-app",
+              "cli"
+            ]
+          ]
+        }
+--- PASS: TestClaudeCLIRecordedRawHTTPHeaders (0.00s)
+PASS
+ok  	github.com/Wei-Shaw/sub2api/internal/service	1.731s

@@ -796,6 +796,16 @@ Antigravity 账户支持可选的**混合调度**功能。开启后，通用端�
 
 ---
 
+## Anthropic 请求准入
+
+Anthropic 推理入口强制校验 Claude Code 请求特征，包含普通分组、综合分组路由到 Anthropic，以及后续回退到 Anthropic 账号的请求。此策略独立于分组的 `claude_code_only` 开关；非 CLI 的 Chat Completions、Responses（含别名及 WebSocket）和 System One 请求不能再通过这些入口转换为 Anthropic 请求。其他平台及本地模型列表、用量查询不受此策略影响。
+
+校验发生在指纹应用及协议转换前，检查 CLI/SDK 请求头、消息结构、系统标识、metadata，以及存在时的会话和计费版本一致性。`count_tokens` 和单条探测请求可以省略系统提示词，但不能只凭 User-Agent 或 `max_tokens=1` 放行。不符合规则时统一返回 `403 Request not permitted`，不返回缺失字段、期望指纹或校验详情。中间代理必须保留 CLI 原始请求头。
+
+通过校验的请求使用该次 CLI 的完整 UA、SDK、操作系统及运行时信息，避免账号缓存或版本自动同步拼出不一致的指纹；账号设备标识和既有 metadata 隔离策略仍生效。内置备用头参考本机 Claude Code 2.1.301 于 2026-10-16 向本地测试端点发送的流量，默认值只有一个来源。HTTP 请求特征可以复制，因此这些检查不等同于官方客户端身份认证，也不保证 TLS、HTTP/2 或整个网络行为与 CLI 完全一致。
+
+2026-10-17 的本机样本验证修复了已准入 CLI 的 billing 后缀误改、无效 UTF-8 准入，以及内置 TLS profile 与实测 ClientHello 的差异。HTTP 头顺序/大小写、未启用 TLS profile 及 HTTPS 代理路径仍不能声称与 CLI 一致。详细结果与剩余覆盖项见 [验证报告](docs/CLAUDE_CLI_VALIDATION_RESULTS_2026-10-17.md)。
+
 ## 项目结构
 
 ```

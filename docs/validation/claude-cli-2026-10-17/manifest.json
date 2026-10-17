@@ -1,0 +1,3901 @@
+{
+  "binary": {
+    "version": "2.1.301 (Claude Code)",
+    "sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+    "capture_script_sha256": "edc682b4df59f56129ca218f0bf0e8a513d1a9647dc595c0d3988ef3d88506b5",
+    "system": "Darwin",
+    "release": "23.6.0",
+    "machine": "arm64",
+    "captured_at": "2026-10-17T07:50:53+0800"
+  },
+  "case_count": 352,
+  "request_count": 368,
+  "results": [
+    {
+      "name": "arabic",
+      "matrix_ids": [
+        "TXT-13"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "ascii",
+      "matrix_ids": [
+        "TXT-01",
+        "CLI-01"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.279
+    },
+    {
+      "name": "chinese",
+      "matrix_ids": [
+        "TXT-05"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.275
+    },
+    {
+      "name": "chinese-at-00",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "chinese-at-01",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "chinese-at-02",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.268
+    },
+    {
+      "name": "chinese-at-03",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "chinese-at-04",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "chinese-at-05",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.259
+    },
+    {
+      "name": "chinese-at-06",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.255
+    },
+    {
+      "name": "chinese-at-07",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "chinese-at-08",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.272
+    },
+    {
+      "name": "chinese-at-09",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.254
+    },
+    {
+      "name": "chinese-at-10",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "chinese-at-11",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "chinese-at-12",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "chinese-at-13",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "chinese-at-14",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.276
+    },
+    {
+      "name": "chinese-at-15",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.273
+    },
+    {
+      "name": "chinese-at-16",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "chinese-at-17",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "chinese-at-18",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "chinese-at-19",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "chinese-at-20",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "chinese-at-21",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "chinese-at-22",
+      "matrix_ids": [
+        "TXT-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "compact-workflow",
+      "matrix_ids": [
+        "MSG-13",
+        "CLI-14"
+      ],
+      "request_count": 3,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.265
+    },
+    {
+      "name": "controls",
+      "matrix_ids": [
+        "TXT-20"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "crlf",
+      "matrix_ids": [
+        "TXT-14"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "custom-beta",
+      "matrix_ids": [
+        "HDR-03"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "devanagari",
+      "matrix_ids": [
+        "TXT-13"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "effort-high",
+      "matrix_ids": [
+        "CLI-15"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "effort-low",
+      "matrix_ids": [
+        "CLI-15"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "emoji-at-00",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "emoji-at-01",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "emoji-at-02",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "emoji-at-03",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.251
+    },
+    {
+      "name": "emoji-at-04",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.254
+    },
+    {
+      "name": "emoji-at-05",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "emoji-at-06",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "emoji-at-07",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "emoji-at-08",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.281
+    },
+    {
+      "name": "emoji-at-09",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.26
+    },
+    {
+      "name": "emoji-at-10",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "emoji-at-11",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "emoji-at-12",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "emoji-at-13",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.272
+    },
+    {
+      "name": "emoji-at-14",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.268
+    },
+    {
+      "name": "emoji-at-15",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "emoji-at-16",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "emoji-at-17",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "emoji-at-18",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "emoji-at-19",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "emoji-at-20",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "emoji-at-21",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "emoji-at-22",
+      "matrix_ids": [
+        "TXT-10"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.323
+    },
+    {
+      "name": "emoji-zwj",
+      "matrix_ids": [
+        "TXT-11"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.323
+    },
+    {
+      "name": "escapes",
+      "matrix_ids": [
+        "TXT-16"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.248
+    },
+    {
+      "name": "haiku",
+      "matrix_ids": [
+        "ENV-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.222
+    },
+    {
+      "name": "hebrew",
+      "matrix_ids": [
+        "TXT-13"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "invisible",
+      "matrix_ids": [
+        "TXT-15"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "japanese",
+      "matrix_ids": [
+        "TXT-13"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "korean",
+      "matrix_ids": [
+        "TXT-13"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "length-00",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 0,
+      "status": "blocked",
+      "exit_code": 1,
+      "timed_out": false,
+      "duration_seconds": 0.337
+    },
+    {
+      "name": "length-01",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.381
+    },
+    {
+      "name": "length-02",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.378
+    },
+    {
+      "name": "length-03",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.375
+    },
+    {
+      "name": "length-04",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.373
+    },
+    {
+      "name": "length-05",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.336
+    },
+    {
+      "name": "length-06",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.352
+    },
+    {
+      "name": "length-07",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.341
+    },
+    {
+      "name": "length-08",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "length-09",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.251
+    },
+    {
+      "name": "length-10",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.275
+    },
+    {
+      "name": "length-11",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.289
+    },
+    {
+      "name": "length-12",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "length-13",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.252
+    },
+    {
+      "name": "length-14",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.225
+    },
+    {
+      "name": "length-15",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "length-16",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.228
+    },
+    {
+      "name": "length-17",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "length-18",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "length-19",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "length-20",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "length-21",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "length-22",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "length-23",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.272
+    },
+    {
+      "name": "length-24",
+      "matrix_ids": [
+        "TXT-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.263
+    },
+    {
+      "name": "long-ascii",
+      "matrix_ids": [
+        "TXT-18"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.247
+    },
+    {
+      "name": "long-unicode",
+      "matrix_ids": [
+        "TXT-18"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "mixed",
+      "matrix_ids": [
+        "TXT-07"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.324
+    },
+    {
+      "name": "mutation-00",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.241
+    },
+    {
+      "name": "mutation-01",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "mutation-02",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-03",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-04",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "mutation-05",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "mutation-06",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "mutation-07",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "mutation-08",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "mutation-09",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "mutation-10",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-11",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "mutation-12",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-13",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "mutation-14",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.293
+    },
+    {
+      "name": "mutation-15",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.311
+    },
+    {
+      "name": "mutation-16",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.305
+    },
+    {
+      "name": "mutation-17",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.288
+    },
+    {
+      "name": "mutation-18",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-19",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "mutation-20",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.231
+    },
+    {
+      "name": "mutation-21",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "mutation-22",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "mutation-23",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "mutation-24",
+      "matrix_ids": [
+        "TXT-04"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "nfc",
+      "matrix_ids": [
+        "TXT-12"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.312
+    },
+    {
+      "name": "nfd",
+      "matrix_ids": [
+        "TXT-12"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "normal-config",
+      "matrix_ids": [
+        "CLI-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.302
+    },
+    {
+      "name": "normal-reminder-moved",
+      "matrix_ids": [
+        "MSG-07"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.332
+    },
+    {
+      "name": "output-json",
+      "matrix_ids": [
+        "CLI-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "output-stream-json",
+      "matrix_ids": [
+        "CLI-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.241
+    },
+    {
+      "name": "positions",
+      "matrix_ids": [
+        "TXT-03"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.252
+    },
+    {
+      "name": "repeat-00",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.229
+    },
+    {
+      "name": "repeat-01",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "repeat-02",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "repeat-03",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "repeat-04",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "repeat-05",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "repeat-06",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "repeat-07",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.229
+    },
+    {
+      "name": "repeat-08",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "repeat-09",
+      "matrix_ids": [
+        "TXT-22"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "retry-429",
+      "matrix_ids": [
+        "ERR-02",
+        "HDR-04"
+      ],
+      "request_count": 2,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.867
+    },
+    {
+      "name": "retry-503",
+      "matrix_ids": [
+        "ERR-02",
+        "HDR-04"
+      ],
+      "request_count": 2,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.853
+    },
+    {
+      "name": "stdin-text",
+      "matrix_ids": [
+        "CLI-07"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "stream-empty-text",
+      "matrix_ids": [
+        "MSG-03"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.218
+    },
+    {
+      "name": "stream-image-first",
+      "matrix_ids": [
+        "MSG-04",
+        "MSG-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.228
+    },
+    {
+      "name": "stream-image-last",
+      "matrix_ids": [
+        "MSG-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.227
+    },
+    {
+      "name": "stream-multiple-text",
+      "matrix_ids": [
+        "MSG-02"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.22
+    },
+    {
+      "name": "stream-repeat-ten",
+      "matrix_ids": [
+        "TXT-22",
+        "IDN-04"
+      ],
+      "request_count": 10,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.35
+    },
+    {
+      "name": "stream-three-turns",
+      "matrix_ids": [
+        "CLI-03",
+        "IDN-04"
+      ],
+      "request_count": 3,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.345
+    },
+    {
+      "name": "suffix-a",
+      "matrix_ids": [
+        "TXT-19"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "suffix-b",
+      "matrix_ids": [
+        "TXT-19"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "surrogate-paired",
+      "matrix_ids": [
+        "TXT-09"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.279
+    },
+    {
+      "name": "surrogate-single",
+      "matrix_ids": [
+        "TXT-08"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.267
+    },
+    {
+      "name": "system-appended",
+      "matrix_ids": [
+        "MSG-14"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.23
+    },
+    {
+      "name": "system-replaced",
+      "matrix_ids": [
+        "MSG-14",
+        "CLI-06"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.232
+    },
+    {
+      "name": "tool-error",
+      "matrix_ids": [
+        "MSG-10"
+      ],
+      "request_count": 2,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "tool-roundtrip",
+      "matrix_ids": [
+        "MSG-10",
+        "CLI-09"
+      ],
+      "request_count": 2,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.256
+    },
+    {
+      "name": "tools-default",
+      "matrix_ids": [
+        "CLI-09"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.229
+    },
+    {
+      "name": "unicode-random-000",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "unicode-random-001",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.265
+    },
+    {
+      "name": "unicode-random-002",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.331
+    },
+    {
+      "name": "unicode-random-003",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.339
+    },
+    {
+      "name": "unicode-random-004",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.351
+    },
+    {
+      "name": "unicode-random-005",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.257
+    },
+    {
+      "name": "unicode-random-006",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "unicode-random-007",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "unicode-random-008",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "unicode-random-009",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "unicode-random-010",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "unicode-random-011",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "unicode-random-012",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.231
+    },
+    {
+      "name": "unicode-random-013",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "unicode-random-014",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.293
+    },
+    {
+      "name": "unicode-random-015",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.294
+    },
+    {
+      "name": "unicode-random-016",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.436
+    },
+    {
+      "name": "unicode-random-017",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.382
+    },
+    {
+      "name": "unicode-random-018",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.375
+    },
+    {
+      "name": "unicode-random-019",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.41
+    },
+    {
+      "name": "unicode-random-020",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.392
+    },
+    {
+      "name": "unicode-random-021",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.361
+    },
+    {
+      "name": "unicode-random-022",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.36
+    },
+    {
+      "name": "unicode-random-023",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.312
+    },
+    {
+      "name": "unicode-random-024",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.343
+    },
+    {
+      "name": "unicode-random-025",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.326
+    },
+    {
+      "name": "unicode-random-026",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.337
+    },
+    {
+      "name": "unicode-random-027",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.315
+    },
+    {
+      "name": "unicode-random-028",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.335
+    },
+    {
+      "name": "unicode-random-029",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.331
+    },
+    {
+      "name": "unicode-random-030",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.316
+    },
+    {
+      "name": "unicode-random-031",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.312
+    },
+    {
+      "name": "unicode-random-032",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.36
+    },
+    {
+      "name": "unicode-random-033",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.324
+    },
+    {
+      "name": "unicode-random-034",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.307
+    },
+    {
+      "name": "unicode-random-035",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.309
+    },
+    {
+      "name": "unicode-random-036",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.341
+    },
+    {
+      "name": "unicode-random-037",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.358
+    },
+    {
+      "name": "unicode-random-038",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.337
+    },
+    {
+      "name": "unicode-random-039",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.354
+    },
+    {
+      "name": "unicode-random-040",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.405
+    },
+    {
+      "name": "unicode-random-041",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.364
+    },
+    {
+      "name": "unicode-random-042",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.351
+    },
+    {
+      "name": "unicode-random-043",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.333
+    },
+    {
+      "name": "unicode-random-044",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.349
+    },
+    {
+      "name": "unicode-random-045",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.362
+    },
+    {
+      "name": "unicode-random-046",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.352
+    },
+    {
+      "name": "unicode-random-047",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.328
+    },
+    {
+      "name": "unicode-random-048",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.426
+    },
+    {
+      "name": "unicode-random-049",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.404
+    },
+    {
+      "name": "unicode-random-050",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.392
+    },
+    {
+      "name": "unicode-random-051",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.4
+    },
+    {
+      "name": "unicode-random-052",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.314
+    },
+    {
+      "name": "unicode-random-053",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.516
+    },
+    {
+      "name": "unicode-random-054",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.325
+    },
+    {
+      "name": "unicode-random-055",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.293
+    },
+    {
+      "name": "unicode-random-056",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.333
+    },
+    {
+      "name": "unicode-random-057",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.347
+    },
+    {
+      "name": "unicode-random-058",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.297
+    },
+    {
+      "name": "unicode-random-059",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.348
+    },
+    {
+      "name": "unicode-random-060",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.35
+    },
+    {
+      "name": "unicode-random-061",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.328
+    },
+    {
+      "name": "unicode-random-062",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.328
+    },
+    {
+      "name": "unicode-random-063",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.326
+    },
+    {
+      "name": "unicode-random-064",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.369
+    },
+    {
+      "name": "unicode-random-065",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.313
+    },
+    {
+      "name": "unicode-random-066",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.318
+    },
+    {
+      "name": "unicode-random-067",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.333
+    },
+    {
+      "name": "unicode-random-068",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.364
+    },
+    {
+      "name": "unicode-random-069",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.337
+    },
+    {
+      "name": "unicode-random-070",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.379
+    },
+    {
+      "name": "unicode-random-071",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.397
+    },
+    {
+      "name": "unicode-random-072",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.406
+    },
+    {
+      "name": "unicode-random-073",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.42
+    },
+    {
+      "name": "unicode-random-074",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.385
+    },
+    {
+      "name": "unicode-random-075",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.364
+    },
+    {
+      "name": "unicode-random-076",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.371
+    },
+    {
+      "name": "unicode-random-077",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.368
+    },
+    {
+      "name": "unicode-random-078",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.347
+    },
+    {
+      "name": "unicode-random-079",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.352
+    },
+    {
+      "name": "unicode-random-080",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.364
+    },
+    {
+      "name": "unicode-random-081",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.324
+    },
+    {
+      "name": "unicode-random-082",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.326
+    },
+    {
+      "name": "unicode-random-083",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.57
+    },
+    {
+      "name": "unicode-random-084",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.512
+    },
+    {
+      "name": "unicode-random-085",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.555
+    },
+    {
+      "name": "unicode-random-086",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.526
+    },
+    {
+      "name": "unicode-random-087",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.385
+    },
+    {
+      "name": "unicode-random-088",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.386
+    },
+    {
+      "name": "unicode-random-089",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.426
+    },
+    {
+      "name": "unicode-random-090",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.403
+    },
+    {
+      "name": "unicode-random-091",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.308
+    },
+    {
+      "name": "unicode-random-092",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.348
+    },
+    {
+      "name": "unicode-random-093",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.314
+    },
+    {
+      "name": "unicode-random-094",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.328
+    },
+    {
+      "name": "unicode-random-095",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.318
+    },
+    {
+      "name": "unicode-random-096",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.34
+    },
+    {
+      "name": "unicode-random-097",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.334
+    },
+    {
+      "name": "unicode-random-098",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.318
+    },
+    {
+      "name": "unicode-random-099",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.278
+    },
+    {
+      "name": "unicode-random-100",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-101",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "unicode-random-102",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.241
+    },
+    {
+      "name": "unicode-random-103",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.25
+    },
+    {
+      "name": "unicode-random-104",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.247
+    },
+    {
+      "name": "unicode-random-105",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "unicode-random-106",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.241
+    },
+    {
+      "name": "unicode-random-107",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "unicode-random-108",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "unicode-random-109",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "unicode-random-110",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "unicode-random-111",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.249
+    },
+    {
+      "name": "unicode-random-112",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-113",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "unicode-random-114",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "unicode-random-115",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "unicode-random-116",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.261
+    },
+    {
+      "name": "unicode-random-117",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.25
+    },
+    {
+      "name": "unicode-random-118",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.252
+    },
+    {
+      "name": "unicode-random-119",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-120",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-121",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "unicode-random-122",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "unicode-random-123",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.247
+    },
+    {
+      "name": "unicode-random-124",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-125",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "unicode-random-126",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.251
+    },
+    {
+      "name": "unicode-random-127",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "unicode-random-128",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "unicode-random-129",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.239
+    },
+    {
+      "name": "unicode-random-130",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "unicode-random-131",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.253
+    },
+    {
+      "name": "unicode-random-132",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.243
+    },
+    {
+      "name": "unicode-random-133",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.245
+    },
+    {
+      "name": "unicode-random-134",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "unicode-random-135",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.234
+    },
+    {
+      "name": "unicode-random-136",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.238
+    },
+    {
+      "name": "unicode-random-137",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.237
+    },
+    {
+      "name": "unicode-random-138",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    },
+    {
+      "name": "unicode-random-139",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.235
+    },
+    {
+      "name": "unicode-random-140",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.242
+    },
+    {
+      "name": "unicode-random-141",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.24
+    },
+    {
+      "name": "unicode-random-142",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "unicode-random-143",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.248
+    },
+    {
+      "name": "unicode-random-144",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.282
+    },
+    {
+      "name": "unicode-random-145",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.272
+    },
+    {
+      "name": "unicode-random-146",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.272
+    },
+    {
+      "name": "unicode-random-147",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.3
+    },
+    {
+      "name": "unicode-random-148",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.279
+    },
+    {
+      "name": "unicode-random-149",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.273
+    },
+    {
+      "name": "unicode-random-150",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.267
+    },
+    {
+      "name": "unicode-random-151",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.299
+    },
+    {
+      "name": "unicode-random-152",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.28
+    },
+    {
+      "name": "unicode-random-153",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.288
+    },
+    {
+      "name": "unicode-random-154",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.259
+    },
+    {
+      "name": "unicode-random-155",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.278
+    },
+    {
+      "name": "unicode-random-156",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.3
+    },
+    {
+      "name": "unicode-random-157",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.281
+    },
+    {
+      "name": "unicode-random-158",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.291
+    },
+    {
+      "name": "unicode-random-159",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.418
+    },
+    {
+      "name": "unicode-random-160",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.397
+    },
+    {
+      "name": "unicode-random-161",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.394
+    },
+    {
+      "name": "unicode-random-162",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.327
+    },
+    {
+      "name": "unicode-random-163",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.409
+    },
+    {
+      "name": "unicode-random-164",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.392
+    },
+    {
+      "name": "unicode-random-165",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.336
+    },
+    {
+      "name": "unicode-random-166",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.362
+    },
+    {
+      "name": "unicode-random-167",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.288
+    },
+    {
+      "name": "unicode-random-168",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.307
+    },
+    {
+      "name": "unicode-random-169",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.327
+    },
+    {
+      "name": "unicode-random-170",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.311
+    },
+    {
+      "name": "unicode-random-171",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.247
+    },
+    {
+      "name": "unicode-random-172",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.252
+    },
+    {
+      "name": "unicode-random-173",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.262
+    },
+    {
+      "name": "unicode-random-174",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.263
+    },
+    {
+      "name": "unicode-random-175",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.254
+    },
+    {
+      "name": "unicode-random-176",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.303
+    },
+    {
+      "name": "unicode-random-177",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.334
+    },
+    {
+      "name": "unicode-random-178",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.318
+    },
+    {
+      "name": "unicode-random-179",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.372
+    },
+    {
+      "name": "unicode-random-180",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.34
+    },
+    {
+      "name": "unicode-random-181",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.351
+    },
+    {
+      "name": "unicode-random-182",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.349
+    },
+    {
+      "name": "unicode-random-183",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.279
+    },
+    {
+      "name": "unicode-random-184",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.276
+    },
+    {
+      "name": "unicode-random-185",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.298
+    },
+    {
+      "name": "unicode-random-186",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.289
+    },
+    {
+      "name": "unicode-random-187",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.27
+    },
+    {
+      "name": "unicode-random-188",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.259
+    },
+    {
+      "name": "unicode-random-189",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.246
+    },
+    {
+      "name": "unicode-random-190",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.252
+    },
+    {
+      "name": "unicode-random-191",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.249
+    },
+    {
+      "name": "unicode-random-192",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.244
+    },
+    {
+      "name": "unicode-random-193",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.261
+    },
+    {
+      "name": "unicode-random-194",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.259
+    },
+    {
+      "name": "unicode-random-195",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.41
+    },
+    {
+      "name": "unicode-random-196",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.401
+    },
+    {
+      "name": "unicode-random-197",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.389
+    },
+    {
+      "name": "unicode-random-198",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.403
+    },
+    {
+      "name": "unicode-random-199",
+      "matrix_ids": [
+        "TXT-23"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.236
+    },
+    {
+      "name": "whitespace",
+      "matrix_ids": [
+        "TXT-14"
+      ],
+      "request_count": 1,
+      "status": "captured",
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_seconds": 0.233
+    }
+  ],
+  "limitations": [
+    "Synthetic API key and loopback only; no real OAuth or live provider validation.",
+    "Local mock success/tool/retry responses; not evidence of provider capability.",
+    "This run is HTTP only; TLS and other operating systems are separate."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "total": 159,
+  "statuses": {
+    "passed": 48,
+    "captured": 37,
+    "pending": 61,
+    "blocked": 9,
+    "failed": 4
+  },
+  "scope": "macOS arm64 / CLI 2.1.301 / synthetic API key / loopback"
+}

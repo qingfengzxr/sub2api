@@ -55,8 +55,7 @@ func TestDialerBasicConnection(t *testing.T) {
 
 // TestJA3Fingerprint verifies the JA3/JA4 fingerprint matches expected value.
 // This test uses tls.peet.ws to verify the fingerprint.
-// Expected JA3 hash: 44f88fca027f27bab4bb08d4af15f23e (Node.js 24.x)
-// Expected JA4: t13d1714h1_5b57614c22b0_7baf387fc6ff
+// Expected JA3 hash is derived from the CLI 2.1.301 loopback capture fields.
 func TestJA3Fingerprint(t *testing.T) {
 	skipNetworkTest(t)
 
@@ -81,7 +80,7 @@ func TestJA3Fingerprint(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create request: %v", err)
 	}
-	req.Header.Set("User-Agent", "Claude Code/2.0.0 Node.js/24.3.0")
+	req.Header.Set("User-Agent", "claude-cli/2.1.301 (external, cli)")
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -107,8 +106,9 @@ func TestJA3Fingerprint(t *testing.T) {
 	t.Logf("PeetPrint: %s", fpResp.TLS.PeetPrint)
 	t.Logf("PeetPrint Hash: %s", fpResp.TLS.PeetPrintHash)
 
-	// Verify JA3 hash matches expected value (Node.js 24.x default)
-	expectedJA3Hash := "44f88fca027f27bab4bb08d4af15f23e"
+	// This external probe is opt-in; the local capture test is authoritative
+	// for comparison with the installed CLI on the same destination shape.
+	expectedJA3Hash := "1523504b38f0fae0d881d4b6554aac1b"
 	if fpResp.TLS.JA3Hash == expectedJA3Hash {
 		t.Logf("✓ JA3 hash matches expected value: %s", expectedJA3Hash)
 	} else {
@@ -123,12 +123,12 @@ func TestJA3Fingerprint(t *testing.T) {
 		t.Errorf("✗ JA4 cipher hash mismatch: got %s, expected containing %s", fpResp.TLS.JA4, expectedJA4CipherHash)
 	}
 
-	// Verify JA4 prefix (t13d1714h1 or t13i1714h1)
-	expectedJA4Prefix := "t13d1714h1"
+	// Verify the 17-cipher, 13-extension profile prefix.
+	expectedJA4Prefix := "t13d1713h1"
 	if strings.HasPrefix(fpResp.TLS.JA4, expectedJA4Prefix) {
-		t.Logf("✓ JA4 prefix matches: %s (t13=TLS1.3, d=domain, 17=ciphers, 14=extensions, h1=HTTP/1.1)", expectedJA4Prefix)
+		t.Logf("✓ JA4 prefix matches: %s (17 ciphers, 13 extensions, HTTP/1.1)", expectedJA4Prefix)
 	} else {
-		altPrefix := "t13i1714h1"
+		altPrefix := "t13i1713h1"
 		if strings.HasPrefix(fpResp.TLS.JA4, altPrefix) {
 			t.Logf("✓ JA4 prefix matches (IP variant): %s", altPrefix)
 		} else {
@@ -143,8 +143,8 @@ func TestJA3Fingerprint(t *testing.T) {
 		t.Logf("Warning: JA3 does not contain expected TLS 1.3 cipher suites")
 	}
 
-	// Verify extension list (14 extensions, Node.js 24.x order)
-	expectedExtensions := "0-65037-23-65281-10-11-35-16-5-13-18-51-45-43"
+	// Verify the observed extension order.
+	expectedExtensions := "0-23-65281-10-11-35-16-5-13-18-51-45-43"
 	if strings.Contains(fpResp.TLS.JA3, expectedExtensions) {
 		t.Logf("✓ JA3 contains expected extension list: %s", expectedExtensions)
 	} else {

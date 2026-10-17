@@ -87,7 +87,7 @@ const DefaultCacheControlTTL = "5m"
 //
 // ⚠️ 读取实际生效的版本号请用 CLIVersion()，它会叠加 SUB2API_CLAUDE_CLI_VERSION 覆盖。
 // 直接引用本常量只在"表达内置基线"时才正确（例如覆盖值的下限校验）。
-const CLICurrentVersion = "2.1.258"
+const CLICurrentVersion = "2.1.301"
 
 // FullClaudeCodeMimicryBetas 返回最"像"真实 Claude Code CLI 的完整 beta 列表，
 // 用于 OAuth 账号伪装成 Claude Code 时使用。
@@ -120,14 +120,15 @@ func DefaultHeaders() map[string]string {
 	return map[string]string{
 		// Keep these in sync with recent Claude CLI traffic to reduce the chance
 		// that Claude Code-scoped OAuth credentials are rejected as "non-CLI" usage.
-		// 版本参考：对齐 Parrot (src/transform/cc_mimicry.py:49) 的 CLI_USER_AGENT。
+		// SDK/runtime profile observed from local Claude Code 2.1.301 on 2026-10-16.
+		// Admitted CLI traffic preserves its own complete profile instead of these defaults.
 		"User-Agent":                                DefaultUserAgent(),
 		"X-Stainless-Lang":                          "js",
-		"X-Stainless-Package-Version":               "0.94.0",
-		"X-Stainless-OS":                            "Linux",
+		"X-Stainless-Package-Version":               "0.128.0",
+		"X-Stainless-OS":                            "MacOS",
 		"X-Stainless-Arch":                          "arm64",
 		"X-Stainless-Runtime":                       "node",
-		"X-Stainless-Runtime-Version":               "v24.3.0",
+		"X-Stainless-Runtime-Version":               "v26.3.0",
 		"X-Stainless-Retry-Count":                   "0",
 		"X-Stainless-Timeout":                       "600",
 		"X-App":                                     "cli",

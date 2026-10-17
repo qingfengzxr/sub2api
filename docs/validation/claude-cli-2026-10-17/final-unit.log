@@ -1,0 +1,5 @@
+ok  	github.com/Wei-Shaw/sub2api/internal/service	205.308s
+ok  	github.com/Wei-Shaw/sub2api/internal/server/routes	11.987s
+ok  	github.com/Wei-Shaw/sub2api/internal/handler	41.698s
+ok  	github.com/Wei-Shaw/sub2api/internal/pkg/claude	0.281s
+ok  	github.com/Wei-Shaw/sub2api/internal/pkg/tlsfingerprint	0.564s

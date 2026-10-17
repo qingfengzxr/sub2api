@@ -4,37 +4,53 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"unicode/utf16"
 
 	"github.com/tidwall/gjson"
 )
 
 // fingerprintSalt 是计算 cc_version 后缀指纹的盐值。
 //
-// 来源：与 Parrot src/transform/cc_mimicry.py 的 FINGERPRINT_SALT 完全一致；
-// 这是真实 Claude Code CLI 抓包推导出的常量，改动会导致 fp 与 CLI 不一致，
-// 进一步触发 Anthropic 的第三方检测。
+// 参考第三方 Parrot src/transform/cc_mimicry.py，并由固定 CLI 样本检验。
+// 这不是官方发布的规范，也不代表对其他版本或服务端识别规则的保证。
 const fingerprintSalt = "59cf53e54c78"
 
-// computeClaudeCodeFingerprint 复刻真实 Claude Code CLI 的 cc_version 指纹算法：
+// computeClaudeCodeFingerprint 实现已观测样本中的 cc_version 后缀计算：
 //
 //  1. 取 messages 中第一条 role=user 的纯文本（首块 text）
-//  2. 取该文本的第 4、7、20 字符（不足以 '0' 补齐）
+//  2. 按 JavaScript UTF-16 字符串下标取第 4、7、20 个码元（不足以 '0' 补齐）
 //  3. SHA256(SALT + chars + cc_version) 取 hex 前 3 字符
 //
-// 算法来自 Parrot src/transform/cc_mimicry.py:compute_fingerprint，与官方 CLI 字节对齐。
-// 任何偏差都会导致 cc_version=X.Y.Z.{fp} 在上游侧与真实 CLI 不一致。
+// CLI 可能在计算后插入 reminder 块或删除空 text 块。最终 payload 的首块文本不一定
+// 是原始输入，因此不得用此函数重新计算已准入 CLI 请求的现有后缀。
 func computeClaudeCodeFingerprint(body []byte, version string) string {
 	firstText := extractFirstUserText(body)
+	// Only the first 21 code units can affect the fingerprint. Avoid allocating
+	// a second full-size copy of a potentially large first user message.
+	units := make([]uint16, 0, 22)
+	for _, r := range firstText {
+		if r <= 0xffff {
+			units = append(units, uint16(r))
+		} else {
+			hi, lo := utf16.EncodeRune(r)
+			units = append(units, uint16(hi), uint16(lo))
+		}
+		if len(units) > 20 {
+			break
+		}
+	}
 	indices := []int{4, 7, 20}
-	chars := make([]byte, 0, 3)
+	chars := make([]uint16, 0, 3)
 	for _, i := range indices {
-		if i < len(firstText) {
-			chars = append(chars, firstText[i])
+		if i < len(units) {
+			chars = append(chars, units[i])
 		} else {
 			chars = append(chars, '0')
 		}
 	}
-	sum := sha256.Sum256([]byte(fingerprintSalt + string(chars) + version))
+	// Decode after concatenation: sampled surrogates may form a pair, while
+	// lone surrogates become U+FFFD, matching Node's UTF-8 string encoding.
+	sum := sha256.Sum256([]byte(fingerprintSalt + string(utf16.Decode(chars)) + version))
 	return hex.EncodeToString(sum[:])[:3]
 }
 
@@ -76,10 +92,9 @@ func extractFirstUserText(body []byte) string {
 //
 //	x-anthropic-billing-header: cc_version=2.1.161.{fp}; cc_entrypoint=cli;
 //
-// 注意：新版 Claude Code CLI 已不再发送 cch=... 签名字段（见 issue #3358）。我们
-// 随之去掉了 cch 段——继续注入它反而会让伪装请求偏离真实 CLI 流量。cc_version +
-// cc_entrypoint=cli 仍保留：它们是客户端识别（claude_code_validator）与 Anthropic
-// 第一方判定都依赖的稳定信号。
+// 本机 2.1.301 样本未发送 cch 字段，此处不生成。cc_entrypoint 在已观测
+// CLI 模式中包含 cli/sdk-cli；本函数仅供项目内部构造 cli 入口文本，不能
+// 用它覆盖已准入客户端的原始文本，也不能据此推断上游客户端识别规则。
 //
 // 此 block 不带 cache_control（与真实 CLI 一致；cache breakpoint 由后续的
 // Claude Code prompt block 承担）。

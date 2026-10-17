@@ -121,14 +121,15 @@ func floorClaudeCLIUserAgentVersion(ua string) (string, bool) {
 // UserAgent 不能在包 init 时固化：必须在每次使用时经 EffectiveCLIVersion 现取，
 // 否则运行期同步到新版本后，新建账号会写入过期版本作为持久身份。
 func defaultFingerprint() Fingerprint {
+	h := claude.DefaultHeaders()
 	return Fingerprint{
-		UserAgent:               claude.DefaultUserAgent(),
-		StainlessLang:           "js",
-		StainlessPackageVersion: "0.94.0",
-		StainlessOS:             "Linux",
-		StainlessArch:           "arm64",
-		StainlessRuntime:        "node",
-		StainlessRuntimeVersion: "v24.3.0",
+		UserAgent:               h["User-Agent"],
+		StainlessLang:           h["X-Stainless-Lang"],
+		StainlessPackageVersion: h["X-Stainless-Package-Version"],
+		StainlessOS:             h["X-Stainless-OS"],
+		StainlessArch:           h["X-Stainless-Arch"],
+		StainlessRuntime:        h["X-Stainless-Runtime"],
+		StainlessRuntimeVersion: h["X-Stainless-Runtime-Version"],
 	}
 }
 
@@ -239,7 +240,7 @@ func (s *IdentityService) GetOrCreateFingerprint(ctx context.Context, accountID 
 				logger.LegacyPrintf("service.identity", "Warning: failed to refresh fingerprint for account %d: %v", accountID, err)
 			}
 		}
-		return cached, nil
+		return fingerprintForClaudeAdmission(ctx, cached, headers), nil
 	}
 
 	// 缓存不存在或解析失败，创建新指纹。首次创建同样是持久化写入，
@@ -261,7 +262,19 @@ func (s *IdentityService) GetOrCreateFingerprint(ctx context.Context, accountID 
 	}
 
 	logger.LegacyPrintf("service.identity", "Created new fingerprint for account %d with client_id: %s", accountID, fp.ClientID)
-	return fp, nil
+	return fingerprintForClaudeAdmission(ctx, fp, headers), nil
+}
+
+// Keep the account's device identity, but use one complete observed CLI profile
+// for this request. Never combine a cached SDK/runtime with a different CLI UA,
+// and never upgrade a real client's advertised version behind its back.
+func fingerprintForClaudeAdmission(ctx context.Context, fp *Fingerprint, headers http.Header) *Fingerprint {
+	if !HasClaudeCodeAdmission(ctx) || fp == nil {
+		return fp
+	}
+	profile := *fp
+	mergeHeadersIntoFingerprint(&profile, headers)
+	return &profile
 }
 
 // createFingerprintFromHeaders 从请求头创建指纹

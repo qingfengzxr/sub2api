@@ -1,0 +1,146 @@
+{
+  "case": {
+    "name": "stream-multiple-text",
+    "prompt": "0123456789ABCDEFGHIJKLMNO",
+    "matrix_ids": [
+      "MSG-02"
+    ],
+    "input_messages": [
+      [
+        {
+          "type": "text",
+          "text": "0123456789ABCDEFGHIJKLMNO"
+        },
+        {
+          "type": "text",
+          "text": "Second text block."
+        }
+      ]
+    ]
+  },
+  "binary": {
+    "version": "2.1.301 (Claude Code)",
+    "sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+    "capture_script_sha256": "edc682b4df59f56129ca218f0bf0e8a513d1a9647dc595c0d3988ef3d88506b5",
+    "system": "Darwin",
+    "release": "23.6.0",
+    "machine": "arm64",
+    "captured_at": "2026-10-17T07:50:53+0800"
+  },
+  "invocation": [
+    "/opt/homebrew/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe",
+    "--bare",
+    "-p",
+    "--no-session-persistence",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--model",
+    "claude-sonnet-4-6",
+    "--tools",
+    "",
+    "--disable-slash-commands",
+    "--input-format",
+    "stream-json",
+    "--output-format",
+    "stream-json",
+    "--verbose"
+  ],
+  "duration_seconds": 0.22,
+  "exit_code": 0,
+  "timed_out": false,
+  "status": "captured",
+  "requests": [
+    {
+      "sequence": 0,
+      "path": "/v1/messages?beta=true",
+      "method": "POST",
+      "headers": [
+        [
+          "Accept",
+          "application/json"
+        ],
+        [
+          "Content-Type",
+          "application/json"
+        ],
+        [
+          "User-Agent",
+          "claude-cli/2.1.301 (external, sdk-cli)"
+        ],
+        [
+          "X-Claude-Code-Session-Id",
+          "989397e8-83f2-438b-aa1f-13f79fc01e82"
+        ],
+        [
+          "X-Stainless-Arch",
+          "arm64"
+        ],
+        [
+          "X-Stainless-Lang",
+          "js"
+        ],
+        [
+          "X-Stainless-OS",
+          "MacOS"
+        ],
+        [
+          "X-Stainless-Package-Version",
+          "0.128.0"
+        ],
+        [
+          "X-Stainless-Retry-Count",
+          "0"
+        ],
+        [
+          "X-Stainless-Runtime",
+          "node"
+        ],
+        [
+          "X-Stainless-Runtime-Version",
+          "v26.3.0"
+        ],
+        [
+          "X-Stainless-Timeout",
+          "600"
+        ],
+        [
+          "anthropic-beta",
+          "claude-code-20250219,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,effort-2025-11-24,dangerous-tool-use-2026-09-03,thinking-display-updates-2026-08-18,afk-mode-2026-01-31"
+        ],
+        [
+          "anthropic-dangerous-direct-browser-access",
+          "true"
+        ],
+        [
+          "anthropic-version",
+          "2023-06-01"
+        ],
+        [
+          "x-app",
+          "cli"
+        ],
+        [
+          "Connection",
+          "keep-alive"
+        ],
+        [
+          "Host",
+          "127.0.0.1:53864"
+        ],
+        [
+          "Accept-Encoding",
+          "gzip, deflate, br, zstd"
+        ],
+        [
+          "Content-Length",
+          "7001"
+        ]
+      ],
+      "body": "{\"model\":\"claude-sonnet-4-6\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"0123456789ABCDEFGHIJKLMNO\"},{\"type\":\"text\",\"text\":\"Second text block.\",\"cache_control\":{\"type\":\"ephemeral\"}}]}],\"system\":[{\"type\":\"text\",\"text\":\"x-anthropic-billing-header: cc_version=2.1.301.fc8; cc_entrypoint=sdk-cli;\"},{\"type\":\"text\",\"text\":\"You are a Claude agent, built on Anthropic's Claude Agent SDK.\",\"cache_control\":{\"type\":\"ephemeral\"}},{\"type\":\"text\",\"text\":\"CWD: /private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\\nDate: 2026-10-17\",\"cache_control\":{\"type\":\"ephemeral\"}}],\"tools\":[],\"metadata\":{\"user_id\":\"{\\\"device_id\\\":\\\"b83a839f1ca1294419fc4f3b4ea357777367453e2d686313c42fd8311cc4644d\\\",\\\"account_uuid\\\":\\\"\\\",\\\"session_id\\\":\\\"989397e8-83f2-438b-aa1f-13f79fc01e82\\\"}\"},\"max_tokens\":32000,\"thinking\":{\"type\":\"adaptive\",\"display\":\"updates\"},\"context_management\":{\"edits\":[{\"type\":\"clear_thinking_20251015\",\"keep\":\"all\"}]},\"safeguards\":[{\"type\":\"dangerous_tool_use\",\"classifier_context\":{\"v\":1,\"permission_mode\":\"auto\",\"platform\":\"macos\",\"live_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"home_dir\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_/home\",\"rule_roots\":{\"userSettings\":\"/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_/config\",\"projectSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"localSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"flagSettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"policySettings\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"cliArg\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"command\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"session\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"toolsNarrowing\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"mcpServerPolicy\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"hostCredential\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\"},\"trusted_directories\":{\"primary\":{\"path\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"resolved\":[\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\"]},\"additional\":[],\"network\":[],\"block_reads_outside_working_directories\":false},\"rules\":{\"allow\":[],\"deny\":[{\"rule\":\"Agent\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Bash\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Edit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"NotebookEdit\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_list\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_read\",\"source\":\"toolsNarrowing\"},{\"rule\":\"memory_write\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebFetch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TodoWrite\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReportFindings\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WebSearch\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskStop\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AskUserQuestion\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFeedback\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Skill\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterPlanMode\",\"source\":\"toolsNarrowing\"},{\"rule\":\"DesignSync\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Projects\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskGet\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskUpdate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"TaskList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Artifact\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactComments\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactData\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ArtifactCheck\",\"source\":\"toolsNarrowing\"},{\"rule\":\"AppifactRepl\",\"source\":\"toolsNarrowing\"},{\"rule\":\"LSP\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EnterWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ExitWorktree\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListAgents\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShareOnboardingGuide\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Poll\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Workflow\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronCreate\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronDelete\",\"source\":\"toolsNarrowing\"},{\"rule\":\"CronList\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ScheduleWakeup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"RemoteTrigger\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchMcpRegistry\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ShowOnboardingRolePicker\",\"source\":\"toolsNarrowing\"},{\"rule\":\"OfferChromeSetup\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadNotifications\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__claude-in-chrome\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__Claude_Browser\",\"source\":\"toolsNarrowing\"},{\"rule\":\"enable__mcp__remote-devices__computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"request_computer\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListConnectors\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SearchSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestPluginInstall\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SuggestSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListPlugins\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListSkills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Monitor\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"SendUserFile\",\"source\":\"toolsNarrowing\"},{\"rule\":\"propose_skills\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ProposeGoal\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PublishPlugin\",\"source\":\"toolsNarrowing\"},{\"rule\":\"PushNotification\",\"source\":\"toolsNarrowing\"},{\"rule\":\"FetchInboxMessage\",\"source\":\"toolsNarrowing\"},{\"rule\":\"EndConversation\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ListMcpResourcesTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"ReadMcpResourceDirTool\",\"source\":\"toolsNarrowing\"},{\"rule\":\"WaitForMcpServers\",\"source\":\"toolsNarrowing\"},{\"rule\":\"GetTask\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Glob\",\"source\":\"toolsNarrowing\"},{\"rule\":\"Grep\",\"source\":\"toolsNarrowing\"}],\"ask\":[]},\"auto_mode\":{\"allow\":[],\"soft_deny\":[],\"hard_deny\":[],\"environment\":[]},\"artifact_consent_holdback\":false,\"case_insensitive_paths\":false,\"restricted\":false,\"is_remote_mode\":false,\"classify_all_shell\":false,\"user_identity\":null,\"git_state\":{\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"root\":null,\"branch\":null,\"default_branch\":null,\"status\":null,\"visibility\":{\"origin\":null,\"push_remote\":null,\"remotes\":[],\"visibility_cache\":[]},\"error\":\"not_a_repo\"}}}],\"output_config\":{\"effort\":\"high\"},\"stream\":true}",
+      "body_sha256": "afeb0a0aa5a072901d0ea64d638b736fbfa51a96c55877eea53ca0012db22a86"
+    }
+  ],
+  "stdout": "{\"type\":\"system\",\"subtype\":\"ui_invalidate\",\"event\":\"ui.render\",\"uuid\":\"2c049cc0-af25-4bf3-a6f6-4babcd156037\",\"session_id\":\"989397e8-83f2-438b-aa1f-13f79fc01e82\"}\n{\"type\":\"system\",\"subtype\":\"init\",\"cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"session_id\":\"989397e8-83f2-438b-aa1f-13f79fc01e82\",\"tools\":[],\"mcp_servers\":[],\"model\":\"claude-sonnet-4-6\",\"permissionMode\":\"auto\",\"slash_commands\":[],\"apiKeySource\":\"ANTHROPIC_API_KEY\",\"claude_code_version\":\"2.1.301\",\"output_style\":\"default\",\"agents\":[\"claude\",\"Explore\",\"general-purpose\",\"Plan\",\"statusline-setup\"],\"skills\":[],\"plugins\":[{\"name\":\"cc-plugin-agents-md\",\"path\":\"builtin\",\"source\":\"cc-plugin-agents-md@builtin\"},{\"name\":\"cc-plugin-plugin-authoring\",\"path\":\"builtin\",\"source\":\"cc-plugin-plugin-authoring@builtin\"}],\"capabilities\":[\"interrupt_receipt_v1\",\"interrupt_cancel_queued_v1\",\"interrupt_send_now_v1\",\"msg_lifecycle_v1\",\"request_marker_lists_v1\",\"sdk_mcp_tools_list_changed\",\"sdk_mcp_manifests\",\"mcp_read_resource_v1\",\"mcp_tool_ui_meta_v1\",\"ui_surface_v1\",\"mcp_call_result_not_for_model_v1\"],\"analytics_disabled\":true,\"product_feedback_disabled\":true,\"uuid\":\"4d4e98c8-b09a-4f68-b328-0dc9e69e4873\",\"original_cwd\":\"/private/var/folders/cq/_fzbcjms2x16qsmkyf22t55h0000gn/T/cli-sample-uvwelba_\",\"additional_directories\":[],\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"per_turn_effort_active\":false,\"view_mode\":\"default\"}\n{\"type\":\"assistant\",\"message\":{\"id\":\"msg_local_sample\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"claude-sonnet-4-6\",\"content\":[{\"type\":\"text\",\"text\":\"OK\"}],\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":20,\"output_tokens\":2},\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"989397e8-83f2-438b-aa1f-13f79fc01e82\",\"uuid\":\"dc9f13fc-a64c-4026-b97b-2098238cba60\",\"timestamp\":\"2026-10-16T23:51:02.889Z\",\"request_id\":\"req_local_sample\"}\n{\"type\":\"system\",\"subtype\":\"informational\",\"content\":\"We're changing auto mode to no longer charge for classifier requests in Claude Code. However, this session isn't eligible because your requests go through 127.0.0.1:53864, which isn't compatible with this update. Nothing breaks: auto mode keeps working, and its classifier requests are billed as before. To fix it and access the new version of auto mode, ask your gateway to implement: https://code.claude.com/docs/en/auto-mode-classifier-billing\",\"isMeta\":false,\"timestamp\":\"2026-10-16T23:51:02.895Z\",\"uuid\":\"2ee069dc-7278-42ed-a9b4-9668e02339bb\",\"level\":\"warning\",\"session_id\":\"989397e8-83f2-438b-aa1f-13f79fc01e82\"}\n{\"duration_api_ms\":8,\"stop_reason\":\"end_turn\",\"session_id\":\"989397e8-83f2-438b-aa1f-13f79fc01e82\",\"total_cost_usd\":0.00009,\"usage\":{\"input_tokens\":20,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":0,\"output_tokens\":2,\"output_tokens_details\":{\"thinking_tokens\":0},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\",\"fallback_credit\":null},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":20,\"outputTokens\":2,\"cacheReadInputTokens\":0,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.00009,\"contextWindow\":200000,\"maxOutputTokens\":32000,\"thinkingTokens\":0,\"canonicalModel\":\"claude-sonnet-4-6\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"safety_stops\":0,\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"OK\",\"ttft_ms\":34,\"type\":\"result\",\"duration_ms\":38,\"uuid\":\"02e8d8f3-388a-43aa-b982-76c22f3c001b\",\"ttft_stream_ms\":34,\"time_to_request_ms\":31,\"first_content_frame_ms\":34,\"queued_turn_count\":0,\"result_index\":0}\n",
+  "stderr": ""
+}

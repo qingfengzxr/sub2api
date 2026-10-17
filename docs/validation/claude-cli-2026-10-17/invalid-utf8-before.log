@@ -1,0 +1,91 @@
+2026/10/16 23:41:16 Timezone initialized: UTC (UTC offset: +00:00)
+=== RUN   TestClaudeCodeAdmissionRejectsMalformedEncoding
+    claude_code_admission_test.go:143: 
+        	Error Trace:	/Users/cooper/Programming/git_home/sub2api/backend/internal/service/claude_code_admission_test.go:143
+        	Error:      	Should be false
+        	Test:       	TestClaudeCodeAdmissionRejectsMalformedEncoding
+        	Messages:   	malformed JSON/UTF-8 must not be admitted
+--- FAIL: TestClaudeCodeAdmissionRejectsMalformedEncoding (0.00s)
+=== RUN   TestClaudeCodeAdmissionHeaderMutations
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/User-Agent/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/User-Agent/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/User-Agent/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-App/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-App/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-App/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Content-Type/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Content-Type/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/Content-Type/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/duplicate
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/missing
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/invalid
+=== RUN   TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/duplicate
+--- PASS: TestClaudeCodeAdmissionHeaderMutations (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/User-Agent/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/User-Agent/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/User-Agent/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-App/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-App/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-App/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Version/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Anthropic-Beta/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Content-Type/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Content-Type/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/Content-Type/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Lang/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Package-Version/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-OS/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Arch/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime/duplicate (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/missing (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/invalid (0.00s)
+    --- PASS: TestClaudeCodeAdmissionHeaderMutations/X-Stainless-Runtime-Version/duplicate (0.00s)
+=== RUN   TestAdmittedClaudeBillingPreservesInjectedReminders
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+2026/10/16 23:41:16 Created new fingerprint for account 1 with client_id: 73b648a4fb48dd56f6ee78822d24582f211489c46fd307bf49a562240bd29426
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+2026/10/16 23:41:16 Created new fingerprint for account 1 with client_id: 9eb9c9700301743dc5461c0610fcf205733eaa2a1187f82a04066b72b29b6302
+--- PASS: TestAdmittedClaudeBillingPreservesInjectedReminders (0.00s)
+FAIL
+FAIL	github.com/Wei-Shaw/sub2api/internal/service	1.118s
+FAIL

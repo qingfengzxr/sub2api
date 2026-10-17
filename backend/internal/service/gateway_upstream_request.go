@@ -90,8 +90,13 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	mimicUserAgent := claude.DefaultUserAgent()
 
 	// Mimicry may override the cached User-Agent later, even without a fingerprint.
-	if billingUA := effectiveBillingUserAgent(mimicUserAgent, tokenType, mimicClaudeCode, fingerprint); billingUA != "" {
-		body = syncBillingHeaderVersion(body, billingUA)
+	// Admission already checked the client's billing version against its UA.
+	// CLI-injected reminder blocks can hide the original text used for the
+	// suffix, so reconstructing it from the final payload changes valid traffic.
+	if !HasClaudeCodeAdmission(ctx) {
+		if billingUA := effectiveBillingUserAgent(mimicUserAgent, tokenType, mimicClaudeCode, fingerprint); billingUA != "" {
+			body = syncBillingHeaderVersion(body, billingUA)
+		}
 	}
 
 	// === 计算最终 anthropic-beta header（先于 body sanitize 与 CCH 签名）===
@@ -171,7 +176,7 @@ func (s *GatewayService) buildUpstreamRequest(ctx context.Context, c *gin.Contex
 	if getHeaderRaw(req.Header, "anthropic-version") == "" {
 		setHeaderRaw(req.Header, "anthropic-version", "2023-06-01")
 	}
-	if tokenType == "oauth" {
+	if tokenType == "oauth" && !HasClaudeCodeAdmission(ctx) {
 		applyClaudeOAuthHeaderDefaults(req)
 	}
 
