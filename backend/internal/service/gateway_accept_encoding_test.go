@@ -48,6 +48,7 @@ func TestGatewayService_AcceptEncodingOnWire(t *testing.T) {
 			}{
 				{name: "gzip", encoding: "gzip", want: "gzip"},
 				{name: "multiple encodings", encoding: "gzip, deflate, br", want: "gzip, deflate, br"},
+				{name: "captured CLI encodings", encoding: "gzip, deflate, br, zstd", want: "gzip, deflate, br, zstd"},
 				{name: "identity", encoding: "identity", want: "identity"},
 				{name: "omitted", want: "gzip"},
 			} {

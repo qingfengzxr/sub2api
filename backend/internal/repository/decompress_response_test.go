@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"compress/zlib"
 	"io"
 	"log/slog"
 	"net/http"
@@ -44,6 +45,7 @@ func TestDecompressResponseBodyExistingEncodings(t *testing.T) {
 		{name: "gzip", encoding: "gzip", compress: compressGzip},
 		{name: "brotli", encoding: "br", compress: compressBrotli},
 		{name: "deflate", encoding: "deflate", compress: compressDeflate},
+		{name: "zlib deflate", encoding: "deflate", compress: compressZlibDeflate},
 	}
 
 	for _, tt := range tests {
@@ -79,6 +81,24 @@ func TestDecompressResponseBodyWithoutEncodingLeavesBodyUntouched(t *testing.T) 
 	require.NoError(t, err)
 	require.Equal(t, "plain", string(body))
 	require.NoError(t, resp.Body.Close())
+}
+
+func TestDecompressResponseBodyUnsupportedDeflatePreservesBytes(t *testing.T) {
+	var dictEncoded bytes.Buffer
+	writer, err := zlib.NewWriterLevelDict(&dictEncoded, zlib.DefaultCompression, []byte("preset dictionary"))
+	require.NoError(t, err)
+	_, err = writer.Write([]byte("preset dictionary payload"))
+	require.NoError(t, err)
+	require.NoError(t, writer.Close())
+	for _, data := range [][]byte{{}, {0x78}, dictEncoded.Bytes()} {
+		resp := newEncodedResponse("deflate", data)
+		decompressResponseBody(resp)
+		body, err := io.ReadAll(resp.Body)
+		require.NoError(t, err)
+		require.Equal(t, data, body)
+		require.Equal(t, "deflate", resp.Header.Get("Content-Encoding"))
+		require.NoError(t, resp.Body.Close())
+	}
 }
 
 func TestDecompressResponseBodyInvalidZstdWarnsAndPreservesBody(t *testing.T) {
@@ -184,6 +204,16 @@ func compressDeflate(t *testing.T, payload []byte) []byte {
 	zw, err := flate.NewWriter(&buf, flate.DefaultCompression)
 	require.NoError(t, err)
 	_, err = zw.Write(payload)
+	require.NoError(t, err)
+	require.NoError(t, zw.Close())
+	return buf.Bytes()
+}
+
+func compressZlibDeflate(t *testing.T, payload []byte) []byte {
+	t.Helper()
+	var buf bytes.Buffer
+	zw := zlib.NewWriter(&buf)
+	_, err := zw.Write(payload)
 	require.NoError(t, err)
 	require.NoError(t, zw.Close())
 	return buf.Bytes()

@@ -808,6 +808,8 @@ Anthropic 推理入口强制校验 Claude Code 请求特征，包含普通分组
 
 后续[固定版本 SDK 核对](docs/CLAUDE_SDK_SOURCE_VERIFICATION_2026-10-17.md)确认：公开 SDK 0.128.0 搭配 Node 26.3.0 的默认网络行为仍不同于原生 CLI。SDK源码可解释部分头部与重试规则，不能替代CLI实采；新增本地HTTP/HTTPS代理测试仅确认CLI侧目标ClientHello的已测字段一致。
 
+2026-10-18 已修复 HTTPS 代理下目标 TLS 指纹回退、profile 更新后复用旧连接、代理建连取消和标准 deflate 解压问题。直连及四种代理路径已补充本地端到端测试；代理外层 TLS 和完整 CLI 网络行为仍不作一致性保证。见[修复与验证记录](docs/CLAUDE_TLS_PROXY_FIX_2026-10-18.md)。
+
 ## 项目结构
 
 ```

@@ -5,7 +5,9 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"compress/zlib"
 	"context"
+	"crypto/sha256"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -563,7 +565,17 @@ func (s *httpUpstreamService) getClientEntryWithTLS(proxyURL string, accountID i
 	settings = s.applyProfilePoolSettings(settings, upstreamProfile)
 	// TLS 指纹客户端使用独立的缓存键，加 "tls:" 前缀
 	cacheKey := "tls:" + buildCacheKey(isolation, proxyKey, accountID, upstreamProtocolModeDefault)
-	poolKey := buildPoolKey(settings, upstreamProtocolModeDefault) + ":tls"
+	// Freeze the profile used by this transport and include every field in the
+	// reuse decision. A profile update must not reuse an old TLS connection.
+	profileJSON, err := json.Marshal(profile)
+	if err != nil {
+		return nil, fmt.Errorf("encode TLS profile: %w", err)
+	}
+	var snapshot *tlsfingerprint.Profile
+	if err := json.Unmarshal(profileJSON, &snapshot); err != nil {
+		return nil, fmt.Errorf("copy TLS profile: %w", err)
+	}
+	poolKey := fmt.Sprintf("%s:tls:%x", buildPoolKey(settings, upstreamProtocolModeDefault), sha256.Sum256(profileJSON))
 
 	now := time.Now()
 	nowUnix := now.UnixNano()
@@ -614,7 +626,7 @@ func (s *httpUpstreamService) getClientEntryWithTLS(proxyURL string, accountID i
 
 	// 创建带 TLS 指纹的 Transport
 	slog.Debug("tls_fingerprint_creating_new_client", "account_id", accountID, "cache_key", cacheKey, "proxy", proxyKey)
-	transport, err := buildUpstreamTransportWithTLSFingerprint(settings, parsedProxy, profile)
+	transport, err := buildUpstreamTransportWithTLSFingerprint(settings, parsedProxy, snapshot)
 	if err != nil {
 		s.mu.Unlock()
 		return nil, fmt.Errorf("build TLS fingerprint transport: %w", err)
@@ -1452,8 +1464,10 @@ func buildUpstreamTransportWithTLSFingerprint(settings poolSettings, proxyURL *u
 		MaxConnsPerHost:       settings.maxConnsPerHost,
 		IdleConnTimeout:       settings.idleConnTimeout,
 		ResponseHeaderTimeout: settings.responseHeaderTimeout,
-		// 禁用默认的 TLS，我们使用自定义的 DialTLSContext
+		DialContext:           newUpstreamDialer().DialContext,
+		// Custom uTLS connections are served by the HTTP/1 transport.
 		ForceAttemptHTTP2: false,
+		TLSNextProto:      make(map[string]func(string, *tls.Conn) http.RoundTripper),
 	}
 
 	// 根据代理类型选择合适的 TLS 指纹 Dialer
@@ -1470,21 +1484,16 @@ func buildUpstreamTransportWithTLSFingerprint(settings poolSettings, proxyURL *u
 			slog.Debug("tls_fingerprint_transport_socks5", "proxy", proxyURL.Host)
 			socks5Dialer := tlsfingerprint.NewSOCKS5ProxyDialer(profile, proxyURL)
 			transport.DialTLSContext = socks5Dialer.DialTLSContext
-		case "https":
-			// The fingerprint dialer emits a plaintext CONNECT preface and cannot
-			// establish TLS to an HTTPS proxy. Keep proxy routing via net/http.
-			return buildUpstreamTransport(settings, proxyURL, upstreamProtocolModeDefault)
-		case "http":
+			transport.DialContext = socks5Dialer.DialContext
+		case "http", "https":
 			// HTTP/HTTPS 代理：使用 HTTPProxyDialer（CONNECT 隧道）
 			slog.Debug("tls_fingerprint_transport_http_connect", "proxy", proxyURL.Host)
 			httpDialer := tlsfingerprint.NewHTTPProxyDialer(profile, proxyURL)
 			transport.DialTLSContext = httpDialer.DialTLSContext
+			// Redirects to plaintext HTTP must also stay inside the proxy route.
+			transport.DialContext = httpDialer.DialContext
 		default:
-			// 未知代理类型，回退到普通代理配置（无 TLS 指纹）
-			slog.Debug("tls_fingerprint_transport_unknown_scheme_fallback", "scheme", scheme)
-			if err := proxyutil.ConfigureTransportProxy(transport, proxyURL); err != nil {
-				return nil, err
-			}
+			return nil, fmt.Errorf("unsupported TLS fingerprint proxy scheme: %s", scheme)
 		}
 	}
 
@@ -1549,7 +1558,29 @@ func decompressResponseBody(resp *http.Response) {
 	case "br":
 		reader = brotli.NewReader(resp.Body)
 	case "deflate":
-		reader = flate.NewReader(resp.Body)
+		// HTTP deflate uses a zlib wrapper. Retain compatibility with upstreams
+		// sending raw DEFLATE, and preserve buffered bytes if initialization fails.
+		bufferedBody := bufio.NewReader(resp.Body)
+		resp.Body = &decompressedBody{reader: bufferedBody, closer: originalBody}
+		header, err := bufferedBody.Peek(2)
+		if err != nil {
+			return
+		}
+		if header[0]&0x0f == 8 && header[0]>>4 <= 7 &&
+			(uint16(header[0])<<8|uint16(header[1]))%31 == 0 {
+			// No out-of-band preset dictionary is available for HTTP responses.
+			// Leave such bodies intact rather than consuming their header first.
+			if header[1]&0x20 != 0 {
+				return
+			}
+			zr, err := zlib.NewReader(bufferedBody)
+			if err != nil {
+				return
+			}
+			reader = zr
+		} else {
+			reader = flate.NewReader(bufferedBody)
+		}
 	case "zstd":
 		bufferedBody := bufio.NewReader(resp.Body)
 		resp.Body = &decompressedBody{reader: bufferedBody, closer: originalBody}
