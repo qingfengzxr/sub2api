@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claudehttp"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
@@ -271,5 +273,50 @@ func TestClaudeCodeAdmissionBlocksAnthropicFallback(t *testing.T) {
 			require.Equal(t, http.StatusForbidden, w.Code)
 			require.JSONEq(t, `{"type":"error","error":{"type":"permission_error","message":"Request not permitted"}}`, w.Body.String())
 		})
+	}
+}
+
+func TestAdmittedClaudeHTTP1ProfileSelection(t *testing.T) {
+	for _, admitted := range []bool{false, true} {
+		for _, version := range []string{"2.1.301", "2.1.302"} {
+			for _, route := range []string{"messages", "count_tokens", "passthrough", "count_tokens_passthrough"} {
+				t.Run(fmt.Sprintf("%s/%s/admitted=%t", route, version, admitted), func(t *testing.T) {
+					incoming, envelope := admittedClaudeFixture(t)
+					incoming.Header.Set("User-Agent", "claude-cli/"+version+" (external, cli)")
+					body, err := json.Marshal(envelope)
+					require.NoError(t, err)
+					ctx := context.Background()
+					if admitted {
+						ctx = WithClaudeCodeAdmission(ctx)
+					}
+					c, _ := gin.CreateTestContext(httptest.NewRecorder())
+					c.Request = incoming.WithContext(ctx)
+					svc := &GatewayService{cfg: &config.Config{}}
+					account := &Account{ID: 1, Platform: PlatformAnthropic, Type: AccountTypeAPIKey}
+					var req *http.Request
+					switch route {
+					case "messages":
+						req, _, err = svc.buildUpstreamRequest(ctx, c, account, body, "synthetic", "apikey", "claude-sonnet-4-6", true, false)
+					case "count_tokens":
+						req, _, err = svc.buildCountTokensRequest(ctx, c, account, body, "synthetic", "apikey", "claude-sonnet-4-6", false)
+					case "passthrough":
+						req, _, err = svc.buildUpstreamRequestAnthropicAPIKeyPassthrough(ctx, c, account, body, "synthetic")
+					case "count_tokens_passthrough":
+						req, err = svc.buildCountTokensRequestAnthropicAPIKeyPassthrough(ctx, c, account, body, "synthetic")
+					}
+					require.NoError(t, err)
+					defer req.Body.Close()
+					require.Equal(t, admitted && version == "2.1.301", claudehttp.Enabled(req))
+					if claudehttp.Enabled(req) {
+						seen := map[string]bool{}
+						for key := range req.Header {
+							lower := strings.ToLower(key)
+							require.False(t, seen[lower], "duplicate casing for %s", key)
+							seen[lower] = true
+						}
+					}
+				})
+			}
+		}
 	}
 }

@@ -1,0 +1,815 @@
+{
+  "cli_version": "2.1.301 (Claude Code)",
+  "binary_sha256": "1f04c69e1c24e4d0a716a863af0aad8fc64d49a499334c29701f073700276b99",
+  "scope": "Loopback HTTP/HTTPS HTTP/1.1; trusted local CA; synthetic API key/static bearer; header names only; no real OAuth",
+  "cases": [
+    {
+      "auth": "api_key",
+      "retry": 0,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 429,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 429
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 503,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 0,
+      "extra": true,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Helper-Method",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "X-Synthetic-Extra",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 0,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 429,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 429
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 503,
+      "extra": false,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 0,
+      "extra": true,
+      "https": false,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Helper-Method",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "X-Synthetic-Extra",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 0,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 429,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 429
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 503,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "api_key",
+      "retry": 0,
+      "extra": true,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Helper-Method",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "X-Synthetic-Extra",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-api-key",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 0,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 429,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 429
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 503,
+      "extra": false,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    },
+    {
+      "auth": "bearer",
+      "retry": 0,
+      "extra": true,
+      "https": true,
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/v1/messages?beta=true",
+          "header_names": [
+            "Accept",
+            "Authorization",
+            "Content-Type",
+            "User-Agent",
+            "X-Claude-Code-Session-Id",
+            "X-Stainless-Arch",
+            "X-Stainless-Helper-Method",
+            "X-Stainless-Lang",
+            "X-Stainless-OS",
+            "X-Stainless-Package-Version",
+            "X-Stainless-Retry-Count",
+            "X-Stainless-Runtime",
+            "X-Stainless-Runtime-Version",
+            "X-Stainless-Timeout",
+            "X-Synthetic-Extra",
+            "anthropic-beta",
+            "anthropic-dangerous-direct-browser-access",
+            "anthropic-version",
+            "x-app",
+            "Connection",
+            "Host",
+            "Accept-Encoding",
+            "Content-Length"
+          ],
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

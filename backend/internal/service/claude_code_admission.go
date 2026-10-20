@@ -11,6 +11,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claudehttp"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/tidwall/gjson"
@@ -264,4 +265,12 @@ func claudeEmptyArray(value any) bool {
 	}
 	items, ok := value.([]any)
 	return ok && len(items) == 0
+}
+
+// Select the measured wire profile only after admission and final header overrides.
+func withAdmittedClaudeHTTP1Profile(req *http.Request) *http.Request {
+	if HasClaudeCodeAdmission(req.Context()) {
+		return claudehttp.WithProfile(req)
+	}
+	return req
 }

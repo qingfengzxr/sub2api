@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/config"
+	"github.com/Wei-Shaw/sub2api/internal/pkg/claudehttp"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
@@ -198,8 +199,8 @@ func recordedHeader(request recordedCLIRequest, name string) string {
 }
 
 // Measure raw HTTP/1.1 header order separately from the semantic assertions.
-// A successful measurement may still report differences; it is not a claim of
-// complete wire equivalence. Neither side's authentication fields are saved.
+// Compare the ordered transport against the recorded CLI names and casing.
+// Authentication values are never saved; body/header values may differ by policy.
 func TestClaudeCLIRecordedRawHTTPHeaders(t *testing.T) {
 	data, err := os.ReadFile(filepath.Join("testdata", "claude_cli", "ascii", "capture.json"))
 	require.NoError(t, err)
@@ -242,7 +243,10 @@ func TestClaudeCLIRecordedRawHTTPHeaders(t *testing.T) {
 		_, _ = io.WriteString(conn, "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}")
 	}()
 	req.URL.Scheme, req.URL.Host = "http", listener.Addr().String()
-	client := &http.Client{Timeout: 5 * time.Second}
+	ordered := claudehttp.NewTransport(&http.Transport{DialContext: (&net.Dialer{Timeout: time.Second}).DialContext})
+	defer ordered.CloseIdleConnections()
+	require.True(t, claudehttp.Enabled(req))
+	client := &http.Client{Timeout: 5 * time.Second, Transport: ordered}
 	response, err := client.Do(req)
 	require.NoError(t, err)
 	require.NoError(t, response.Body.Close())
@@ -255,9 +259,18 @@ func TestClaudeCLIRecordedRawHTTPHeaders(t *testing.T) {
 			headers = append(headers, []string{key, strings.TrimSpace(value)})
 		}
 	}
+	var expectedNames, actualNames []string
+	for _, pair := range original.Headers {
+		expectedNames = append(expectedNames, pair[0])
+	}
+	for _, pair := range headers {
+		actualNames = append(actualNames, pair[0])
+	}
+	require.Equal(t, expectedNames, actualNames)
 	comparison := map[string]any{"cli_headers": original.Headers, "forwarded_headers": headers,
-		"exact_sequence_equal": reflect.DeepEqual(original.Headers, headers),
-		"allowed_differences":  "destination Host/Content-Length and OAuth beta; remaining order/casing/transport-added fields are measured discrepancies"}
+		"exact_sequence_equal":         reflect.DeepEqual(original.Headers, headers),
+		"header_names_and_order_equal": reflect.DeepEqual(expectedNames, actualNames),
+		"allowed_differences":          "destination Host/Content-Length, authentication and policy-adjusted header values"}
 	encoded, err := json.MarshalIndent(comparison, "", "  ")
 	require.NoError(t, err)
 	if output := os.Getenv("CLAUDE_CLI_HTTP_RESULT"); output != "" {

@@ -1,0 +1,30 @@
+{
+  "baseline_commit": "adb6d3a8d",
+  "profile": "claude-cli-2.1.301-h1",
+  "actual_cli_cases": 16,
+  "actual_cli_requests": 24,
+  "historical_requests_replayed": 40,
+  "new_cli_sequences_replayed": 24,
+  "repository_tls_request_count": 40,
+  "repository_route_configurations": 20,
+  "concurrent_requests": 40,
+  "results": {
+    "full_transport_tls_repository_race": "PASS",
+    "full_service": "PASS",
+    "targeted_service_race": "PASS",
+    "transport_concurrency_race": "PASS",
+    "proxy_tools": "PASS"
+  },
+  "source_sha256": {
+    "backend/go.mod": "4d3652863e43b3ee47bb3e09a46c047b1cca6b0ab64410e74a5e5efdda7fb44c",
+    "backend/go.sum": "33b0931e5afb5cbf520b3d46b2315eaa91975e74bb06c3fc4a014709df034a86",
+    "backend/scripts/claude_cli_header_order_capture.py": "4be0bcf01583a2fb0b2f0fa2358d2b5909e5aa7b1309c739b2ef0e30a4de3af8",
+    "backend/internal/pkg/claudehttp/testdata/cli-2.1.301-header-order.json": "c9dcda404502eea2b450f8e9e6e01d7fd02c60e1999e1d0039225f304e028c69"
+  },
+  "notes": [
+    "proxy-tools.log is an excerpt from the combined service/proxy test command",
+    "count_tokens uses the same profile but fresh native CLI captures here are messages requests",
+    "Synthetic Bearer is not real OAuth",
+    "Unknown versions retain the existing transport"
+  ]
+}

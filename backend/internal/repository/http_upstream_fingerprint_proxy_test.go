@@ -149,16 +149,23 @@ func TestFingerprintTransportProxyRoutes(t *testing.T) {
 		proxy := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.Host == destination {
 				plainCalls.Add(1)
-				c, _, err := w.(http.Hijacker).Hijack()
+				c, buffered, err := w.(http.Hijacker).Hijack()
 				if err != nil {
 					t.Error(err)
 					return
 				}
 				defer c.Close()
 				_ = c.SetDeadline(time.Now().Add(3 * time.Second))
-				_, _ = io.WriteString(c, "HTTP/1.1 200 Connection Established\r\n\r\nHTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK")
-				buf := make([]byte, 4096)
-				_, _ = c.Read(buf)
+				_, _ = io.WriteString(c, "HTTP/1.1 200 Connection Established\r\n\r\n")
+				// Respond only after receiving the tunneled HTTP request.
+				// Sending unsolicited HTTP data races net/http's idle reader.
+				tunneled, err := http.ReadRequest(buffered.Reader)
+				if err != nil {
+					t.Error(err)
+					return
+				}
+				_ = tunneled.Body.Close()
+				_, _ = io.WriteString(c, "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK")
 				return
 			}
 			fingerprintRelayCONNECT(t, w, r, target.Listener.Addr().String())
