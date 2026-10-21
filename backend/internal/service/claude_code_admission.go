@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math"
 	"mime"
 	"net/http"
@@ -251,7 +252,25 @@ func (v *ClaudeCodeValidator) ValidateIngress(r *http.Request, body map[string]a
 		return false
 	}
 
-	return matched
+	// Claude Code 2.1.304+ changed the system prompt payload while retaining
+	// the authenticated CLI envelope. Keep the legacy prompt match for older
+	// versions, but accept newer official CLI versions after all structural,
+	// identity, billing/session and beta checks above have passed.
+	if matched || isNewerClaudeCLI(ua[1], "2.1.304") {
+		return true
+	}
+	return false
+}
+
+func isNewerClaudeCLI(version, minimum string) bool {
+	var a, b, c, x, y, z int
+	if _, err := fmt.Sscanf(version, "%d.%d.%d", &a, &b, &c); err != nil {
+		return false
+	}
+	if _, err := fmt.Sscanf(minimum, "%d.%d.%d", &x, &y, &z); err != nil {
+		return false
+	}
+	return a > x || (a == x && (b > y || (b == y && c >= z)))
 }
 
 func isClaudeUUID(value string) bool {
