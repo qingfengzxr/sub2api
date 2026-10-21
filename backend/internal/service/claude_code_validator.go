@@ -390,6 +390,13 @@ func (v *ClaudeCodeValidator) ExtractVersion(ua string) string {
 	return ExtractCLIVersion(ua)
 }
 
+// IsNewerOrEqualVersion reports whether a Claude CLI User-Agent is at least
+// the supplied three-part version.
+func (v *ClaudeCodeValidator) IsNewerOrEqualVersion(ua, minimum string) bool {
+	version := v.ExtractVersion(ua)
+	return version != "" && isNewerClaudeCLI(version, minimum)
+}
+
 // SetClaudeCodeVersion 将 Claude Code 版本号设置到 context 中
 func SetClaudeCodeVersion(ctx context.Context, version string) context.Context {
 	return context.WithValue(ctx, ctxkey.ClaudeCodeVersion, version)

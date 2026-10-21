@@ -58,6 +58,17 @@ func claudeCodeAdmissionMiddleware() gin.HandlerFunc {
 		}
 		requestmodel.ResetRequestBody(c.Request, body)
 		if !validator.ValidateIngressJSON(c.Request, body) {
+			// Claude Code 2.1.304+ changed its bootstrap envelope. Keep the
+			// request on the CLI-only route and let the gateway perform the
+			// remaining body/account checks instead of returning a false 403.
+			if service.IsClaudeCodeIngressRequest(c.Request) &&
+				validator.IsNewerOrEqualVersion(c.GetHeader("User-Agent"), "2.1.304") {
+				ctx := service.WithClaudeCodeAdmission(c.Request.Context())
+				ctx = service.SetClaudeCodeVersion(ctx, validator.ExtractVersion(c.GetHeader("User-Agent")))
+				c.Request = c.Request.WithContext(ctx)
+				c.Next()
+				return
+			}
 			if requireAdmission {
 				reject(http.StatusForbidden)
 			} else {
