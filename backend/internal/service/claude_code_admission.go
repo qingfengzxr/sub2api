@@ -239,9 +239,6 @@ func (v *ClaudeCodeValidator) ValidateIngress(r *http.Request, body map[string]a
 		claudeEmptyArray(body["system"]) && claudeEmptyArray(body["tools"]) {
 		return true
 	}
-	if identity == nil {
-		return false
-	}
 	hasCLIBeta := false
 	for _, beta := range strings.Split(r.Header.Get("Anthropic-Beta"), ",") {
 		if strings.TrimSpace(beta) == claude.BetaClaudeCode {
@@ -249,6 +246,16 @@ func (v *ClaudeCodeValidator) ValidateIngress(r *http.Request, body map[string]a
 		}
 	}
 	if !hasCLIBeta {
+		return false
+	}
+	// The first request emitted by newer Claude Code releases may omit
+	// metadata.user_id while establishing the session. The strict envelope and
+	// CLI-only headers above still apply; allow that bootstrap request for newer
+	// CLI versions so it can establish identity on the next turn.
+	if identity == nil && isNewerClaudeCLI(ua[1], "2.1.304") {
+		return true
+	}
+	if identity == nil {
 		return false
 	}
 
