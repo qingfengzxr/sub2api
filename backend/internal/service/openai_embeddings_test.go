@@ -149,7 +149,7 @@ func TestForwardEmbeddings_AccessStateUsesTypedFailover(t *testing.T) {
 	require.False(t, c.Writer.Written())
 }
 
-func TestForwardEmbeddings_NonAccessFailoverKeepsLegacyShape(t *testing.T) {
+func TestForwardEmbeddings_NonAccessFailoverKeepsRoutingAndHeaders(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	reqBody := []byte(`{"model":"text-embedding-3-small","input":"hello"}`)
@@ -183,6 +183,6 @@ func TestForwardEmbeddings_NonAccessFailoverKeepsLegacyShape(t *testing.T) {
 	require.Empty(t, failoverErr.Reason)
 	require.Zero(t, failoverErr.ClientStatusCode)
 	require.Empty(t, failoverErr.ClientMessage)
-	require.Nil(t, failoverErr.ResponseHeaders)
+	require.Equal(t, "application/json", failoverErr.ResponseHeaders.Get("Content-Type"))
 	require.False(t, c.Writer.Written())
 }

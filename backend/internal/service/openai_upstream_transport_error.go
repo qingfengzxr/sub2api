@@ -118,7 +118,7 @@ func (s *OpenAIGatewayService) handleOpenAIUpstreamTransportError(ctx context.Co
 	if isClientCanceledTransportError(ctx, err) {
 		return err
 	}
-	safeErr := sanitizeUpstreamErrorMessage(err.Error())
+	safeErr := embeddingSafeDiagnostic(ctx, sanitizeUpstreamErrorMessage(err.Error()))
 	setOpsUpstreamError(c, 0, safeErr, "")
 	appendOpsUpstreamError(c, OpsUpstreamErrorEvent{
 		ProxyID:            opsUpstreamProxyID(account),

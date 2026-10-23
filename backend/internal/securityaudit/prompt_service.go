@@ -107,7 +107,11 @@ func (s *PromptService) EffectiveMode() Mode {
 	return s.config.EffectiveMode()
 }
 
-func (s *PromptService) Enqueue(_ context.Context, req Request) error {
+func (s *PromptService) Enqueue(ctx context.Context, req Request) error {
+	if req.Protocol == "openai_embeddings" {
+		_, err := s.Evaluate(ctx, req)
+		return err
+	}
 	if s == nil || s.enqueuer == nil || s.EffectiveMode() != ModeAsync {
 		return nil
 	}
@@ -153,7 +157,7 @@ func (s *PromptService) Evaluate(ctx context.Context, req Request) (*PromptDecis
 		}
 		return &PromptDecision{Kind: DecisionAllow, AllowNextStage: true}, nil
 	}
-	if cfg.EffectiveMode() != ModeBlocking || !cfg.IncludesGroup(req.GroupID) {
+	if (cfg.EffectiveMode() != ModeBlocking && !(req.Protocol == "openai_embeddings" && cfg.EffectiveMode() == ModeAsync)) || !cfg.IncludesGroup(req.GroupID) {
 		return &PromptDecision{Kind: DecisionAllow, AllowNextStage: true}, nil
 	}
 	snapshot, err := ExtractBlockingPromptSnapshot(req, cfg.BlockingLatestTurnOnly)

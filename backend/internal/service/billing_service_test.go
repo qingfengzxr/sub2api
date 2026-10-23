@@ -2246,7 +2246,7 @@ func TestAstraUltrafastPricingUsesSixTimesStandard(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, 6.0, configuredServiceTierMultiplier("ultrafast", p))
 		require.Equal(t, 3.0, configuredServiceTierMultiplier("priority", p))
-		cost := svc.computeTokenBreakdown(p, UsageTokens{InputTokens: 1000, OutputTokens: 1000, CacheReadTokens: 1000, CacheCreationTokens: 1000}, 1, "ultrafast", false)
+		cost := svc.computeTokenBreakdown(p, UsageTokens{InputTokens: 1000, OutputTokens: 1000, CacheReadTokens: 1000, CacheCreationTokens: 1000}, 1, "ultrafast", LongContextPricingPolicy{})
 		require.InDelta(t, custom*24000, cost.TotalCost, 1e-10)
 	}
 	p, err := svc.GetModelPricing("gpt-6-sol")

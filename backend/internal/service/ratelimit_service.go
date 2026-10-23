@@ -568,8 +568,8 @@ func (s *RateLimitService) HandleUpstreamError(ctx context.Context, account *Acc
 			account.Type,
 			strings.TrimSpace(headers.Get("x-request-id")),
 			strings.TrimSpace(headers.Get("cf-ray")),
-			upstreamMsg,
-			truncateForLog(responseBody, 1024),
+			embeddingSafeDiagnostic(ctx, upstreamMsg),
+			embeddingSafeDiagnostic(ctx, truncateForLog(responseBody, 1024)),
 		)
 		shouldDisable = s.handle403(ctx, account, upstreamMsg, responseBody)
 	case 429:
@@ -969,6 +969,7 @@ func (s *RateLimitService) GeminiCooldown(ctx context.Context, account *Account)
 
 // handleAuthError 处理认证类错误(401/403)，停止账号调度
 func (s *RateLimitService) handleAuthError(ctx context.Context, account *Account, errorMsg string) {
+	errorMsg = embeddingSafeDiagnostic(ctx, errorMsg)
 	s.notifyAccountSchedulingBlocked(account, time.Time{}, "auth_error")
 	if err := s.accountRepo.SetError(ctx, account.ID, errorMsg); err != nil {
 		slog.Warn("account_set_error_failed", "account_id", account.ID, "error", err)
@@ -1058,7 +1059,7 @@ func (s *RateLimitService) handleOpenAI403(ctx context.Context, account *Account
 		slog.Warn(
 			"openai_403_html_body_skips_account_penalty",
 			"account_id", account.ID,
-			"upstream_message", upstreamMsg,
+			"upstream_message", embeddingSafeDiagnostic(ctx, upstreamMsg),
 		)
 		return false
 	}
@@ -1067,7 +1068,7 @@ func (s *RateLimitService) handleOpenAI403(ctx context.Context, account *Account
 			"openai_403_cloudflare_bot_block_skips_account_penalty",
 			"account_id", account.ID,
 			"platform", account.Platform,
-			"upstream_message", upstreamMsg,
+			"upstream_message", embeddingSafeDiagnostic(ctx, upstreamMsg),
 		)
 		return false
 	}
@@ -1078,6 +1079,7 @@ func (s *RateLimitService) handleOpenAI403(ctx context.Context, account *Account
 		responseBody,
 		"account may be suspended or lack permissions",
 	)
+	msg = embeddingSafeDiagnostic(ctx, msg)
 
 	if s.openAI403CounterCache == nil {
 		s.handleAuthError(ctx, account, msg)
@@ -1172,6 +1174,7 @@ func (s *RateLimitService) handleAntigravity403(ctx context.Context, account *Ac
 
 // handleCustomErrorCode 处理自定义错误码，停止账号调度
 func (s *RateLimitService) handleCustomErrorCode(ctx context.Context, account *Account, statusCode int, errorMsg string) {
+	errorMsg = embeddingSafeDiagnostic(ctx, errorMsg)
 	msg := "Custom error code " + strconv.Itoa(statusCode) + ": " + errorMsg
 	s.notifyAccountSchedulingBlocked(account, time.Time{}, "custom_error_code")
 	if err := s.accountRepo.SetError(ctx, account.ID, msg); err != nil {
@@ -2726,7 +2729,7 @@ func (s *RateLimitService) triggerTempUnschedulable(ctx context.Context, account
 		StatusCode:      statusCode,
 		MatchedKeyword:  matchedKeyword,
 		RuleIndex:       ruleIndex,
-		ErrorMessage:    truncateTempUnschedMessage(responseBody, tempUnschedMessageMaxBytes),
+		ErrorMessage:    embeddingSafeDiagnostic(ctx, truncateTempUnschedMessage(responseBody, tempUnschedMessageMaxBytes)),
 	}
 
 	reason := ""

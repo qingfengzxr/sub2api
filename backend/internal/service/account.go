@@ -1829,7 +1829,7 @@ func (a *Account) SupportsOpenAIEndpointCapability(capability OpenAIEndpointCapa
 			return false
 		}
 	case OpenAIEndpointCapabilityEmbeddings:
-		if a.Type != AccountTypeAPIKey {
+		if a.Platform != PlatformOpenAI || a.Type != AccountTypeAPIKey {
 			return false
 		}
 	default:
