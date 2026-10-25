@@ -1580,7 +1580,7 @@ export default {
       connectingToApi: 'Connecting to API...',
       testCompleted: 'Test completed successfully!',
       testFailed: 'Test failed',
-      connectedToApi: 'Connected to API',
+      connectedToApi: 'Starting API test',
       usingModel: 'Using model: {model}',
       sendingTestMessage: 'Sending test message: "hi"',
       sendingImageRequest: 'Sending image generation test request...',
