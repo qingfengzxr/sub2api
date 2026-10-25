@@ -179,6 +179,7 @@ func UserGroupFromService(g *service.Group) *UserGroup {
 		return nil
 	}
 	return &UserGroup{
+		I18n:                            g.I18n,
 		ID:                              g.ID,
 		Name:                            g.Name,
 		Description:                     g.Description,
@@ -263,6 +264,7 @@ func groupFromServiceBase(g *service.Group) Group {
 		ID:                              g.ID,
 		Name:                            g.Name,
 		Description:                     g.Description,
+		I18n:                            g.I18n,
 		Platform:                        g.Platform,
 		RateMultiplier:                  g.RateMultiplier,
 		IsExclusive:                     g.IsExclusive,

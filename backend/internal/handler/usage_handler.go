@@ -259,7 +259,7 @@ func (h *UsageHandler) List(c *gin.Context) {
 
 	out := make([]dto.UsageLog, 0, len(records))
 	for i := range records {
-		out = append(out, *h.usageLogFromServiceForUser(c.Request.Context(), &records[i]))
+		out = append(out, *h.usageLogFromServiceForUser(c.Request.Context(), &records[i], c.GetHeader("Accept-Language")))
 	}
 	response.Paginated(c, out, result.Total, page, pageSize)
 }
@@ -405,17 +405,17 @@ func (h *UsageHandler) GetByID(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, h.usageLogFromServiceForUser(c.Request.Context(), record))
+	response.Success(c, h.usageLogFromServiceForUser(c.Request.Context(), record, c.GetHeader("Accept-Language")))
 }
 
-func (h *UsageHandler) usageLogFromServiceForUser(ctx context.Context, record *service.UsageLog) *dto.UsageLog {
+func (h *UsageHandler) usageLogFromServiceForUser(ctx context.Context, record *service.UsageLog, acceptLanguage string) *dto.UsageLog {
 	if record == nil {
 		return nil
 	}
 	if h.standardUnitPriceResolver != nil {
 		h.standardUnitPriceResolver.Apply(ctx, record)
 	}
-	return dto.UsageLogFromService(record)
+	return dto.UsageLogFromService(record).Localized(acceptLanguage)
 }
 
 // Stats handles getting usage statistics
