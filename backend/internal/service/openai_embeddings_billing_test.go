@@ -99,3 +99,43 @@ func TestOpenAIEmbeddingsRecordUsageBalanceAndSubscription(t *testing.T) {
 		}
 	}
 }
+
+func TestOpenAIEmbeddingsIgnoreBillableTokenMultiplier(t *testing.T) {
+	for model, price := range map[string]float64{
+		"text-embedding-3-small": .02e-6,
+		"text-embedding-3-large": .13e-6,
+		"text-embedding-ada-002": .10e-6,
+	} {
+		t.Run(model, func(t *testing.T) {
+			usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+			billingRepo := &openAIRecordUsageBillingRepoStub{result: &UsageBillingApplyResult{Applied: true}}
+			svc := newOpenAIRecordUsageServiceWithTokenMultiplierForTest(
+				usageRepo, billingRepo, &openAIRecordUsageUserRepoStub{}, &openAIRecordUsageSubRepoStub{}, nil, true, 3,
+			)
+			groupID := int64(1)
+			key := &APIKey{ID: 3, GroupID: &groupID, Group: &Group{ID: groupID, RateMultiplier: 1}}
+			account := &Account{ID: 4, Platform: PlatformOpenAI, Type: AccountTypeAPIKey}
+			plan, err := svc.PrepareOpenAIEmbeddingsBilling(
+				context.Background(), account,
+				[]byte(`{"model":"`+model+`","input":"hello"}`), key, ChannelUsageFields{},
+			)
+			require.NoError(t, err)
+
+			err = svc.RecordUsage(context.Background(), &OpenAIRecordUsageInput{
+				EmbeddingsBilling: plan,
+				Result: &OpenAIForwardResult{
+					RequestID:     "embedding-billable-token-exempt-" + model,
+					Model:         model,
+					UpstreamModel: model,
+					Usage:         OpenAIUsage{InputTokens: 101},
+				},
+				APIKey: key, User: &User{ID: 5}, Account: account,
+			})
+			require.NoError(t, err)
+			require.Equal(t, 101, usageRepo.lastLog.InputTokens)
+			require.Equal(t, 101, usageRepo.lastLog.BillableInputTokens)
+			require.Equal(t, 1.0, usageRepo.lastLog.BillingTokenMultiplier)
+			require.InDelta(t, 101*price, usageRepo.lastLog.TotalCost, 1e-12)
+		})
+	}
+}

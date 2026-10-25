@@ -195,7 +195,15 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 		CacheReadTokens:      result.Usage.CacheReadInputTokens,
 		ImageOutputTokens:    result.Usage.ImageOutputTokens,
 	}
-	billableUsage := BuildBillableUsage(tokens, s.billingTokenPolicy(ctx))
+	billingTokenPolicy := s.billingTokenPolicy(ctx)
+	// Embeddings are already billed from the provider's prompt_tokens. The
+	// platform billable-token multiplier is for generative token billing and
+	// must not inflate embedding input usage, including mapped and compatible
+	// provider models handled by the embeddings endpoint.
+	if input.EmbeddingsBilling != nil || IsOpenAIEmbeddingsEndpoint(input.InboundEndpoint) || isOfficialOpenAIEmbeddingResult(result) {
+		billingTokenPolicy = BillingTokenPolicy{Multiplier: 1}
+	}
+	billableUsage := BuildBillableUsage(tokens, billingTokenPolicy)
 
 	// Get rate multiplier
 	multiplier := 1.0

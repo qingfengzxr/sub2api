@@ -148,3 +148,14 @@ func (s *OpenAIGatewayService) calculateOpenAIEmbeddingsCost(ctx context.Context
 	}
 	return cost, nil
 }
+
+func isOfficialOpenAIEmbeddingResult(result *OpenAIForwardResult) bool {
+	if result == nil {
+		return false
+	}
+	model := strings.TrimSpace(result.UpstreamModel)
+	if model == "" {
+		model = strings.TrimSpace(result.Model)
+	}
+	return openAIEmbeddingDimensions(strings.ToLower(model)) > 0
+}
