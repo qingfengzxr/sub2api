@@ -800,11 +800,16 @@ func (s *AccountTestService) testBedrockAccountConnection(c *gin.Context, ctx co
 func (s *AccountTestService) testOpenAIAccountConnection(c *gin.Context, account *Account, modelID string, prompt string, mode string) error {
 	ctx := c.Request.Context()
 	mode = normalizeAccountTestMode(mode)
+	embeddingsOnly := account.SupportsOpenAIEndpointCapability(OpenAIEndpointCapabilityEmbeddings) &&
+		!account.SupportsOpenAIEndpointCapability(OpenAIEndpointCapabilityChatCompletions)
 
 	// Default to openai.DefaultTestModel for OpenAI testing
 	testModelID := modelID
 	if testModelID == "" {
 		testModelID = openai.DefaultTestModel
+		if embeddingsOnly && mode != AccountTestModeCompact {
+			testModelID = "text-embedding-3-small"
+		}
 	}
 
 	// Align test routing with gateway behavior: OpenAI accounts apply normal
@@ -812,6 +817,11 @@ func (s *AccountTestService) testOpenAIAccountConnection(c *gin.Context, account
 	// /responses wire and does NOT apply the legacy compact-only mapping
 	// (post-#5641 semantics: compact_model_mapping is /responses/compact-only).
 	testModelID = account.GetMappedModel(testModelID)
+	// Embeddings are independent of the account's text-generation protocol.
+	if mode != AccountTestModeCompact && (openAIEmbeddingDimensions(modelID) > 0 || openAIEmbeddingDimensions(testModelID) > 0 ||
+		embeddingsOnly) {
+		return s.testOpenAIEmbeddingsConnection(c, account, testModelID, prompt)
+	}
 	if mode == AccountTestModeCompact {
 		return s.testOpenAICompactConnection(c, account, testModelID)
 	}

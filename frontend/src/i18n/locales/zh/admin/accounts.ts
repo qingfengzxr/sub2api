@@ -1669,7 +1669,7 @@ export default {
       readyToTest: '准备测试。点击"开始测试"按钮开始...',
       connectingToApi: '连接 API 中...',
       testCompleted: '测试完成！',
-      connectedToApi: '已连接到 API',
+      connectedToApi: '开始测试 API',
       usingModel: '使用模型：{model}',
       sendingTestMessage: '发送测试消息："hi"',
       sendingImageRequest: '发送生图测试请求...',
