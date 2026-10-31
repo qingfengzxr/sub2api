@@ -117,6 +117,9 @@ type PromptSnapshot struct {
 
 func (s PromptSnapshot) Redacted() PromptSnapshot {
 	s.ScanText = ""
+	if s.Protocol == "openai_embeddings" {
+		s.FullPrompt, s.RedactedPreview = "", ""
+	}
 	return s
 }
 

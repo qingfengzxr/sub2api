@@ -21,6 +21,7 @@ import (
 
 // OpenAIRecordUsageInput input for recording usage
 type OpenAIRecordUsageInput struct {
+	EmbeddingsBilling  *OpenAIEmbeddingsBilling
 	Result             *OpenAIForwardResult
 	APIKey             *APIKey
 	User               *User
@@ -194,7 +195,15 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 		CacheReadTokens:      result.Usage.CacheReadInputTokens,
 		ImageOutputTokens:    result.Usage.ImageOutputTokens,
 	}
-	billableUsage := BuildBillableUsage(tokens, s.billingTokenPolicy(ctx))
+	billingTokenPolicy := s.billingTokenPolicy(ctx)
+	// Embeddings are already billed from the provider's prompt_tokens. The
+	// platform billable-token multiplier is for generative token billing and
+	// must not inflate embedding input usage, including mapped and compatible
+	// provider models handled by the embeddings endpoint.
+	if input.EmbeddingsBilling != nil || IsOpenAIEmbeddingsEndpoint(input.InboundEndpoint) || isOfficialOpenAIEmbeddingResult(result) {
+		billingTokenPolicy = BillingTokenPolicy{Multiplier: 1}
+	}
+	billableUsage := BuildBillableUsage(tokens, billingTokenPolicy)
 
 	// Get rate multiplier
 	multiplier := 1.0
@@ -239,21 +248,30 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 	}
 	longContextBillingGate := openAILongContextBillingGate(billingAccount)
 	modelLongContextExempt := openAISubscriptionLongContextExempt(billingAccount, result)
-	cost, err = s.calculateOpenAIRecordUsageCost(
-		ctx,
-		result,
-		apiKey,
-		billingModels,
-		multiplier,
-		imageMultiplier,
-		videoMultiplier,
-		baseMultiplier,
-		billableUsage,
-		serviceTier,
-		longContextBillingGate,
-		modelLongContextExempt,
-		pricingAt,
-	)
+	if input.EmbeddingsBilling != nil {
+		disabled := false
+		longContextBillingGate = &disabled
+		cost, err = s.calculateOpenAIEmbeddingsCost(ctx, input.EmbeddingsBilling, result, billableUsage, multiplier, pricingAt)
+		if err != nil {
+			return err
+		}
+	} else {
+		cost, err = s.calculateOpenAIRecordUsageCost(
+			ctx,
+			result,
+			apiKey,
+			billingModels,
+			multiplier,
+			imageMultiplier,
+			videoMultiplier,
+			baseMultiplier,
+			billableUsage,
+			serviceTier,
+			longContextBillingGate,
+			modelLongContextExempt,
+			pricingAt,
+		)
+	}
 	if err != nil {
 		if !isUsagePricingUnavailableError(err) {
 			return err
@@ -280,7 +298,7 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 		result.UpstreamResponseModelConflict,
 		result.ImageCount > 0 || result.VideoCount > 0 || result.WebSearchCalls > 0 ||
 			result.AudioUsage != nil || result.SearchCount > 0,
-	); responseModel != "" && !strings.EqualFold(responseModel, baselineBillingModel) {
+	); input.EmbeddingsBilling == nil && responseModel != "" && !strings.EqualFold(responseModel, baselineBillingModel) {
 		if identified, responseChannelPriced := s.hasIdentifiedOpenAIResponsePricing(ctx, responseModel, apiKey); identified {
 			responseModels := s.filterCNProviderBillingModelCandidates(ctx, account, apiKey, usageBillingModelCandidates(responseModel))
 			responseCost, responseErr := s.calculateOpenAIRecordUsageCost(

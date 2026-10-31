@@ -370,6 +370,7 @@ func NewBillingService(cfg *config.Config, pricingService *PricingService) *Bill
 // initFallbackPricing 初始化硬编码回退价格（当动态价格不可用时使用）
 // 价格单位：USD per token（与LiteLLM格式一致）
 func (s *BillingService) initFallbackPricing() {
+	s.initOpenAIEmbeddingsPricing()
 	// Claude 4.5 Opus
 	s.fallbackPrices["claude-opus-4.5"] = &ModelPricing{
 		InputPricePerToken:         5e-6,    // $5 per MTok
@@ -1072,7 +1073,11 @@ func (s *BillingService) initFallbackPricing() {
 
 // getFallbackPricing 根据模型系列获取回退价格
 func (s *BillingService) getFallbackPricing(model string) *ModelPricing {
-	modelLower := normalizeAntigravityClaudeTierAlias(strings.ToLower(model))
+	modelLower := strings.ToLower(model)
+	if openAIEmbeddingDimensions(modelLower) > 0 {
+		return s.fallbackPrices[modelLower]
+	}
+	modelLower = normalizeAntigravityClaudeTierAlias(modelLower)
 	if modelLower == "jev-latest" {
 		return s.fallbackPrices["jev-latest"]
 	}
@@ -1438,7 +1443,8 @@ func (s *BillingService) getModelPricingAt(model string, pricingAt time.Time) (*
 		// 无 fallback 则 fail-closed（ErrModelPricingUnavailable）。
 		// 图片计费路径（getDefaultImagePrice / getImageUnitPrice）直接读
 		// PricingService，不受影响。
-		if litellmPricing != nil && litellmPricing.TokenPricingAbsent {
+		if litellmPricing != nil && (litellmPricing.TokenPricingAbsent ||
+			(openAIEmbeddingDimensions(model) > 0 && litellmPricing.InputTokenPricingAbsent)) {
 			litellmPricing = nil
 		}
 		if litellmPricing != nil {

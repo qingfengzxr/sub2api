@@ -130,6 +130,9 @@ func (g *GuardEvaluator) Evaluate(ctx context.Context, cfg ActiveConfig, snapsho
 		return nil, &GuardError{Code: ErrorCodeInvalidResponse, Cause: err}
 	}
 	aggregated.ChunkTotal = len(chunks)
+	if snapshot.Protocol == "openai_embeddings" {
+		aggregated.ScannerEvidence = nil
+	}
 	kind := DecisionAllow
 	if aggregated.Action == ActionWarn {
 		kind = DecisionFlag

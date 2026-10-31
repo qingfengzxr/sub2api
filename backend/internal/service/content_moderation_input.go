@@ -35,6 +35,18 @@ func extractContentModerationInput(protocol string, body []byte, filterReminders
 	var parts []string
 	var images []string
 	switch protocol {
+	case "openai_embeddings":
+		input := gjson.GetBytes(body, "input")
+		if input.Type == gjson.String {
+			collector.addModerationText(&parts, input.Str)
+		} else if input.IsArray() {
+			input.ForEach(func(_, item gjson.Result) bool {
+				if item.Type == gjson.String {
+					collector.addModerationText(&parts, item.Str)
+				}
+				return true
+			})
+		}
 	case ContentModerationProtocolAnthropicMessages:
 		collector.collectLastAnthropicUserMessage(gjson.GetBytes(body, "messages"), &parts, &images)
 	case ContentModerationProtocolOpenAIChat:

@@ -530,6 +530,7 @@ type ContentModerationService struct {
 	asyncProcessed           atomic.Int64
 	asyncErrors              atomic.Int64
 	preBlockActive           atomic.Int64
+	embeddingsObserveActive  atomic.Int64
 	preBlockChecked          atomic.Int64
 	preBlockAllowed          atomic.Int64
 	preBlockBlocked          atomic.Int64
@@ -1058,6 +1059,15 @@ func (s *ContentModerationService) Check(ctx context.Context, input ContentModer
 		return allow, nil
 	}
 	if cfg.Mode == ContentModerationModeObserve {
+		if input.Protocol == "openai_embeddings" {
+			if !s.acquireEmbeddingsObservation(cfg.WorkerCount) {
+				s.asyncDropped.Add(1)
+				slog.Warn("content_moderation.embeddings_observe_capacity", "user_id", input.UserID)
+				return allow, nil
+			}
+			defer s.embeddingsObserveActive.Add(-1)
+			return s.checkSync(ctx, input, cfg, content, hashText, nil, false), nil
+		}
 		slog.Info("content_moderation.enqueue_observe",
 			"user_id", input.UserID,
 			"api_key_id", input.APIKeyID,
@@ -1073,6 +1083,9 @@ func (s *ContentModerationService) Check(ctx context.Context, input ContentModer
 }
 
 func (s *ContentModerationService) checkSync(ctx context.Context, input ContentModerationCheckInput, cfg *ContentModerationConfig, content ContentModerationInput, hashText string, queueDelay *int, allowBlock bool) *ContentModerationDecision {
+	if input.Protocol == "openai_embeddings" {
+		ctx = context.WithValue(ctx, embeddingsDiagnosticPrivacyKey{}, true)
+	}
 	allow := &ContentModerationDecision{Allowed: true, Action: ContentModerationActionAllow}
 	trackPreBlock := queueDelay == nil && allowBlock && cfg != nil && cfg.Mode == ContentModerationModePreBlock
 	if trackPreBlock {
@@ -1763,6 +1776,9 @@ func (s *ContentModerationService) callModeration(ctx context.Context, cfg *Cont
 		if trackLoad {
 			s.finishModerationAPIKeyCall(key, latency, false, cfg.Engine)
 		}
+		if safeMessage := embeddingSafeDiagnostic(ctx, err.Error()); safeMessage != err.Error() {
+			err = errors.New(safeMessage)
+		}
 		s.markAPIKeyError(key, err.Error(), latency, httpStatus, cfg.Engine)
 		lastErr = err
 		if httpStatus == http.StatusBadRequest {
@@ -1905,6 +1921,12 @@ func (s *ContentModerationService) resolveModerationProxyURL(ctx context.Context
 }
 
 func (s *ContentModerationService) buildLog(input ContentModerationCheckInput, cfg *ContentModerationConfig, action string, flagged bool, highestCategory string, highestScore float64, scores map[string]float64, text string, latency *int, queueDelay *int, errText string) *ContentModerationLog {
+	if input.Protocol == "openai_embeddings" {
+		text = ""
+		if errText != "" {
+			errText = "embedding moderation failed"
+		}
+	}
 	var userID *int64
 	if input.UserID > 0 {
 		userID = &input.UserID

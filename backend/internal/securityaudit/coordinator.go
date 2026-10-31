@@ -36,6 +36,9 @@ func (c *Coordinator) Check(ctx context.Context, req Request) Decision {
 	}
 	switch mode {
 	case ModeAsync:
+		if req.Protocol == "openai_embeddings" {
+			return c.checkEmbeddingsObservation(ctx, req)
+		}
 		// Enqueue is deliberately best-effort. The implementation owns a bounded
 		// context and copies request memory before it can outlive the Handler.
 		_ = c.prompt.Enqueue(ctx, req.Clone())
