@@ -52,9 +52,13 @@ func TestClaudeCodeAdmissionRegisteredAntigravityFallback(t *testing.T) {
 				// the forced route is used with an Anthropic-group key.
 				require.NotEqual(t, http.StatusForbidden, w.Code)
 				require.Equal(t, kind == "cli", service.HasClaudeCodeAdmission(ingress.Context()))
+				if kind == "duplicate_json" {
+					require.Equal(t, http.StatusBadRequest, w.Code)
+					return // malformed JSON is rejected independently of CLI identity
+				}
 
 				// The handler's platform fallback clears ForcePlatform but retains
-				// ingress context. Exercise the real forwarding guard with that state.
+				// ingress context. Ordinary clients must reach the existing parser too.
 				ctx := context.WithValue(ingress.Context(), ctxkey.ForcePlatform, "")
 				fallbackWriter := httptest.NewRecorder()
 				c, _ := gin.CreateTestContext(fallbackWriter)
@@ -67,13 +71,8 @@ func TestClaudeCodeAdmissionRegisteredAntigravityFallback(t *testing.T) {
 				} else {
 					_, err = svc.Forward(ctx, c, account, nil)
 				}
-				if kind == "cli" {
-					require.ErrorContains(t, err, "empty request") // reached parsing, past admission
-					require.NotEqual(t, http.StatusForbidden, fallbackWriter.Code)
-				} else {
-					require.ErrorIs(t, err, service.ErrClaudeCodeOnly)
-					require.Equal(t, http.StatusForbidden, fallbackWriter.Code)
-				}
+				require.ErrorContains(t, err, "empty request")
+				require.NotEqual(t, http.StatusForbidden, fallbackWriter.Code)
 			})
 		}
 	}

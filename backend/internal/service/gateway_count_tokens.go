@@ -18,9 +18,6 @@ import (
 // ForwardCountTokens 转发 count_tokens 请求到上游 API
 // 特点：不记录使用量、仅支持非流式响应
 func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context, account *Account, parsed *ParsedRequest) error {
-	if err := enforceClaudeCodeAdmission(ctx, c, account); err != nil {
-		return err
-	}
 	if parsed == nil {
 		s.countTokensError(c, http.StatusBadRequest, "invalid_request_error", "Request body is empty")
 		return fmt.Errorf("parse request: empty request")
@@ -77,7 +74,10 @@ func (s *GatewayService) ForwardCountTokens(ctx context.Context, c *gin.Context,
 		return err
 	}
 
-	isClaudeCodeCT := IsClaudeCodeClient(ctx) || isClaudeCodeClient(c.GetHeader("User-Agent"), parsed.MetadataUserID)
+	isClaudeCodeCT := IsClaudeCodeClient(ctx)
+	if !HasClaudeCodeAdmissionPolicy(ctx) {
+		isClaudeCodeCT = isClaudeCodeCT || isClaudeCodeClient(c.GetHeader("User-Agent"), parsed.MetadataUserID)
+	}
 	shouldMimicClaudeCode := account.IsOAuth() && !isClaudeCodeCT
 
 	if shouldMimicClaudeCode {

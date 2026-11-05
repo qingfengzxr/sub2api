@@ -3,7 +3,6 @@ package routes
 import (
 	"errors"
 	"net/http"
-	"strings"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
 	pkghttputil "github.com/Wei-Shaw/sub2api/internal/pkg/httputil"
@@ -12,8 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Anthropic inference is CLI-only, including composite routes and compatibility
-// aliases. Local discovery/usage GETs do not expose an upstream request identity.
+// Classify original CLI profiles before protocol conversion. Classification is
+// not authorization: ordinary clients use the existing server-side adapters,
+// while optional claude_code_only restrictions remain owned by group scheduling.
 func claudeCodeAdmissionMiddleware() gin.HandlerFunc {
 	validator := service.NewClaudeCodeValidator()
 	return func(c *gin.Context) {
@@ -22,24 +22,21 @@ func claudeCodeAdmissionMiddleware() gin.HandlerFunc {
 		if forced, _ := c.Request.Context().Value(ctxkey.ForcePlatform).(string); forced != "" {
 			platform = forced
 		}
-		// An ungrouped key, when allowed by settings, defaults to Anthropic.
-		requireAdmission := platform == service.PlatformAnthropic || platform == ""
-		if c.Request.Method == http.MethodGet && !strings.Contains(c.Request.URL.Path, "/responses") {
+		if c.Request.Method == http.MethodGet {
 			c.Next()
 			return
 		}
-		// Other platforms keep accepting their normal clients. For a possible
-		// Anthropic fallback, validate CLI envelopes now, before any conversion,
-		// and carry the result through the original request context.
-		if !requireAdmission && (!service.IsClaudeCodeIngressRequest(c.Request) ||
-			!validator.ValidateUserAgent(c.GetHeader("User-Agent"))) {
+		// Do not interpret other platforms' multipart/binary endpoints as JSON.
+		// Messages requests may later fall back to Anthropic, so validate their
+		// original JSON and classify their profile regardless of initial platform.
+		if platform != service.PlatformAnthropic && platform != "" && !service.IsClaudeCodeIngressRequest(c.Request) {
 			c.Next()
 			return
 		}
 		reject := func(status int) {
 			service.MarkOpsClientBusinessLimited(c, service.OpsClientBusinessLimitedReasonLocalPolicyDenied)
 			c.AbortWithStatusJSON(status, gin.H{"type": "error", "error": gin.H{
-				"type": "permission_error", "message": "Request not permitted",
+				"type": "invalid_request_error", "message": "Invalid request body",
 			}})
 		}
 		body, err := pkghttputil.ReadRequestBodyWithPrealloc(c.Request)
@@ -47,38 +44,21 @@ func claudeCodeAdmissionMiddleware() gin.HandlerFunc {
 			var maxErr *http.MaxBytesError
 			if errors.As(err, &maxErr) {
 				reject(http.StatusRequestEntityTooLarge)
-			} else if !requireAdmission {
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"type": "error", "error": gin.H{
-					"type": "invalid_request_error", "message": "Failed to read request body",
-				}})
 			} else {
-				reject(http.StatusForbidden)
+				reject(http.StatusBadRequest)
 			}
 			return
 		}
 		requestmodel.ResetRequestBody(c.Request, body)
-		if !validator.ValidateIngressJSON(c.Request, body) {
-			// Claude Code 2.1.304+ changed its bootstrap envelope. Keep the
-			// request on the CLI-only route and let the gateway perform the
-			// remaining body/account checks instead of returning a false 403.
-			if service.IsClaudeCodeIngressRequest(c.Request) &&
-				validator.IsNewerOrEqualVersion(c.GetHeader("User-Agent"), "2.1.304") {
-				ctx := service.WithClaudeCodeAdmission(c.Request.Context())
-				ctx = service.SetClaudeCodeVersion(ctx, validator.ExtractVersion(c.GetHeader("User-Agent")))
-				c.Request = c.Request.WithContext(ctx)
-				c.Next()
-				return
-			}
-			if requireAdmission {
-				reject(http.StatusForbidden)
-			} else {
-				c.Next()
-			}
+		if !service.ValidateGatewayJSONBody(body) {
+			reject(http.StatusBadRequest)
 			return
 		}
-		ctx := service.WithClaudeCodeAdmission(c.Request.Context())
-		ctx = service.SetClaudeCodeVersion(ctx, validator.ExtractVersion(c.GetHeader("User-Agent")))
-		c.Request = c.Request.WithContext(ctx)
+		if validator.ValidateIngressJSON(c.Request, body) {
+			ctx := service.WithClaudeCodeAdmission(c.Request.Context())
+			ctx = service.SetClaudeCodeVersion(ctx, validator.ExtractVersion(c.GetHeader("User-Agent")))
+			c.Request = c.Request.WithContext(ctx)
+		}
 		c.Next()
 	}
 }

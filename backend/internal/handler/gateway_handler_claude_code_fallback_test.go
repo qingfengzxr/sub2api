@@ -89,6 +89,16 @@ func TestGatewayOpenAICompatibleHandlersClaudeCodeOnlyFallback(t *testing.T) {
 		call func(*GatewayHandler, *gin.Context)
 	}{
 		{
+			name: "messages", path: "/v1/messages",
+			body: `{"model":"claude-sonnet-4-5","max_tokens":128,"messages":[{"role":"user","content":"hello"}],"stream":false}`,
+			call: (*GatewayHandler).Messages,
+		},
+		{
+			name: "count_tokens", path: "/v1/messages/count_tokens",
+			body: `{"model":"claude-sonnet-4-5","messages":[{"role":"user","content":"hello"}]}`,
+			call: (*GatewayHandler).CountTokens,
+		},
+		{
 			name: "responses", path: "/v1/responses",
 			body: `{"model":"claude-sonnet-4-5","input":"hello","stream":false}`,
 			call: (*GatewayHandler).Responses,
@@ -152,7 +162,7 @@ func TestGatewayOpenAICompatibleHandlersClaudeCodeOnlyFallback(t *testing.T) {
 				}
 				recorder := httptest.NewRecorder()
 				c, _ := gin.CreateTestContext(recorder)
-				ctx := context.WithValue(context.Background(), ctxkey.Group, primary)
+				ctx := service.WithClaudeCodeAdmissionPolicy(context.WithValue(context.Background(), ctxkey.Group, primary))
 				req := httptest.NewRequest(http.MethodPost, ep.path, bytes.NewBufferString(ep.body)).WithContext(ctx)
 				req.Header.Set("Content-Type", "application/json")
 				c.Request = req
@@ -166,7 +176,9 @@ func TestGatewayOpenAICompatibleHandlersClaudeCodeOnlyFallback(t *testing.T) {
 					require.Equal(t, http.StatusForbidden, recorder.Code)
 					require.Contains(t, recorder.Body.String(), "This group is restricted to Claude Code clients")
 					require.False(t, reachedSelection, "a Claude Code only group without fallback must be rejected before account selection")
-					require.Empty(t, schedulerCache.queriedGroupIDs())
+					if ep.name != "messages" && ep.name != "count_tokens" {
+						require.Empty(t, schedulerCache.queriedGroupIDs())
+					}
 					return
 				}
 				require.NotContains(t, recorder.Body.String(), "restricted to Claude Code clients")
@@ -174,7 +186,9 @@ func TestGatewayOpenAICompatibleHandlersClaudeCodeOnlyFallback(t *testing.T) {
 				require.Equal(t, fallbackAccountID, selected)
 				queried := schedulerCache.queriedGroupIDs()
 				require.Contains(t, queried, fallbackGroupID)
-				require.NotContains(t, queried, primaryGroupID)
+				if ep.name != "messages" && ep.name != "count_tokens" {
+					require.NotContains(t, queried, primaryGroupID)
+				}
 			})
 		}
 	}

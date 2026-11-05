@@ -13,13 +13,13 @@ import (
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claude"
 	"github.com/Wei-Shaw/sub2api/internal/pkg/claudehttp"
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/tidwall/gjson"
 )
 
-// Admission is deliberately separate from compatibility detection: a matching
-// prompt or User-Agent alone must never authorize access to Anthropic forwarding.
+// Profile preservation is deliberately separate from authorization: matching a
+// prompt or User-Agent alone does not prove a complete CLI profile. Ordinary
+// clients are still allowed through the server-side compatibility adapters.
 // These are observable protocol checks, not cryptographic client attestation.
 var (
 	claudeIngressUA      = regexp.MustCompile(`^claude-cli/([0-9]+\.[0-9]+\.[0-9]+)(?: \([^\r\n()]+\))?$`)
@@ -32,23 +32,16 @@ var (
 type claudeCodeAdmissionKey struct{}
 type claudeCodeAdmissionPolicyKey struct{}
 
-// The route installs the policy even for other platforms: a later fallback to
-// an Anthropic account must not bypass ingress admission. Internal account
-// health checks are outside this public gateway policy.
+// The route records that the original ingress profile was classified, including
+// a negative result. It does not make Anthropic forwarding CLI-only. Internal
+// calls without this marker retain their historical compatibility detection.
 func WithClaudeCodeAdmissionPolicy(ctx context.Context) context.Context {
-	return context.WithValue(ctx, claudeCodeAdmissionPolicyKey{}, true)
+	return context.WithValue(SetClaudeCodeClient(ctx, false), claudeCodeAdmissionPolicyKey{}, true)
 }
 
-func enforceClaudeCodeAdmission(ctx context.Context, c *gin.Context, account *Account) error {
-	policy, _ := ctx.Value(claudeCodeAdmissionPolicyKey{}).(bool)
-	if !policy || account == nil || account.Platform != PlatformAnthropic || HasClaudeCodeAdmission(ctx) {
-		return nil
-	}
-	MarkOpsClientBusinessLimited(c, OpsClientBusinessLimitedReasonLocalPolicyDenied)
-	c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"type": "error", "error": gin.H{
-		"type": "permission_error", "message": "Request not permitted",
-	}})
-	return ErrClaudeCodeOnly
+func HasClaudeCodeAdmissionPolicy(ctx context.Context) bool {
+	classified, _ := ctx.Value(claudeCodeAdmissionPolicyKey{}).(bool)
+	return classified
 }
 
 // WithClaudeCodeAdmission is set only after validating the original ingress body.
@@ -67,10 +60,21 @@ func (v *ClaudeCodeValidator) ValidateIngressJSON(r *http.Request, body []byte) 
 	var envelope map[string]any
 	// encoding/json replaces malformed UTF-8; forwarding must not interpret
 	// different raw text after the admission decision.
-	if !utf8.Valid(body) || json.Unmarshal(body, &envelope) != nil || !claudeUniqueJSONKeys(gjson.ParseBytes(body)) {
+	if !ValidateGatewayJSONBody(body) || json.Unmarshal(body, &envelope) != nil {
 		return false
 	}
 	return v.ValidateIngress(r, envelope)
+}
+
+// ValidateGatewayJSONBody checks syntax independently of client identity.
+// Ordinary SDKs must not need CLI headers, but ambiguous or malformed bodies
+// still must not be interpreted differently by validation and forwarding.
+func ValidateGatewayJSONBody(body []byte) bool {
+	if !utf8.Valid(body) || !gjson.ValidBytes(body) {
+		return false
+	}
+	value := gjson.ParseBytes(body)
+	return value.IsObject() && claudeUniqueJSONKeys(value)
 }
 
 func claudeUniqueJSONKeys(value gjson.Result) bool {

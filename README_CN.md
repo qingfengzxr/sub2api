@@ -796,15 +796,17 @@ Antigravity 账户支持可选的**混合调度**功能。开启后，通用端�
 
 ---
 
-## Anthropic 请求准入
+## Anthropic 客户端兼容与可选 CLI-only
 
-Anthropic 推理入口强制校验 Claude Code 请求特征，包含普通分组、综合分组路由到 Anthropic，以及后续回退到 Anthropic 账号的请求。此策略独立于分组的 `claude_code_only` 开关；非 CLI 的 Chat Completions、Responses（含别名及 WebSocket）和 System One 请求不能再通过这些入口转换为 Anthropic 请求。其他平台及本地模型列表、用量查询不受此策略影响。
+Anthropic 默认接受普通 SDK、Agent 和其他兼容客户端的合法请求，通过已有 Messages、Chat Completions、Responses 等处理器转换和转发；客户端不必自行伪装 Claude CLI。普通分组、综合分组解析到 Anthropic，以及其他平台回退到 Anthropic 都遵循这项兼容策略。协议或端点本身不受支持时，仍由对应处理器返回正常错误，不因此承诺新增 WebSocket 或 System One 能力。
 
-校验发生在指纹应用及协议转换前，检查 CLI/SDK 请求头、消息结构、系统标识、metadata，以及存在时的会话和计费版本一致性。`count_tokens` 和单条探测请求可以省略系统提示词，但不能只凭 User-Agent 或 `max_tokens=1` 放行。不符合规则时统一返回 `403 Request not permitted`，不返回缺失字段、期望指纹或校验详情。中间代理必须保留 CLI 原始请求头。
+客户端限制仅由既有分组配置 `claude_code_only` 控制：关闭时正常适配；开启时，未识别为完整 CLI profile 的请求转到配置的 `fallback_group_id`，没有可用回退则拒绝。Chat Completions 和 Responses 本身不是 Claude CLI 原生入口，启用 CLI-only 的分组应为这类请求配置普通回退分组。无需新增全局环境变量或数据库迁移；既有分组开关不会被本次代码调整自动改写。
 
-通过校验的请求使用该次 CLI 的完整 UA、SDK、操作系统及运行时信息，避免账号缓存或版本自动同步拼出不一致的指纹；账号设备标识和既有 metadata 隔离策略仍生效。内置备用头参考本机 Claude Code 2.1.301 于 2026-10-16 向本地测试端点发送的流量，默认值只有一个来源。HTTP 请求特征可以复制，因此这些检查不等同于官方客户端身份认证，也不保证 TLS、HTTP/2 或整个网络行为与 CLI 完全一致。
+入口在协议转换前识别完整 CLI/SDK headers、消息结构、metadata，以及存在时的会话和计费版本一致性。通过识别的 CLI 请求保留原始 profile 和 billing 特征；其他合法请求走服务端适配，不因缺少 CLI 特征一律返回 403。仅声明新版 CLI User-Agent 不会获得“已验证 CLI”标记。公开入口的识别结果不会再被后续宽松 UA/body 检测覆盖。
 
-2026-10-17 的本机样本验证修复了已准入 CLI 的 billing 后缀误改、无效 UTF-8 准入，以及内置 TLS profile 与实测 ClientHello 的差异。HTTP 头顺序/大小写、未启用 TLS profile 及 HTTPS 代理路径仍不能声称与 CLI 一致。详细结果与剩余覆盖项见 [验证报告](docs/CLAUDE_CLI_VALIDATION_RESULTS_2026-10-17.md)。
+API Key 鉴权、模型白名单、计费、配额、限流和现有安全检查仍然执行。Anthropic JSON 入口及可能回退的 Messages 请求继续拒绝畸形 JSON、无效 UTF-8、重复 JSON 字段和非对象正文（400）；超限正文仍返回 413。其他平台的非 Messages multipart/binary 入口不套用这项 JSON profile 检查。
+
+内置备用头参考本机 Claude Code 2.1.301 于 2026-10-16 向本地测试端点发送的流量。HTTP 请求特征可以复制，profile 识别不等同于官方客户端身份认证，服务端适配也不保证上游接受或完整网络指纹等价。2026-10-17 的[验证报告](docs/CLAUDE_CLI_VALIDATION_RESULTS_2026-10-17.md)是历史样本快照；当前兼容策略和验证边界见 [实现记录](backend/dev-docs/anthropic-client-compatibility.md)。
 
 后续[固定版本 SDK 核对](docs/CLAUDE_SDK_SOURCE_VERIFICATION_2026-10-17.md)确认：公开 SDK 0.128.0 搭配 Node 26.3.0 的默认网络行为仍不同于原生 CLI。SDK源码可解释部分头部与重试规则，不能替代CLI实采；新增本地HTTP/HTTPS代理测试仅确认CLI侧目标ClientHello的已测字段一致。
 

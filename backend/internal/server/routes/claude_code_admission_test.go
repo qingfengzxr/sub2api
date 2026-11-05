@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestClaudeCodeAdmissionRegisteredRoutes(t *testing.T) {
+func TestClaudeCodeAdmissionIncompleteCLIReachesHandlerValidation(t *testing.T) {
 	router := newGatewayRoutesTestRouter(service.PlatformAnthropic)
 	for _, path := range []string{
 		"/v1/messages", "/v1/messages/count_tokens", "/messages/count_tokens",
@@ -29,14 +29,14 @@ func TestClaudeCodeAdmissionRegisteredRoutes(t *testing.T) {
 			r.Header.Set("User-Agent", "claude-cli/2.1.301 (external, cli)")
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, r)
-			require.Equal(t, http.StatusForbidden, w.Code)
-			require.JSONEq(t, `{"type":"error","error":{"type":"permission_error","message":"Request not permitted"}}`, w.Body.String())
+			require.Equal(t, http.StatusInternalServerError, w.Code)
+			require.Contains(t, w.Body.String(), "User context not found")
 		})
 	}
 	for _, path := range []string{"/v1/responses", "/responses", "/backend-api/codex/responses"} {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, httptest.NewRequest(http.MethodGet, path, nil))
-		require.Equal(t, http.StatusForbidden, w.Code)
+		require.NotEqual(t, http.StatusForbidden, w.Code)
 	}
 }
 
@@ -69,13 +69,8 @@ func TestClaudeCodeAdmissionPreservesBodyAndCompositeScope(t *testing.T) {
 			}
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, r)
-			wantAllowed := validCLI || platform != service.PlatformAnthropic
-			require.Equal(t, wantAllowed, reached)
-			if wantAllowed {
-				require.Equal(t, http.StatusNoContent, w.Code)
-			} else {
-				require.Equal(t, http.StatusForbidden, w.Code)
-			}
+			require.True(t, reached)
+			require.Equal(t, http.StatusNoContent, w.Code)
 		}
 	}
 }

@@ -89,9 +89,6 @@ func sleepWithContext(ctx context.Context, d time.Duration) error {
 
 // Forward 转发请求到Claude API
 func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *Account, parsed *ParsedRequest) (result *ForwardResult, err error) {
-	if err := enforceClaudeCodeAdmission(ctx, c, account); err != nil {
-		return nil, err
-	}
 	startTime := time.Now()
 	if parsed == nil {
 		return nil, fmt.Errorf("parse request: empty request")
@@ -201,7 +198,10 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	if c != nil {
 		clientUserAgent = c.GetHeader("User-Agent")
 	}
-	isClaudeCode := IsClaudeCodeClient(ctx) || isClaudeCodeClient(clientUserAgent, parsed.MetadataUserID)
+	isClaudeCode := IsClaudeCodeClient(ctx)
+	if !HasClaudeCodeAdmissionPolicy(ctx) {
+		isClaudeCode = isClaudeCode || isClaudeCodeClient(clientUserAgent, parsed.MetadataUserID)
+	}
 
 	// 补充判定：上游 API 网关（如 new-api）转发真实 Claude Code 流量时，
 	// UA 会变成 Go-http-client 但 body 保留了完整的 Claude Code 特征
@@ -209,7 +209,7 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 	// 重写 system prompt，会破坏 Anthropic prompt cache 的前缀匹配——
 	// 导致 messages 级缓存永远 miss、cache_creation 每轮全量重写。
 	// 通过检查 body 中的 billing attribution block 来识别被代理的真实 CC 流量。
-	if !isClaudeCode && parsed.MetadataUserID != "" {
+	if !HasClaudeCodeAdmissionPolicy(ctx) && !isClaudeCode && parsed.MetadataUserID != "" {
 		isClaudeCode = systemHasBillingAttributionBlock(body)
 	}
 

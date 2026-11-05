@@ -249,7 +249,7 @@ func TestAdmittedClaudeProfilePreservedOnWire(t *testing.T) {
 	}
 }
 
-func TestClaudeCodeAdmissionBlocksAnthropicFallback(t *testing.T) {
+func TestClaudeCodeAdmissionDoesNotAuthorizeOrRejectForwarding(t *testing.T) {
 	svc := &GatewayService{}
 	account := &Account{Platform: PlatformAnthropic, Type: AccountTypeOAuth}
 	ctx := WithClaudeCodeAdmissionPolicy(context.Background())
@@ -269,9 +269,9 @@ func TestClaudeCodeAdmissionBlocksAnthropicFallback(t *testing.T) {
 			case "chat/completions":
 				_, err = svc.ForwardAsChatCompletions(ctx, c, account, nil, nil)
 			}
-			require.ErrorIs(t, err, ErrClaudeCodeOnly)
-			require.Equal(t, http.StatusForbidden, w.Code)
-			require.JSONEq(t, `{"type":"error","error":{"type":"permission_error","message":"Request not permitted"}}`, w.Body.String())
+			require.Error(t, err, "missing request data still must fail normal parsing")
+			require.NotErrorIs(t, err, ErrClaudeCodeOnly)
+			require.NotEqual(t, http.StatusForbidden, w.Code)
 		})
 	}
 }

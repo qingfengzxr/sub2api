@@ -48,7 +48,7 @@ func SetClaudeCodeClientContext(c *gin.Context, body []byte, parsedReq *service.
 	if c == nil || c.Request == nil {
 		return
 	}
-	if service.HasClaudeCodeAdmission(c.Request.Context()) {
+	if service.HasClaudeCodeAdmission(c.Request.Context()) || service.HasClaudeCodeAdmissionPolicy(c.Request.Context()) {
 		return
 	}
 	ua := c.GetHeader("User-Agent")
