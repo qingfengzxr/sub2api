@@ -1233,11 +1233,7 @@ func (s *GatewayService) calculateImageCost(
 		return cost
 	}
 	if resolved != nil && resolved.Source == PricingSourceChannel {
-		tokens := UsageTokens{
-			InputTokens:       result.Usage.InputTokens,
-			OutputTokens:      result.Usage.OutputTokens,
-			ImageOutputTokens: result.Usage.ImageOutputTokens,
-		}
+		tokens := billableUsage.UsageTokens()
 		switch {
 		case resolved.Mode == BillingModePerRequest || resolved.Mode == BillingModeImage:
 			// 按次/图片模式按请求张数结算。Tokens 不参与计价，但尺寸档未命中时
@@ -1264,7 +1260,6 @@ func (s *GatewayService) calculateImageCost(
 			return cost
 		case !forcePerImage:
 			// token 模式且开关未强制按张：保持原 token 计费。
-			tokens = billableUsage.UsageTokens()
 			gid := apiKey.Group.ID
 			cost, err := s.billingService.CalculateCostUnified(CostInput{
 				Ctx:             ctx,
