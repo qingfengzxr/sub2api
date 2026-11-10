@@ -104,6 +104,38 @@ func TestOpenAICacheWriteTTLRecordUsage(t *testing.T) {
 	}
 }
 
+func TestBillableOpenAIResponseMatchesRecordedUsage(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	userRepo := &openAIRecordUsageUserRepoStub{}
+	svc := newOpenAIRecordUsageServiceForTest(usageRepo, userRepo, &openAIRecordUsageSubRepoStub{}, nil)
+	recorder := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(recorder)
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", nil)
+	ctx := WithBillingTokenPolicy(context.Background(), BillingTokenPolicy{Enabled: true, Multiplier: 2.5})
+	response := `{"id":"r","usage":{"input_tokens":100,"output_tokens":21,"total_tokens":121,"input_tokens_details":{"cached_tokens":20,"cache_write_tokens":10}}}`
+	resp := &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(response))}
+	account := &Account{ID: 1, Platform: PlatformOpenAI, Type: AccountTypeAPIKey}
+	result, err := svc.handleNonStreamingResponsePassthrough(ctx, resp, c, account, "gpt-4o", "gpt-4o")
+	require.NoError(t, err)
+	policy, ok := BillingTokenPolicyFromContext(c.Request.Context())
+	require.True(t, ok)
+	require.Equal(t, 2.5, policy.Multiplier)
+	err = svc.RecordUsage(c.Request.Context(), &OpenAIRecordUsageInput{
+		Result: &OpenAIForwardResult{RequestID: "r", Model: "gpt-4o", Usage: *result.usage},
+		APIKey: &APIKey{ID: 1}, User: &User{ID: 1}, Account: account,
+	})
+	require.NoError(t, err)
+	log := usageRepo.lastLog
+	require.NotNil(t, log)
+	assert.Equal(t, 70, log.InputTokens)
+	assert.Equal(t, 175, log.BillableInputTokens)
+	assert.Equal(t, 21, log.OutputTokens)
+	assert.Equal(t, 53, log.BillableOutputTokens)
+	assert.Equal(t, int64(log.BillableInputTokens+log.BillableCacheReadTokens+log.BillableCacheCreationTokens), gjson.Get(recorder.Body.String(), "usage.input_tokens").Int())
+	assert.Equal(t, int64(log.BillableOutputTokens), gjson.Get(recorder.Body.String(), "usage.output_tokens").Int())
+}
+
 func TestOpenAICacheWriteTTLInvalidDetailsKeepAggregate(t *testing.T) {
 	for _, details := range []string{
 		`null`, `{}`, `{"ttl_12h_tokens":10}`,

@@ -251,6 +251,9 @@ func usageRecordContext(parent context.Context, base context.Context) context.Co
 	if parent == nil {
 		return base
 	}
+	if policy, ok := service.BillingTokenPolicyFromContext(parent); ok {
+		base = service.WithBillingTokenPolicy(base, policy)
+	}
 	if clientRequestID, _ := parent.Value(ctxkey.ClientRequestID).(string); strings.TrimSpace(clientRequestID) != "" {
 		base = context.WithValue(base, ctxkey.ClientRequestID, strings.TrimSpace(clientRequestID))
 	}

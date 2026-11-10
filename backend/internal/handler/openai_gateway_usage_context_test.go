@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
+	"github.com/Wei-Shaw/sub2api/internal/service"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,6 +23,14 @@ func TestSubmitUsageRecordTaskCopiesRequestContext(t *testing.T) {
 
 	require.Equal(t, "client-request-123", gotClientRequestID)
 	require.Equal(t, "request-456", gotRequestID)
+}
+
+func TestUsageRecordContextPreservesBillingTokenPolicy(t *testing.T) {
+	policy := service.BillingTokenPolicy{Enabled: true, Multiplier: 2.5}
+	parent := service.WithBillingTokenPolicy(context.Background(), policy)
+	got, ok := service.BillingTokenPolicyFromContext(usageRecordContext(parent, context.Background()))
+	require.True(t, ok)
+	require.Equal(t, policy, got)
 }
 
 func TestOpenAISubmitUsageRecordTaskCopiesRequestContext(t *testing.T) {

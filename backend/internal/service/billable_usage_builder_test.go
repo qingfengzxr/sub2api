@@ -1,10 +1,19 @@
 package service
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
+
+func TestBillingTokenPolicySnapshotOverridesServiceFallback(t *testing.T) {
+	policy := BillingTokenPolicy{Enabled: true, Multiplier: 2.5}
+	ctx := WithBillingTokenPolicy(context.Background(), policy)
+	require.Equal(t, policy, (*GatewayService)(nil).billingTokenPolicy(ctx))
+	require.Equal(t, policy, (*OpenAIGatewayService)(nil).billingTokenPolicy(ctx))
+	require.Equal(t, BillingTokenPolicy{Multiplier: 1}, (*GatewayService)(nil).billingTokenPolicy(context.Background()))
+}
 
 func TestBuildBillableUsage_DisabledKeepsRawCompatible(t *testing.T) {
 	raw := UsageTokens{

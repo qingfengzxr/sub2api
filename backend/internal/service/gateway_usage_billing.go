@@ -622,6 +622,9 @@ func (s *GatewayService) billingDeps() *billingDeps {
 }
 
 func (s *GatewayService) billingTokenPolicy(ctx context.Context) BillingTokenPolicy {
+	if policy, ok := BillingTokenPolicyFromContext(ctx); ok {
+		return policy
+	}
 	if s == nil || s.settingService == nil {
 		return BillingTokenPolicy{Multiplier: 1}
 	}

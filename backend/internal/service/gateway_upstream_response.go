@@ -707,6 +707,7 @@ func partialStreamUsageResult(c *gin.Context, resp *http.Response, streamResult 
 }
 
 func (s *GatewayService) handleStreamingResponse(ctx context.Context, resp *http.Response, c *gin.Context, account *Account, startTime time.Time, originalModel, mappedModel string, mimicClaudeCode bool) (*streamingResult, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	observer := upstreamResponseModelObserverFromContext(c)
 	if observer == nil {
 		observer = beginUpstreamResponseModelObservation(c)
@@ -997,24 +998,17 @@ func (s *GatewayService) handleStreamingResponse(ctx context.Context, resp *http
 		if anthropicStreamEventIsTerminal(eventName, dataLine) {
 			sawTerminalEvent = true
 		}
-		if !eventChanged {
-			block := ""
-			if eventName != "" {
-				block = "event: " + eventName + "\n"
+		newData := []byte(dataLine)
+		if eventChanged {
+			var err error
+			newData, err = json.Marshal(event)
+			if err != nil {
+				newData = []byte(dataLine)
 			}
-			block += "data: " + dataLine + "\n\n"
-			return []string{block}, dataLine, usagePatch, nil
 		}
-
-		newData, err := json.Marshal(event)
+		newData, err := billableAnthropicStreamEvent(newData, policy, IsForceCacheBilling(ctx))
 		if err != nil {
-			// 序列化失败，直接透传原始数据
-			block := ""
-			if eventName != "" {
-				block = "event: " + eventName + "\n"
-			}
-			block += "data: " + dataLine + "\n\n"
-			return []string{block}, dataLine, usagePatch, nil
+			return nil, dataLine, usagePatch, fmt.Errorf("rewrite anthropic billable usage: %w", err)
 		}
 
 		block := ""
@@ -1477,6 +1471,18 @@ func (s *GatewayService) handleNonStreamingResponse(ctx context.Context, resp *h
 	}
 
 	body = reverseToolNamesIfPresent(c, body)
+
+	if IsForceCacheBilling(ctx) && response.Usage.InputTokens > 0 {
+		body, err = classifyAnthropicResponseInputAsCacheRead(body, &response.Usage)
+		if err != nil {
+			return nil, err
+		}
+	}
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
+	body, err = billableAnthropicResponse(body, "usage", policy)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite anthropic billable usage: %w", err)
+	}
 
 	// 写入响应
 	c.Data(resp.StatusCode, contentType, body)

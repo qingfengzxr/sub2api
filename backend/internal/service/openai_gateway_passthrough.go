@@ -1836,6 +1836,7 @@ func (s *OpenAIGatewayService) handleStreamingResponsePassthrough(
 	originalModel string,
 	mappedModel string,
 ) (*openaiStreamingResultPassthrough, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	observer := upstreamResponseModelObserverFromContext(c)
 	if observer == nil {
 		observer = beginUpstreamResponseModelObservation(c)
@@ -2168,6 +2169,15 @@ func (s *OpenAIGatewayService) handleStreamingResponsePassthrough(
 				firstTokenMs = &ms
 			}
 			s.parseSSEUsageBytesWithType(dataBytes, eventType, usage)
+			if bytes.Contains(dataBytes, []byte(`"usage"`)) {
+				updated, rewriteErr := billableOpenAIResponseUsage(dataBytes, policy)
+				if rewriteErr != nil {
+					return resultWithUsage(), fmt.Errorf("rewrite OpenAI billable usage: %w", rewriteErr)
+				}
+				if !bytes.Equal(updated, dataBytes) {
+					line = "data: " + string(updated)
+				}
+			}
 		}
 		if line == "" {
 			pendingSSEEventType = ""
@@ -2285,6 +2295,7 @@ func (s *OpenAIGatewayService) handleNonStreamingResponsePassthrough(
 	originalModel string,
 	mappedModel string,
 ) (*openaiNonStreamingResultPassthrough, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	body, err := ReadUpstreamResponseBody(resp.Body, s.cfg, c, openAITooLargeError)
 	if err != nil {
 		return nil, err
@@ -2343,6 +2354,11 @@ func (s *OpenAIGatewayService) handleNonStreamingResponsePassthrough(
 	if err != nil {
 		return nil, fmt.Errorf("restore OpenAI Responses client tools: %w", err)
 	}
+	body, err = billableOpenAIResponseUsage(body, policy)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite OpenAI billable usage: %w", err)
+	}
+	c.Writer.Header().Del("Content-Length")
 	if !writeOpenAICompactSSEBridge(c, resp.StatusCode, body) {
 		c.Data(resp.StatusCode, contentType, body)
 	}
@@ -2424,6 +2440,15 @@ func (s *OpenAIGatewayService) handlePassthroughSSEToJSON(resp *http.Response, c
 		if contentType == "" {
 			contentType = "text/event-stream"
 		}
+	}
+	if ok {
+		policy := s.snapshotResponseBillingTokenPolicy(c.Request.Context(), c)
+		var rewriteErr error
+		body, rewriteErr = billableOpenAIResponseUsage(body, policy)
+		if rewriteErr != nil {
+			return nil, fmt.Errorf("rewrite OpenAI billable usage: %w", rewriteErr)
+		}
+		c.Writer.Header().Del("Content-Length")
 	}
 	if !writeOpenAICompactSSEBridge(c, resp.StatusCode, body) {
 		// 上游的 Content-Type（text/event-stream）已复制到响应头，而 c.Data

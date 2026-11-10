@@ -378,6 +378,7 @@ func (s *GatewayService) handleStreamingResponseAnthropicAPIKeyPassthrough(
 	startTime time.Time,
 	model string,
 ) (*streamingResult, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	observer := upstreamResponseModelObserverFromContext(c)
 	if observer == nil {
 		observer = beginUpstreamResponseModelObservation(c)
@@ -562,6 +563,13 @@ func (s *GatewayService) handleStreamingResponseAnthropicAPIKeyPassthrough(
 
 			if !clientDisconnected {
 				restored := string(reverseToolNamesIfPresent(c, []byte(line)))
+				if data, ok := extractAnthropicSSEDataLine(restored); ok && data != "" && data != "[DONE]" {
+					updated, err := billableAnthropicStreamEvent([]byte(data), policy, IsForceCacheBilling(ctx))
+					if err != nil {
+						return &streamingResult{usage: usage, firstTokenMs: firstTokenMs}, fmt.Errorf("rewrite anthropic billable usage: %w", err)
+					}
+					restored = restored[:len(restored)-len(data)] + string(updated)
+				}
 				if _, err := io.WriteString(w, restored); err != nil {
 					clientDisconnected = true
 					logger.LegacyPrintf("service.gateway", "[Anthropic passthrough] Client disconnected during streaming, continue draining upstream for usage: account=%d", account.ID)
@@ -895,6 +903,11 @@ func (s *GatewayService) handleNonStreamingResponseAnthropicAPIKeyPassthrough(
 		contentType = "application/json"
 	}
 	body = reverseToolNamesIfPresent(c, body)
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
+	body, err = billableAnthropicResponse(body, "usage", policy)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite anthropic billable usage: %w", err)
+	}
 	c.Data(resp.StatusCode, contentType, body)
 	return usage, nil
 }

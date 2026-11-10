@@ -49,6 +49,7 @@ func (s *OpenAIGatewayService) handleStreamingResponse(ctx context.Context, resp
 }
 
 func (s *OpenAIGatewayService) handleStreamingResponseWithReasoning(ctx context.Context, resp *http.Response, c *gin.Context, account *Account, startTime time.Time, originalModel, mappedModel, reasoningEffort string) (*openaiStreamingResult, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	observer := upstreamResponseModelObserverFromContext(c)
 	if observer == nil {
 		observer = beginUpstreamResponseModelObservation(c)
@@ -718,6 +719,16 @@ func (s *OpenAIGatewayService) handleStreamingResponseWithReasoning(ctx context.
 				return
 			}
 
+			if bytes.Contains(dataBytes, []byte(`"usage"`)) {
+				updated, rewriteErr := billableOpenAIResponseUsage(dataBytes, policy)
+				if rewriteErr != nil {
+					streamEarlyErr = fmt.Errorf("rewrite OpenAI billable usage: %w", rewriteErr)
+					return
+				}
+				if !bytes.Equal(updated, dataBytes) {
+					line = "data: " + string(updated)
+				}
+			}
 			// 写入客户端（客户端断开后继续 drain 上游）
 			if !clientDisconnected && !failureDelivered && !suppressCurrentEvent {
 				shouldFlush := queueDrained && (clientOutputStarted || startsClientOutput)
@@ -1650,6 +1661,7 @@ func openAICacheCreationTTLTokensFromUsage(value gjson.Result, aggregate int) (i
 }
 
 func (s *OpenAIGatewayService) handleNonStreamingResponse(ctx context.Context, resp *http.Response, c *gin.Context, account *Account, originalModel, mappedModel string) (*openaiNonStreamingResult, error) {
+	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
 	body, err := ReadUpstreamResponseBody(resp.Body, s.cfg, c, openAITooLargeError)
 	if err != nil {
 		return nil, err
@@ -1734,6 +1746,11 @@ func (s *OpenAIGatewayService) handleNonStreamingResponse(ctx context.Context, r
 		}
 	}
 
+	body, err = billableOpenAIResponseUsage(body, policy)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite OpenAI billable usage: %w", err)
+	}
+	c.Writer.Header().Del("Content-Length")
 	if !writeOpenAICompactSSEBridge(c, resp.StatusCode, body) {
 		c.Data(resp.StatusCode, contentType, body)
 	}
@@ -1845,6 +1862,15 @@ func (s *OpenAIGatewayService) handleSSEToJSON(resp *http.Response, c *gin.Conte
 		if contentType == "" {
 			contentType = "text/event-stream"
 		}
+	}
+	if ok {
+		policy := s.snapshotResponseBillingTokenPolicy(c.Request.Context(), c)
+		var rewriteErr error
+		body, rewriteErr = billableOpenAIResponseUsage(body, policy)
+		if rewriteErr != nil {
+			return nil, fmt.Errorf("rewrite OpenAI billable usage: %w", rewriteErr)
+		}
+		c.Writer.Header().Del("Content-Length")
 	}
 	if !writeOpenAICompactSSEBridge(c, resp.StatusCode, body) {
 		// 上游的 Content-Type（text/event-stream）已复制到响应头，而 c.Data

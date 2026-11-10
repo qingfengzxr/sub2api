@@ -1,10 +1,28 @@
 package service
 
-import "math"
+import (
+	"context"
+	"math"
+)
 
 type BillingTokenPolicy struct {
 	Enabled    bool
 	Multiplier float64
+}
+
+type billingTokenPolicyKey struct{}
+
+// WithBillingTokenPolicy fixes the policy used by a request and its billing task.
+func WithBillingTokenPolicy(ctx context.Context, policy BillingTokenPolicy) context.Context {
+	return context.WithValue(ctx, billingTokenPolicyKey{}, policy)
+}
+
+func BillingTokenPolicyFromContext(ctx context.Context) (BillingTokenPolicy, bool) {
+	if ctx == nil {
+		return BillingTokenPolicy{}, false
+	}
+	policy, ok := ctx.Value(billingTokenPolicyKey{}).(BillingTokenPolicy)
+	return policy, ok
 }
 
 type BillableUsage struct {
