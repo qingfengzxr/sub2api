@@ -14,6 +14,8 @@ type BillableUsage struct {
 	CacheReadTokens        int
 	CacheCreation5mTokens  int
 	CacheCreation1hTokens  int
+	CacheCreation30mTokens int
+	CacheCreation12hTokens int
 	ImageOutputTokens      int
 	TextInputTokens        int
 	CachedTextInputTokens  int
@@ -37,6 +39,8 @@ func BuildBillableUsage(raw UsageTokens, policy BillingTokenPolicy) BillableUsag
 		CacheReadTokens:        multiplyBillableTokens(raw.CacheReadTokens, 1),
 		CacheCreation5mTokens:  multiplyBillableTokens(raw.CacheCreation5mTokens, 1),
 		CacheCreation1hTokens:  multiplyBillableTokens(raw.CacheCreation1hTokens, 1),
+		CacheCreation30mTokens: multiplyBillableTokens(raw.CacheCreation30mTokens, 1),
+		CacheCreation12hTokens: multiplyBillableTokens(raw.CacheCreation12hTokens, 1),
 		ImageOutputTokens:      multiplyBillableTokens(raw.ImageOutputTokens, multiplier),
 		TextInputTokens:        multiplyBillableTokens(raw.TextInputTokens, multiplier),
 		CachedTextInputTokens:  multiplyBillableTokens(raw.CachedTextInputTokens, 1),
@@ -48,13 +52,15 @@ func BuildBillableUsage(raw UsageTokens, policy BillingTokenPolicy) BillableUsag
 
 func (u BillableUsage) UsageTokens() UsageTokens {
 	return UsageTokens{
-		InputTokens:           u.InputTokens,
-		OutputTokens:          u.OutputTokens,
-		CacheCreationTokens:   u.CacheCreationTokens,
-		CacheReadTokens:       u.CacheReadTokens,
-		CacheCreation5mTokens: u.CacheCreation5mTokens,
-		CacheCreation1hTokens: u.CacheCreation1hTokens,
-		ImageOutputTokens:     u.ImageOutputTokens,
+		InputTokens:            u.InputTokens,
+		OutputTokens:           u.OutputTokens,
+		CacheCreationTokens:    u.CacheCreationTokens,
+		CacheReadTokens:        u.CacheReadTokens,
+		CacheCreation5mTokens:  u.CacheCreation5mTokens,
+		CacheCreation1hTokens:  u.CacheCreation1hTokens,
+		CacheCreation30mTokens: u.CacheCreation30mTokens,
+		CacheCreation12hTokens: u.CacheCreation12hTokens,
+		ImageOutputTokens:      u.ImageOutputTokens,
 	}
 }
 

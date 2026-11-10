@@ -131,7 +131,7 @@ func TestCalculateOpenAIRecordUsageCost_ImageCountBillingIgnoresMixedRequests(t 
 	cost, err := svc.calculateOpenAIRecordUsageCost(context.Background(), &OpenAIForwardResult{
 		Model: model, ImageCount: 1, ImageSize: "1K", ImageEndpoint: false,
 	}, apiKey, []string{model}, 1, 1, 1, 1,
-		UsageTokens{InputTokens: 1_000_000, OutputTokens: 10_000},
+		BuildBillableUsage(UsageTokens{InputTokens: 1_000_000, OutputTokens: 10_000}, BillingTokenPolicy{Multiplier: 1}),
 		"", nil, false, time.Time{})
 
 	require.NoError(t, err)

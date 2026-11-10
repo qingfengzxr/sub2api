@@ -5,13 +5,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Wei-Shaw/sub2api/internal/config"
 	"github.com/stretchr/testify/require"
 )
 
 func TestOpenAIEmbeddingsBillingSnapshotAndInputOnly(t *testing.T) {
 	for model, price := range map[string]float64{"text-embedding-3-small": .02e-6, "text-embedding-3-large": .13e-6, "text-embedding-ada-002": .10e-6} {
 		t.Run(model, func(t *testing.T) {
-			billing := newTestBillingService()
+			billing := NewBillingService(&config.Config{}, nil)
 			priceCard, err := billing.GetModelPricing(model)
 			require.NoError(t, err)
 			require.Equal(t, price, priceCard.InputPricePerToken)
@@ -34,7 +35,7 @@ func TestOpenAIEmbeddingsBillingSnapshotAndInputOnly(t *testing.T) {
 func TestOpenAIEmbeddingsBillingExplicitPricingAndMissingUsage(t *testing.T) {
 	for _, mode := range []BillingMode{BillingModeToken, BillingModePerRequest} {
 		t.Run(string(mode), func(t *testing.T) {
-			billing := newTestBillingService()
+			billing := NewBillingService(&config.Config{}, nil)
 			price := 0.5
 			groupID := int64(1)
 			key := &APIKey{GroupID: &groupID, Group: &Group{ID: 1, LongContextPricingEnabled: true, ModelPricing: []ChannelModelPricing{{Models: []string{"alias"}, BillingMode: mode, InputPrice: &price, PerRequestPrice: &price}}}}
