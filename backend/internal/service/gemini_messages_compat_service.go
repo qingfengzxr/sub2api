@@ -1042,11 +1042,12 @@ func (s *GeminiMessagesCompatService) Forward(ctx context.Context, c *gin.Contex
 			upstreamResponseModelObserverFromContext(c).ObserveGemini(collectedBytes)
 			observeGeminiImageOutputs(c, collectedBytes)
 			claudeResp, usageObj2 := convertGeminiToClaudeMessage(collected, originalModel, collectedBytes, false)
-			c.JSON(http.StatusOK, claudeResp)
 			usage = usageObj2
 			if usageObj != nil && (usageObj.InputTokens > 0 || usageObj.OutputTokens > 0) {
 				usage = usageObj
 			}
+			applyGeminiClaudeResponseUsage(c, claudeResp, usage)
+			c.JSON(http.StatusOK, claudeResp)
 		} else {
 			usage, err = s.handleNonStreamingResponse(c, resp, originalModel)
 			if err != nil {
@@ -1577,6 +1578,11 @@ func (s *GeminiMessagesCompatService) ForwardNative(ctx context.Context, c *gin.
 			b, _ := json.Marshal(collected)
 			upstreamResponseModelObserverFromContext(c).ObserveGemini(b)
 			observeGeminiImageOutputs(c, b)
+			policy, forceCache := responseBillingPolicy(c)
+			b, err = billableGeminiResponse(b, policy, forceCache)
+			if err != nil {
+				return nil, fmt.Errorf("rewrite Gemini billable usage: %w", err)
+			}
 			c.Data(http.StatusOK, "application/json", b)
 			usage = usageObj
 		} else {
@@ -2165,6 +2171,7 @@ func (s *GeminiMessagesCompatService) handleNonStreamingResponse(c *gin.Context,
 	}
 
 	claudeResp, usage := convertGeminiToClaudeMessage(geminiResp, originalModel, unwrappedBody, false)
+	applyGeminiClaudeResponseUsage(c, claudeResp, usage)
 	c.JSON(http.StatusOK, claudeResp)
 
 	return usage, nil
@@ -2480,11 +2487,15 @@ func (s *GeminiMessagesCompatService) handleStreamingResponse(c *gin.Context, re
 		stopReason = "tool_use"
 	}
 
+	billable := billableClaudeUsageForResponse(c, &usage)
 	usageObj := map[string]any{
-		"output_tokens": usage.OutputTokens,
+		"output_tokens": billable.OutputTokens,
 	}
-	if usage.InputTokens > 0 {
-		usageObj["input_tokens"] = usage.InputTokens
+	if billable.InputTokens > 0 {
+		usageObj["input_tokens"] = billable.InputTokens
+	}
+	if billable.CacheReadTokens > 0 {
+		usageObj["cache_read_input_tokens"] = billable.CacheReadTokens
 	}
 	writeSSE(c.Writer, "message_delta", map[string]any{
 		"type": "message_delta",
@@ -2855,6 +2866,7 @@ func (s *GeminiMessagesCompatService) handleNativeNonStreamingResponse(c *gin.Co
 	}
 	observer.ObserveGemini(respBody)
 	observeGeminiImageOutputs(c, respBody)
+	usage := extractGeminiUsage(respBody)
 	if sig, ok := detectGeminiResponseSignalInBody(respBody); ok {
 		s.markGeminiResponseSignal(c, account, sig, false, upstreamRequestID)
 	} else if isGeminiEmptyResponseBody(respBody) {
@@ -2867,15 +2879,21 @@ func (s *GeminiMessagesCompatService) handleNativeNonStreamingResponse(c *gin.Co
 	if contentType == "" {
 		contentType = "application/json"
 	}
+	policy, forceCache := responseBillingPolicy(c)
+	respBody, err = billableGeminiResponse(respBody, policy, forceCache)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite Gemini billable usage: %w", err)
+	}
 	c.Data(resp.StatusCode, contentType, respBody)
 
-	if u := extractGeminiUsage(respBody); u != nil {
-		return u, nil
+	if usage != nil {
+		return usage, nil
 	}
 	return &ClaudeUsage{}, nil
 }
 
 func (s *GeminiMessagesCompatService) handleNativeStreamingResponse(c *gin.Context, resp *http.Response, startTime time.Time, isOAuth bool, account *Account, upstreamRequestID string) (*geminiNativeStreamResult, error) {
+	policy, forceCache := responseBillingPolicy(c)
 	if s.cfg != nil && s.cfg.Gateway.GeminiDebugResponseHeaders {
 		logger.LegacyPrintf("service.gemini_messages_compat", "[GeminiAPI] ========== Streaming Response Headers ==========")
 		for key, values := range resp.Header {
@@ -2954,6 +2972,15 @@ func (s *GeminiMessagesCompatService) handleNativeStreamingResponse(c *gin.Conte
 					}
 					observer.ObserveGemini(rawBytes)
 					observeGeminiImageOutputs(c, rawBytes)
+					updated, rewriteErr := billableGeminiResponse(rawBytes, policy, forceCache)
+					if rewriteErr != nil {
+						return nil, fmt.Errorf("rewrite Gemini billable usage: %w", rewriteErr)
+					}
+					if isOAuth && len(rawBytes) > 0 {
+						rawToWrite = string(updated)
+					} else if !bytes.Equal(updated, rawBytes) {
+						line = strings.Replace(line, payload, string(updated), 1)
+					}
 
 					if gjson.GetBytes(rawBytes, "candidates.0.finishReason").String() != "" {
 						finished = true

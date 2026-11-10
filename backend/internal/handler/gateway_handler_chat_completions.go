@@ -294,6 +294,13 @@ func (h *GatewayHandler) ChatCompletions(c *gin.Context) {
 		}
 		var result *service.ForwardResult
 		setActualUpstreamEndpoint(c, "")
+		if _, policyErr := h.gatewayService.PrepareResponseBillingTokenPolicy(c.Request.Context(), c); policyErr != nil {
+			if accountReleaseFunc != nil {
+				accountReleaseFunc()
+			}
+			h.chatCompletionsErrorResponse(c, http.StatusServiceUnavailable, "api_error", "Billing configuration is temporarily unavailable")
+			return
+		}
 		if account.Platform == service.PlatformGemini {
 			if h.geminiCompatService == nil {
 				h.chatCompletionsErrorResponse(c, http.StatusBadGateway, "upstream_error", "Gemini compatibility service is not configured")

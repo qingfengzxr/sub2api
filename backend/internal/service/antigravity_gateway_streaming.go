@@ -298,7 +298,12 @@ func (s *AntigravityGatewayService) handleGeminiStreamingResponse(c *gin.Context
 					firstTokenMs = &ms
 				}
 
-				cw.Fprintf("data: %s\n\n", payload)
+				policy, forceCache := responseBillingPolicy(c)
+				clientPayload, err := billableGeminiResponse([]byte(payload), policy, forceCache)
+				if err != nil {
+					return nil, err
+				}
+				cw.Fprintf("data: %s\n\n", clientPayload)
 				continue
 			}
 
@@ -522,6 +527,11 @@ returnResponse:
 	respBody, err := json.Marshal(finalResponse)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response: %w", err)
+	}
+	policy, forceCache := responseBillingPolicy(c)
+	respBody, err = billableGeminiResponse(respBody, policy, forceCache)
+	if err != nil {
+		return nil, err
 	}
 	c.Data(http.StatusOK, "application/json", respBody)
 
@@ -980,6 +990,10 @@ func (s *AntigravityGatewayService) handleClaudeStreamToNonStreaming(c *gin.Cont
 
 		return nil, s.writeClaudeError(c, http.StatusBadGateway, errType, errMsg)
 	}
+	claudeResp, err = billableAnthropicResponseForClient(claudeResp, c)
+	if err != nil {
+		return nil, err
+	}
 	c.Data(http.StatusOK, "application/json", claudeResp)
 	return streamRes, nil
 }
@@ -1118,7 +1132,11 @@ func (s *AntigravityGatewayService) handleClaudeStreamingResponse(c *gin.Context
 				// 上游完成，发送结束事件
 				finalEvents, agUsage := processor.Finish()
 				if len(finalEvents) > 0 {
-					cw.Write(finalEvents)
+					clientEvents, err := billableAnthropicSSEForClient(finalEvents, c)
+					if err != nil {
+						return nil, err
+					}
+					cw.Write(clientEvents)
 				} else if !processor.MessageStartSent() && !cw.Disconnected() {
 					// 整个流未收到任何可解析的上游数据（全部 SSE 行均无法被 JSON 解析），
 					// 触发 failover 在同账号重试，避免向客户端发出缺少 message_start 的残缺流
@@ -1154,7 +1172,11 @@ func (s *AntigravityGatewayService) handleClaudeStreamingResponse(c *gin.Context
 					ms := int(time.Since(startTime).Milliseconds())
 					firstTokenMs = &ms
 				}
-				cw.Write(claudeEvents)
+				clientEvents, err := billableAnthropicSSEForClient(claudeEvents, c)
+				if err != nil {
+					return nil, err
+				}
+				cw.Write(clientEvents)
 			}
 
 		case <-intervalCh:

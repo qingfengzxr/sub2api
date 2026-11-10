@@ -459,6 +459,7 @@ func (s *OpenAIGatewayService) forwardOpenAIWSV2(
 	flushInterval := s.openAIWSEventFlushInterval()
 	pendingFlushEvents := 0
 	lastFlushAt := time.Now()
+	var responseRewriteErr error
 	flushStreamWriter := func(force bool) {
 		if clientDisconnected || flusher == nil || pendingFlushEvents <= 0 {
 			return
@@ -473,7 +474,12 @@ func (s *OpenAIGatewayService) forwardOpenAIWSV2(
 		lastFlushAt = time.Now()
 	}
 	emitStreamMessage := func(message []byte, forceFlush bool) {
-		if clientDisconnected {
+		if clientDisconnected || responseRewriteErr != nil {
+			return
+		}
+		policy, _ := BillingTokenPolicyFromContext(ctx)
+		message, responseRewriteErr = billableOpenAIResponseUsage(message, policy)
+		if responseRewriteErr != nil {
 			return
 		}
 		frame := make([]byte, 0, len(message)+8)
@@ -814,9 +820,17 @@ readLoop:
 			responseID = strings.TrimSpace(gjson.GetBytes(finalResponse, "id").String())
 		}
 
+		policy, _ := BillingTokenPolicyFromContext(ctx)
+		finalResponse, responseRewriteErr = billableOpenAIResponseUsage(finalResponse, policy)
+		if responseRewriteErr != nil {
+			return nil, responseRewriteErr
+		}
 		c.Data(http.StatusOK, "application/json", finalResponse)
 	} else {
 		flushStreamWriter(true)
+	}
+	if responseRewriteErr != nil {
+		return nil, responseRewriteErr
 	}
 
 	if responseID != "" && stateStore != nil {

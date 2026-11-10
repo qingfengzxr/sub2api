@@ -25,6 +25,8 @@ type antigravityCompatStreamAdapter interface {
 type antigravityChatStreamAdapter struct {
 	anthropicState *apicompat.AnthropicEventToResponsesState
 	chatState      *apicompat.ResponsesEventToChatState
+	context        *gin.Context
+	usage          *ClaudeUsage
 }
 
 func newAntigravityChatStreamAdapter(model string, includeUsage bool) *antigravityChatStreamAdapter {
@@ -50,6 +52,7 @@ func (a *antigravityChatStreamAdapter) Finalize(writer *antigravityClientWriter)
 		a.emitResponseEvent(&responseEvent, writer)
 	}
 	for _, chunk := range apicompat.FinalizeResponsesChatStream(a.chatState) {
+		chunk.Usage = billableClaudeChatUsage(a.context, chunk.Usage, a.usage)
 		if data, err := apicompat.ChatChunkToSSE(chunk); err == nil {
 			writer.Write([]byte(data))
 		}
@@ -63,6 +66,7 @@ func (a *antigravityChatStreamAdapter) WriteError(writer *antigravityClientWrite
 
 func (a *antigravityChatStreamAdapter) emitResponseEvent(event *apicompat.ResponsesStreamEvent, writer *antigravityClientWriter) {
 	for _, chunk := range apicompat.ResponsesEventToChatChunks(event, a.chatState) {
+		chunk.Usage = billableClaudeChatUsage(a.context, chunk.Usage, a.usage)
 		if data, err := apicompat.ChatChunkToSSE(chunk); err == nil {
 			writer.Write([]byte(data))
 		}
@@ -71,6 +75,8 @@ func (a *antigravityChatStreamAdapter) emitResponseEvent(event *apicompat.Respon
 
 type antigravityResponsesStreamAdapter struct {
 	anthropicState *apicompat.AnthropicEventToResponsesState
+	context        *gin.Context
+	usage          *ClaudeUsage
 }
 
 func newAntigravityResponsesStreamAdapter(model string) *antigravityResponsesStreamAdapter {
@@ -96,6 +102,7 @@ func (a *antigravityResponsesStreamAdapter) WriteError(writer *antigravityClient
 }
 
 func (a *antigravityResponsesStreamAdapter) emitResponseEvent(event apicompat.ResponsesStreamEvent, writer *antigravityClientWriter) {
+	event = billableClaudeResponsesEvent(a.context, event, a.usage)
 	if data, err := apicompat.ResponsesEventToSSE(event); err == nil {
 		writer.Write([]byte(data))
 	}
@@ -303,6 +310,12 @@ func (s *AntigravityGatewayService) handleAntigravityCompatStreamWithKeepaliveIn
 		c.Status(http.StatusOK)
 	}
 	session := newAntigravityCompatStreamSession(originalModel, startTime, adapter, writer)
+	switch adapter := adapter.(type) {
+	case *antigravityChatStreamAdapter:
+		adapter.context, adapter.usage = c, session.usage
+	case *antigravityResponsesStreamAdapter:
+		adapter.context, adapter.usage = c, session.usage
+	}
 	session.preContentKeepaliveInterval = interval
 	events, stopScanner, maxLineSize, queueBudget := s.startAntigravityCompatScanner(resp.Body)
 	defer stopScanner()

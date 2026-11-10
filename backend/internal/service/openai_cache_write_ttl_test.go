@@ -136,6 +136,133 @@ func TestBillableOpenAIResponseMatchesRecordedUsage(t *testing.T) {
 	assert.Equal(t, int64(log.BillableOutputTokens), gjson.Get(recorder.Body.String(), "usage.output_tokens").Int())
 }
 
+func TestBillableOpenAIResponseMatchesPricedDebit(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	const groupID int64 = 777
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	userRepo := &openAIRecordUsageUserRepoStub{}
+	svc := newOpenAIRecordUsageServiceForTest(usageRepo, userRepo, &openAIRecordUsageSubRepoStub{}, nil)
+	var pricing ChannelModelPricing
+	require.NoError(t, json.Unmarshal([]byte(`{"platform":"openai","models":["gpt-6-luna"],"billing_mode":"token","input_price":0.00000065,"output_price":0.00000325,"cache_write_price":0.0000008125,"cache_write_12h_price":0.000001625,"cache_read_price":0.000000065}`), &pricing))
+	svc.channelService = &ChannelService{}
+	svc.channelService.cache.Store(populateChannelCache([]Channel{{ID: 1, Status: StatusActive, GroupIDs: []int64{groupID}, ModelPricing: []ChannelModelPricing{pricing}}}, map[int64]string{groupID: PlatformOpenAI}))
+	svc.resolver = NewModelPricingResolver(svc.channelService, svc.billingService)
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/responses", nil)
+	ctx := WithBillingTokenPolicy(context.Background(), BillingTokenPolicy{Enabled: true, Multiplier: 2.5})
+	body := ` {"id":"r","usage":{"input_tokens":100,"output_tokens":21,"total_tokens":121,"input_tokens_details":{"cached_tokens":20,"cache_write_tokens":10,"cache_write_tokens_details":{"ttl_30m_tokens":4,"ttl_12h_tokens":6}}}}`
+	resp := &http.Response{StatusCode: http.StatusOK, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}
+	account := &Account{ID: 1, Platform: PlatformOpenAI, Type: AccountTypeAPIKey}
+	result, err := svc.handleNonStreamingResponsePassthrough(ctx, resp, c, account, "gpt-6-luna", "gpt-6-luna")
+	require.NoError(t, err)
+	err = svc.RecordUsage(c.Request.Context(), &OpenAIRecordUsageInput{
+		Result: &OpenAIForwardResult{RequestID: "r", Model: "gpt-6-luna", Usage: *result.usage},
+		APIKey: &APIKey{ID: 1, GroupID: i64p(groupID), Group: &Group{ID: groupID, Platform: PlatformOpenAI, RateMultiplier: 0.5}},
+		User:   &User{ID: 1}, Account: account,
+		ChannelUsageFields: ChannelUsageFields{OriginalModel: "gpt-6-luna", BillingModelSource: BillingModelSourceRequested},
+	})
+	require.NoError(t, err)
+	log := usageRepo.lastLog
+	require.NotNil(t, log)
+	require.Equal(t, 70, log.InputTokens)
+	require.Equal(t, 175, log.BillableInputTokens)
+	require.Equal(t, 53, log.BillableOutputTokens)
+	require.EqualValues(t, 205, gjson.Get(rec.Body.String(), "usage.input_tokens").Int())
+	require.EqualValues(t, 53, gjson.Get(rec.Body.String(), "usage.output_tokens").Int())
+	expected := (175*0.65 + 53*3.25 + 20*0.065 + 4*0.8125 + 6*1.625) / 1e6
+	require.InDelta(t, expected, log.TotalCost, 1e-12)
+	require.InDelta(t, expected*0.5, userRepo.lastAmount, 1e-12)
+}
+
+func TestAnthropicToChatBillableResponseMatchesPricedDebit(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	for _, stream := range []bool{false, true} {
+		t.Run(fmt.Sprintf("stream=%t", stream), func(t *testing.T) {
+			usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+			userRepo := &openAIRecordUsageUserRepoStub{}
+			svc := newGatewayRecordUsageServiceForTest(usageRepo, userRepo, &openAIRecordUsageSubRepoStub{})
+			rec := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(rec)
+			ctx := WithBillingTokenPolicy(context.Background(), BillingTokenPolicy{Enabled: true, Multiplier: 2.5})
+			c.Request = httptest.NewRequest(http.MethodPost, "/v1/chat/completions", nil).WithContext(ctx)
+			body := `event: message_start
+data: {"type":"message_start","message":{"id":"m","type":"message","role":"assistant","model":"claude-sonnet-4","content":[],"usage":{"input_tokens":80,"cache_read_input_tokens":20,"cache_creation_input_tokens":10,"output_tokens":0}}}
+
+event: content_block_start
+data: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":"ok"}}
+
+event: message_delta
+data: {"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{"output_tokens":21}}
+
+event: message_stop
+data: {"type":"message_stop"}
+
+`
+			resp := &http.Response{StatusCode: http.StatusOK, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}
+			var result *ForwardResult
+			var err error
+			if stream {
+				result, err = svc.handleCCStreamingFromAnthropic(resp, c, "claude-sonnet-4", "claude-sonnet-4", nil, time.Now())
+			} else {
+				result, err = svc.handleCCBufferedFromAnthropic(resp, c, "claude-sonnet-4", "claude-sonnet-4", nil, time.Now())
+			}
+			require.NoError(t, err)
+			require.Equal(t, 80, result.Usage.InputTokens)
+			require.Equal(t, 21, result.Usage.OutputTokens)
+			require.Contains(t, rec.Body.String(), `"prompt_tokens":230`)
+			require.Contains(t, rec.Body.String(), `"completion_tokens":53`)
+			err = svc.RecordUsage(ctx, &RecordUsageInput{Result: result, APIKey: &APIKey{ID: 1}, User: &User{ID: 1}, Account: &Account{ID: 1}})
+			require.NoError(t, err)
+			log := usageRepo.lastLog
+			require.NotNil(t, log)
+			require.Equal(t, 200, log.BillableInputTokens)
+			require.Equal(t, 53, log.BillableOutputTokens)
+			expected, err := svc.billingService.CalculateCost("claude-sonnet-4", UsageTokens{InputTokens: 200, OutputTokens: 53, CacheReadTokens: 20, CacheCreationTokens: 10}, 1.1)
+			require.NoError(t, err)
+			require.Greater(t, expected.ActualCost, 0.0)
+			require.InDelta(t, expected.ActualCost, log.ActualCost, 1e-12)
+			require.InDelta(t, expected.ActualCost, userRepo.lastAmount, 1e-12)
+		})
+	}
+}
+
+func TestAnthropicForcedCacheResponseMatchesRecordedUsage(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	usageRepo := &openAIRecordUsageLogRepoStub{inserted: true}
+	userRepo := &openAIRecordUsageUserRepoStub{}
+	svc := newGatewayRecordUsageServiceForTest(usageRepo, userRepo, &openAIRecordUsageSubRepoStub{})
+	rec := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(rec)
+	ctx := WithForceCacheBilling(WithBillingTokenPolicy(context.Background(), BillingTokenPolicy{Enabled: true, Multiplier: 2.5}))
+	c.Request = httptest.NewRequest(http.MethodPost, "/v1/messages", nil).WithContext(ctx)
+	body := `{"id":"m","type":"message","usage":{"input_tokens":80,"cache_read_input_tokens":20,"cache_creation_input_tokens":10,"output_tokens":21}}`
+	resp := &http.Response{StatusCode: http.StatusOK, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}
+	account := &Account{ID: 1, Platform: PlatformAnthropic, Type: AccountTypeAPIKey}
+	usage, err := svc.handleNonStreamingResponseAnthropicAPIKeyPassthrough(ctx, resp, c, account)
+	require.NoError(t, err)
+	require.Equal(t, 80, usage.InputTokens)
+	require.Equal(t, 20, usage.CacheReadInputTokens)
+	err = svc.RecordUsage(ctx, &RecordUsageInput{
+		Result: &ForwardResult{RequestID: "m", Model: "claude-sonnet-4", Usage: *usage},
+		APIKey: &APIKey{ID: 1}, User: &User{ID: 1}, Account: account, ForceCacheBilling: true,
+	})
+	require.NoError(t, err)
+	log := usageRepo.lastLog
+	require.NotNil(t, log)
+	require.EqualValues(t, log.BillableInputTokens, gjson.Get(rec.Body.String(), "usage.input_tokens").Int())
+	require.EqualValues(t, log.BillableCacheReadTokens, gjson.Get(rec.Body.String(), "usage.cache_read_input_tokens").Int())
+	require.EqualValues(t, log.BillableCacheCreationTokens, gjson.Get(rec.Body.String(), "usage.cache_creation_input_tokens").Int())
+	require.EqualValues(t, log.BillableOutputTokens, gjson.Get(rec.Body.String(), "usage.output_tokens").Int())
+	require.Equal(t, 100, log.BillableCacheReadTokens)
+	require.Equal(t, 53, log.BillableOutputTokens)
+	expected, err := svc.billingService.CalculateCost("claude-sonnet-4", UsageTokens{OutputTokens: 53, CacheReadTokens: 100, CacheCreationTokens: 10}, 1.1)
+	require.NoError(t, err)
+	require.Greater(t, expected.ActualCost, 0.0)
+	require.InDelta(t, expected.ActualCost, log.ActualCost, 1e-12)
+	require.InDelta(t, expected.ActualCost, userRepo.lastAmount, 1e-12)
+}
+
 func TestOpenAICacheWriteTTLInvalidDetailsKeepAggregate(t *testing.T) {
 	for _, details := range []string{
 		`null`, `{}`, `{"ttl_12h_tokens":10}`,

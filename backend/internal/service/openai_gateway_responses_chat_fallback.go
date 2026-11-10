@@ -166,7 +166,16 @@ func (s *OpenAIGatewayService) bufferChatCompletionsAsResponses(
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
 	}
-	c.JSON(http.StatusOK, responsesResp)
+	body, err := json.Marshal(responsesResp)
+	if err != nil {
+		return nil, err
+	}
+	policy, _ := responseBillingPolicy(c)
+	body, err = billableOpenAIResponseUsage(body, policy)
+	if err != nil {
+		return nil, err
+	}
+	c.Data(http.StatusOK, "application/json", body)
 
 	return &OpenAIForwardResult{
 		RequestID:                   requestID,
@@ -206,14 +215,15 @@ func (s *OpenAIGatewayService) streamChatCompletionsAsResponses(
 	state.ToolSearchDeclared = toolSearch
 	state.NamespaceTools = namespaceTools
 	clientDisconnected := false
+	var rewriteErr error
 
 	writeEvents := func(events []apicompat.ResponsesStreamEvent) {
-		if clientDisconnected || len(events) == 0 {
+		if clientDisconnected || rewriteErr != nil || len(events) == 0 {
 			return
 		}
 		writeStreamHeaders()
 		for _, event := range events {
-			sse, err := apicompat.ResponsesEventToSSE(event)
+			payload, err := json.Marshal(event)
 			if err != nil {
 				logger.L().Warn("openai responses chat fallback: failed to marshal stream event",
 					zap.Error(err),
@@ -221,7 +231,12 @@ func (s *OpenAIGatewayService) streamChatCompletionsAsResponses(
 				)
 				continue
 			}
-			if _, err := fmt.Fprint(c.Writer, sse); err != nil {
+			policy, _ := responseBillingPolicy(c)
+			payload, rewriteErr = billableOpenAIResponseUsage(payload, policy)
+			if rewriteErr != nil {
+				return
+			}
+			if _, err := fmt.Fprintf(c.Writer, "event: %s\ndata: %s\n\n", event.Type, payload); err != nil {
 				clientDisconnected = true
 				logger.L().Debug("openai responses chat fallback: client disconnected, continuing to drain upstream for billing",
 					zap.Error(err),
@@ -275,6 +290,9 @@ func (s *OpenAIGatewayService) streamChatCompletionsAsResponses(
 	finalEvents := apicompat.FinalizeChatCompletionsResponsesStream(state)
 	s.cacheReasoningItemsFromEvents(finalEvents)
 	writeEvents(finalEvents)
+	if rewriteErr != nil {
+		return &OpenAIForwardResult{RequestID: requestID, Usage: scan.Usage, Model: originalModel, Stream: true}, rewriteErr
+	}
 	if !clientDisconnected {
 		writeStreamHeaders()
 		if _, err := fmt.Fprint(c.Writer, "data: [DONE]\n\n"); err != nil {

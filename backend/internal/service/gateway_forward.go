@@ -110,7 +110,10 @@ func (s *GatewayService) Forward(ctx context.Context, c *gin.Context, account *A
 			return nil, err
 		}
 	}
-	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
+	policy, err := s.PrepareResponseBillingTokenPolicy(ctx, c)
+	if err != nil {
+		return nil, err
+	}
 	ctx = WithBillingTokenPolicy(ctx, policy)
 	// Anthropic Fast is requested with speed=fast rather than OpenAI's
 	// service_tier. Attach it at this shared boundary so passthrough, OAuth and

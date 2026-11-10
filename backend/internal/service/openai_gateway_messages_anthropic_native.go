@@ -273,6 +273,11 @@ func (s *OpenAIGatewayService) handleNativeAnthropicBufferedResponse(
 		contentType = "application/json"
 	}
 	body = reverseToolNamesIfPresent(c, body)
+	policy, _ := responseBillingPolicy(c)
+	body, err = billableAnthropicResponse(body, "usage", policy)
+	if err != nil {
+		return nil, fmt.Errorf("rewrite anthropic billable usage: %w", err)
+	}
 	c.Data(resp.StatusCode, contentType, body)
 
 	return &OpenAIForwardResult{
@@ -484,6 +489,14 @@ func (s *OpenAIGatewayService) handleNativeAnthropicStreamingResponse(
 
 			if !clientDisconnected {
 				restored := string(reverseToolNamesIfPresent(c, []byte(line)))
+				if data, ok := extractAnthropicSSEDataLine(restored); ok && data != "" && data != "[DONE]" {
+					policy, _ := responseBillingPolicy(c)
+					updated, rewriteErr := billableAnthropicStreamEvent([]byte(data), policy, IsForceCacheBilling(ctx))
+					if rewriteErr != nil {
+						return s.nativeAnthropicStreamResult(c, resp, usage, firstTokenMs, clientDisconnected, originalModel, billingModel, upstreamModel, reasoningEffort, startTime), fmt.Errorf("rewrite anthropic billable usage: %w", rewriteErr)
+					}
+					restored = restored[:len(restored)-len(data)] + string(updated)
+				}
 				if _, err := io.WriteString(w, restored); err != nil {
 					clientDisconnected = true
 					logger.LegacyPrintf("service.gateway", "[CN Anthropic 直通] Client disconnected during streaming, continue draining upstream for usage: account=%d", account.ID)

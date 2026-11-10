@@ -754,10 +754,23 @@ func (h *GatewayHandler) GeminiV1BetaModels(c *gin.Context) {
 
 		// 5) forward (根据平台分流)
 		var result *service.ForwardResult
+		if action != "countTokens" {
+			if _, policyErr := h.gatewayService.PrepareResponseBillingTokenPolicy(c.Request.Context(), c); policyErr != nil {
+				if accountReleaseFunc != nil {
+					accountReleaseFunc()
+				}
+				googleError(c, http.StatusServiceUnavailable, "Billing configuration is temporarily unavailable")
+				return
+			}
+		}
 		requestCtx := c.Request.Context()
 		if fs.SwitchCount > 0 {
 			requestCtx = service.WithAccountSwitchCount(requestCtx, fs.SwitchCount, h.metadataBridgeEnabled())
 		}
+		if fs.ForceCacheBilling {
+			requestCtx = service.WithForceCacheBilling(requestCtx)
+		}
+		c.Request = c.Request.WithContext(requestCtx)
 		sessionGroupID := derefGroupID(apiKey.GroupID)
 		if account.Platform == service.PlatformAntigravity && account.Type != service.AccountTypeAPIKey {
 			result, err = h.antigravityGatewayService.ForwardGemini(

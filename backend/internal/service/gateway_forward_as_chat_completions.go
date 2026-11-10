@@ -33,6 +33,11 @@ func (s *GatewayService) ForwardAsChatCompletions(
 	body []byte,
 	parsed *ParsedRequest,
 ) (*ForwardResult, error) {
+	policy, err := s.PrepareResponseBillingTokenPolicy(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	ctx = WithBillingTokenPolicy(ctx, policy)
 	startTime := time.Now()
 
 	// 1. Parse Chat Completions request
@@ -346,6 +351,7 @@ func (s *GatewayService) handleCCBufferedFromAnthropic(
 	// Chain: Anthropic → Responses → Chat Completions
 	responsesResp := apicompat.AnthropicToResponsesResponse(finalResp)
 	ccResp := apicompat.ResponsesToChatCompletions(responsesResp, originalModel)
+	ccResp.Usage = billableClaudeChatUsage(c, ccResp.Usage, &usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -428,6 +434,7 @@ func (s *GatewayService) handleCCStreamingFromAnthropic(
 	}
 
 	writeChunk := func(chunk apicompat.ChatCompletionsChunk) bool {
+		chunk.Usage = billableClaudeChatUsage(c, chunk.Usage, &usage)
 		sse, err := apicompat.ChatChunkToSSE(chunk)
 		if err != nil {
 			return false

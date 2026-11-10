@@ -35,6 +35,11 @@ func (s *GatewayService) ForwardAsResponses(
 	body []byte,
 	parsed *ParsedRequest,
 ) (*ForwardResult, error) {
+	policy, err := s.PrepareResponseBillingTokenPolicy(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	ctx = WithBillingTokenPolicy(ctx, policy)
 	startTime := time.Now()
 
 	normalizedBody, normalized, err := normalizeOpenAIResponsesLegacyIngressWithConfig(s.cfg, body)
@@ -509,6 +514,7 @@ func (s *GatewayService) handleResponsesBufferedStreamingResponse(
 	}
 	responsesResp := apicompat.AnthropicToResponsesResponse(finalResp)
 	responsesResp.Model = originalModel // Use original model name
+	responsesResp.Usage = billableClaudeResponsesUsage(c, responsesResp.Usage, &usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -620,6 +626,7 @@ func (s *GatewayService) handleResponsesStreamingResponse(
 		// Convert to Responses events
 		events := apicompat.AnthropicEventToResponsesEvents(event, state)
 		for _, evt := range events {
+			evt = billableClaudeResponsesEvent(c, evt, &usage)
 			payload, err := json.Marshal(evt)
 			if err != nil {
 				logger.L().Warn("forward_as_responses stream: failed to marshal event",
@@ -661,6 +668,7 @@ func (s *GatewayService) handleResponsesStreamingResponse(
 		}
 		if finalEvents := apicompat.FinalizeAnthropicResponsesStream(state); len(finalEvents) > 0 {
 			for _, evt := range finalEvents {
+				evt = billableClaudeResponsesEvent(c, evt, &usage)
 				sse, err := apicompat.ResponsesEventToSSE(evt)
 				if err != nil {
 					continue

@@ -285,6 +285,13 @@ func (h *GatewayHandler) Responses(c *gin.Context) {
 		}
 		var result *service.ForwardResult
 		setActualUpstreamEndpoint(c, "")
+		if _, policyErr := h.gatewayService.PrepareResponseBillingTokenPolicy(c.Request.Context(), c); policyErr != nil {
+			if accountReleaseFunc != nil {
+				accountReleaseFunc()
+			}
+			h.responsesErrorResponse(c, http.StatusServiceUnavailable, "api_error", "Billing configuration is temporarily unavailable")
+			return
+		}
 		if shouldUseAntigravityCompat(account) {
 			if h.antigravityGatewayService == nil {
 				h.responsesErrorResponse(c, http.StatusBadGateway, "upstream_error", "Antigravity compatibility service is not configured")

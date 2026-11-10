@@ -33,6 +33,11 @@ func (s *OpenAIGatewayService) ForwardAsAnthropic(
 	promptCacheKey string,
 	defaultMappedModel string,
 ) (*OpenAIForwardResult, error) {
+	policy, err := prepareResponseBillingTokenPolicy(ctx, c, s.settingService)
+	if err != nil {
+		return nil, err
+	}
+	ctx = WithBillingTokenPolicy(ctx, policy)
 	// 工具 Schema 清洗必须先于所有分流：下游每条路径（原生 Anthropic 直通、
 	// Chat Completions 转换、Responses 转换）都会把 tools 原样带给上游，而
 	// xAI / Moonshot 等严格校验方会因 input_schema 里的 required:null 或
@@ -672,6 +677,7 @@ func (s *OpenAIGatewayService) handleAnthropicBufferedStreamingResponse(
 	acc.SupplementResponseOutput(finalResponse)
 
 	anthropicResp := apicompat.ResponsesToAnthropic(finalResponse, originalModel)
+	anthropicResp.Usage = billableAnthropicProtocolUsage(c, anthropicResp.Usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -1179,6 +1185,7 @@ func (s *OpenAIGatewayService) handleAnthropicStreamingResponse(
 		events := apicompat.ResponsesEventToAnthropicEvents(&event, state)
 		if !clientDisconnected {
 			for _, evt := range events {
+				evt = billableAnthropicProtocolEvent(c, evt)
 				sse, err := apicompat.ResponsesAnthropicEventToSSE(evt)
 				if err != nil {
 					logger.L().Warn("openai messages stream: failed to marshal event",
@@ -1214,6 +1221,7 @@ func (s *OpenAIGatewayService) handleAnthropicStreamingResponse(
 		}
 		if finalEvents := apicompat.FinalizeResponsesAnthropicStream(state); len(finalEvents) > 0 && !clientDisconnected {
 			for _, evt := range finalEvents {
+				evt = billableAnthropicProtocolEvent(c, evt)
 				sse, err := apicompat.ResponsesAnthropicEventToSSE(evt)
 				if err != nil {
 					continue

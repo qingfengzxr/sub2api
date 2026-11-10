@@ -163,6 +163,7 @@ func (s *OpenAIGatewayService) bufferChatCompletionsAsAnthropic(
 		return nil, err
 	}
 	anthropicResp := apicompat.ChatCompletionsResponseToAnthropic(ccResp, originalModel)
+	anthropicResp.Usage = billableAnthropicProtocolUsage(c, anthropicResp.Usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -209,6 +210,7 @@ func (s *OpenAIGatewayService) streamChatCompletionsAsAnthropic(
 			return
 		}
 		for _, aEvt := range anthropicEvents {
+			aEvt = billableAnthropicProtocolEvent(c, aEvt)
 			sse, err := apicompat.ResponsesAnthropicEventToSSE(aEvt)
 			if err != nil {
 				continue
@@ -252,6 +254,7 @@ func (s *OpenAIGatewayService) streamChatCompletionsAsAnthropic(
 	finalEvents := apicompat.FinalizeChatCompletionsAnthropicStream(anthropicState)
 	if !clientDisconnected {
 		for _, aEvt := range finalEvents {
+			aEvt = billableAnthropicProtocolEvent(c, aEvt)
 			sse, err := apicompat.ResponsesAnthropicEventToSSE(aEvt)
 			if err != nil {
 				continue

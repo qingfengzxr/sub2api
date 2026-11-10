@@ -20,7 +20,10 @@ import (
 
 // Forward forwards request to OpenAI API
 func (s *OpenAIGatewayService) Forward(ctx context.Context, c *gin.Context, account *Account, body []byte) (*OpenAIForwardResult, error) {
-	policy := s.snapshotResponseBillingTokenPolicy(ctx, c)
+	policy, err := prepareResponseBillingTokenPolicy(ctx, c, s.settingService)
+	if err != nil {
+		return nil, err
+	}
 	ctx = WithBillingTokenPolicy(ctx, policy)
 	beginUpstreamResponseModelObservation(c)
 	ClearActualOpenAIUpstreamEndpoint(c)

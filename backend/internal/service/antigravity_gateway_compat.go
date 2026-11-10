@@ -620,7 +620,9 @@ func (s *AntigravityGatewayService) handleChatCompletionsNonStreamingFromAntigra
 		return nil, s.writeAntigravityCompatError(c, http.StatusBadGateway, "upstream_error", "Failed to parse upstream response")
 	}
 	responsesResponse := apicompat.AnthropicToResponsesResponse(&anthropicResponse)
-	c.JSON(http.StatusOK, apicompat.ResponsesToChatCompletions(responsesResponse, originalModel))
+	chatResponse := apicompat.ResponsesToChatCompletions(responsesResponse, originalModel)
+	chatResponse.Usage = billableClaudeChatUsage(c, chatResponse.Usage, result.usage)
+	c.JSON(http.StatusOK, chatResponse)
 	return result, nil
 }
 
@@ -638,7 +640,9 @@ func (s *AntigravityGatewayService) handleResponsesNonStreamingFromAntigravity(
 	if json.Unmarshal(claudeResponse, &anthropicResponse) != nil {
 		return nil, s.writeAntigravityCompatError(c, http.StatusBadGateway, "upstream_error", "Failed to parse upstream response")
 	}
-	c.JSON(http.StatusOK, apicompat.AnthropicToResponsesResponse(&anthropicResponse))
+	response := apicompat.AnthropicToResponsesResponse(&anthropicResponse)
+	response.Usage = billableClaudeResponsesUsage(c, response.Usage, result.usage)
+	c.JSON(http.StatusOK, response)
 	return result, nil
 }
 

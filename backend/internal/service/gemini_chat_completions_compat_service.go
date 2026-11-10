@@ -274,6 +274,7 @@ func (s *GeminiMessagesCompatService) forwardClaudeBodyAsChatCompletions(
 		if err != nil {
 			return nil, s.writeChatCompletionsError(c, http.StatusBadGateway, "upstream_error", "Failed to parse upstream response")
 		}
+		applyGeminiChatResponseUsage(c, chatResp, usageObj2)
 		c.JSON(http.StatusOK, chatResp)
 		usage = usageObj2
 	} else {
@@ -481,8 +482,16 @@ func (s *GeminiMessagesCompatService) handleChatCompletionsNonStreamingResponseF
 	}
 
 	responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
+	applyGeminiChatResponseUsage(c, chatResp, usage)
 	c.JSON(http.StatusOK, chatResp)
 	return usage, nil
+}
+
+func applyGeminiChatResponseUsage(c *gin.Context, response *apicompat.ChatCompletionsResponse, usage *ClaudeUsage) {
+	if response == nil || response.Usage == nil || usage == nil {
+		return
+	}
+	response.Usage = billableClaudeChatUsage(c, response.Usage, usage)
 }
 
 func geminiResponseToChatCompletions(
@@ -815,8 +824,9 @@ func (s *GeminiMessagesCompatService) handleChatCompletionsStreamingResponseFrom
 	if sawToolUse {
 		stopReason = "tool_use"
 	}
-	anthState.InputTokens = usage.InputTokens
-	anthState.CacheReadInputTokens = usage.CacheReadInputTokens
+	billable := billableClaudeUsageForResponse(c, &usage)
+	anthState.InputTokens = billable.InputTokens
+	anthState.CacheReadInputTokens = billable.CacheReadTokens
 	if emitAnthropicEvent(&apicompat.AnthropicStreamEvent{
 		Type: "message_delta",
 		Delta: &apicompat.AnthropicDelta{
@@ -824,9 +834,9 @@ func (s *GeminiMessagesCompatService) handleChatCompletionsStreamingResponseFrom
 			StopReason: stopReason,
 		},
 		Usage: &apicompat.AnthropicUsage{
-			InputTokens:          usage.InputTokens,
-			OutputTokens:         usage.OutputTokens,
-			CacheReadInputTokens: usage.CacheReadInputTokens,
+			InputTokens:          billable.InputTokens,
+			OutputTokens:         billable.OutputTokens,
+			CacheReadInputTokens: billable.CacheReadTokens,
 		},
 	}) {
 		return streamResult(), nil

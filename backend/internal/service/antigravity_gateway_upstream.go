@@ -131,6 +131,10 @@ func (s *AntigravityGatewayService) ForwardUpstream(ctx context.Context, c *gin.
 		// 提取 usage
 		upstreamResponseModelObserverFromContext(c).ObserveAnthropic(respBody)
 		usage = s.extractClaudeUsage(respBody)
+		respBody, err = billableAnthropicResponseForClient(respBody, c)
+		if err != nil {
+			return nil, err
+		}
 
 		c.Header("Content-Type", resp.Header.Get("Content-Type"))
 		c.Status(http.StatusOK)
@@ -272,9 +276,13 @@ func (s *AntigravityGatewayService) streamUpstreamResponse(c *gin.Context, resp 
 
 			// 尝试从 message_delta 或 message_stop 事件提取 usage
 			s.extractSSEUsage(line, usage)
+			clientLine, err := billableAnthropicSSEForClient([]byte(line), c)
+			if err != nil {
+				return &antigravityStreamResult{usage: usage, firstTokenMs: firstTokenMs}
+			}
 
 			// 透传行
-			cw.Fprintf("%s\n", line)
+			cw.Fprintf("%s\n", clientLine)
 
 		case <-intervalCh:
 			lastRead := time.Unix(0, atomic.LoadInt64(&lastReadAt))

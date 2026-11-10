@@ -120,6 +120,8 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_KeepLeaseAcrossT
 	captureDialer := &openAIWSCaptureDialer{conn: captureConn}
 	pool := newOpenAIWSConnPool(cfg)
 	pool.setClientDialerForTest(captureDialer)
+	settings := &wsBillingSettingsRepo{}
+	settings.multiplier.Store(25)
 
 	svc := &OpenAIGatewayService{
 		cfg:              cfg,
@@ -128,6 +130,7 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_KeepLeaseAcrossT
 		openaiWSResolver: NewOpenAIWSProtocolResolver(cfg),
 		toolCorrector:    NewCodexToolCorrector(),
 		openaiWSPool:     pool,
+		settingService:   &SettingService{settingRepo: settings, cfg: cfg},
 	}
 
 	account := &Account{
@@ -148,10 +151,12 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_KeepLeaseAcrossT
 
 	serverErrCh := make(chan error, 1)
 	turnTerminalCh := make(chan string, 2)
+	results := make(chan *OpenAIForwardResult, 2)
 	hooks := &OpenAIWSIngressHooks{
 		AfterTurn: func(_ int, result *OpenAIForwardResult, turnErr error) {
 			if turnErr == nil && result != nil {
 				turnTerminalCh <- result.UpstreamTerminalEvent
+				results <- result
 			}
 		},
 	}
@@ -220,13 +225,25 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_KeepLeaseAcrossT
 	firstTurnEvent := readMessage()
 	require.Equal(t, "response.completed", gjson.GetBytes(firstTurnEvent, "type").String())
 	require.Equal(t, "resp_ingress_turn_1", gjson.GetBytes(firstTurnEvent, "response.id").String())
+	require.EqualValues(t, 3, gjson.GetBytes(firstTurnEvent, "response.usage.input_tokens").Int())
+	require.EqualValues(t, 3, gjson.GetBytes(firstTurnEvent, "response.usage.output_tokens").Int())
+	settings.multiplier.Store(30)
 
 	writeMessage(`{"type":"response.create","model":"gpt-5.1","stream":false,"previous_response_id":"resp_ingress_turn_1"}`)
 	secondTurnEvent := readMessage()
 	require.Equal(t, "response.completed", gjson.GetBytes(secondTurnEvent, "type").String())
 	require.Equal(t, "resp_ingress_turn_2", gjson.GetBytes(secondTurnEvent, "response.id").String())
+	require.EqualValues(t, 3, gjson.GetBytes(secondTurnEvent, "response.usage.input_tokens").Int())
+	require.EqualValues(t, 3, gjson.GetBytes(secondTurnEvent, "response.usage.output_tokens").Int())
 	require.Equal(t, "response.completed", <-turnTerminalCh, "首轮 turn 应保留成功终态")
 	require.Equal(t, "response.completed", <-turnTerminalCh, "第二轮 turn 应保留成功终态")
+	for _, multiplier := range []float64{2.5, 3} {
+		result := <-results
+		require.Equal(t, 1, result.Usage.InputTokens)
+		require.Equal(t, 1, result.Usage.OutputTokens)
+		require.NotNil(t, result.ResponseBillingPolicy)
+		require.Equal(t, multiplier, result.ResponseBillingPolicy.Multiplier)
+	}
 
 	_ = clientConn.Close(coderws.StatusNormalClosure, "done")
 
@@ -1418,12 +1435,15 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_HTTPBridgeModeRe
 			)),
 		},
 	}
+	settings := &wsBillingSettingsRepo{}
+	settings.multiplier.Store(25)
 	svc := &OpenAIGatewayService{
 		cfg:              cfg,
 		httpUpstream:     upstream,
 		cache:            &stubGatewayCache{},
 		openaiWSResolver: NewOpenAIWSProtocolResolver(cfg),
 		toolCorrector:    NewCodexToolCorrector(),
+		settingService:   &SettingService{settingRepo: settings, cfg: cfg},
 	}
 
 	account := &Account{
@@ -1518,6 +1538,9 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_HTTPBridgeModeRe
 	require.Equal(t, "response.done", gjson.GetBytes(event2, "type").String())
 	require.Equal(t, "resp_http_bridge_1", gjson.GetBytes(event2, "response.id").String())
 	require.Equal(t, "completed", gjson.GetBytes(event2, "response.output.0.status").String())
+	require.EqualValues(t, 4, gjson.GetBytes(event2, "response.usage.input_tokens").Int())
+	require.EqualValues(t, 3, gjson.GetBytes(event2, "response.usage.output_tokens").Int())
+	require.EqualValues(t, 1, gjson.GetBytes(event2, "response.usage.input_tokens_details.cached_tokens").Int())
 
 	_ = clientConn.Close(coderws.StatusNormalClosure, "done")
 
@@ -1535,6 +1558,8 @@ func TestOpenAIGatewayService_ProxyResponsesWebSocketFromClient_HTTPBridgeModeRe
 		require.Equal(t, 2, result.Usage.InputTokens)
 		require.Equal(t, 1, result.Usage.OutputTokens)
 		require.Equal(t, 1, result.Usage.CacheReadInputTokens)
+		require.NotNil(t, result.ResponseBillingPolicy)
+		require.Equal(t, 2.5, result.ResponseBillingPolicy.Multiplier)
 		require.NotNil(t, result.FirstTokenMs)
 	case <-time.After(2 * time.Second):
 		t.Fatal("未收到 http_bridge turn 结果回调")

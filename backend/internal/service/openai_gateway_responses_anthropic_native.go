@@ -295,6 +295,7 @@ func (s *OpenAIGatewayService) handleResponsesBufferedFromNativeAnthropic(
 	}
 	responsesResp := apicompat.AnthropicToResponsesResponse(finalResp)
 	responsesResp.Model = originalModel
+	responsesResp.Usage = billableClaudeResponsesUsage(c, responsesResp.Usage, &usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -438,6 +439,7 @@ func (s *OpenAIGatewayService) handleResponsesStreamingFromNativeAnthropic(
 		}
 		events := apicompat.AnthropicEventToResponsesEvents(event, state)
 		for _, evt := range events {
+			evt = billableClaudeResponsesEvent(c, evt, &usage)
 			payload, err := json.Marshal(evt)
 			if err != nil {
 				continue
@@ -519,6 +521,7 @@ func (s *OpenAIGatewayService) handleResponsesStreamingFromNativeAnthropic(
 	if finalEvents := apicompat.FinalizeAnthropicResponsesStream(state); len(finalEvents) > 0 && !clientDisconnected {
 		wrote := false
 		for _, evt := range finalEvents {
+			evt = billableClaudeResponsesEvent(c, evt, &usage)
 			payload, err := json.Marshal(evt)
 			if err != nil {
 				continue

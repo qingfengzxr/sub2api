@@ -27,8 +27,9 @@ type openAIWSClientFrameConn struct {
 	waitingForNextTurn   atomic.Bool
 	// The relay observes upstream payloads, while clients must keep seeing the
 	// model identifier they supplied for the current turn.
-	restoreResponseModel func([]byte) []byte
-	restoreToolNames     func([]byte) []byte
+	restoreResponseModel  func([]byte) []byte
+	restoreToolNames      func([]byte) []byte
+	responseBillingPolicy func() BillingTokenPolicy
 }
 
 // openAIWSPolicyEnforcingFrameConn wraps a client-side FrameConn and runs
@@ -650,6 +651,13 @@ func (c *openAIWSClientFrameConn) WriteFrame(ctx context.Context, msgType coderw
 		if c.restoreToolNames != nil {
 			payload = c.restoreToolNames(payload)
 		}
+		if c.responseBillingPolicy != nil {
+			var err error
+			payload, err = billableOpenAIResponseUsage(payload, c.responseBillingPolicy())
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return c.conn.Write(ctx, msgType, payload)
 }
@@ -969,6 +977,9 @@ func (s *OpenAIGatewayService) proxyResponsesWebSocketV2Passthrough(
 		restoreToolNames: func(payload []byte) []byte {
 			return restoreCodexToolNamesFromContext(c, payload)
 		},
+	}
+	if hooks != nil {
+		clientFrameConn.responseBillingPolicy = hooks.responseBillingPolicy
 	}
 	policyClientConn := &openAIWSPolicyEnforcingFrameConn{
 		inner: clientFrameConn,

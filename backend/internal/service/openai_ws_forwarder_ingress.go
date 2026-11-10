@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/openai"
@@ -83,6 +84,56 @@ func (s *OpenAIGatewayService) ProxyResponsesWebSocketFromClient(
 	if account == nil {
 		return errors.New("account is nil")
 	}
+	var policyMu sync.Mutex
+	policies := make(map[int]BillingTokenPolicy)
+	currentPolicy, err := loadResponseBillingTokenPolicy(ctx, s.settingService)
+	if err != nil {
+		return NewOpenAIWSClientCloseError(coderws.StatusTryAgainLater, "billing configuration is temporarily unavailable", err)
+	}
+	policies[1] = currentPolicy
+	originalHooks := hooks
+	wrappedHooks := OpenAIWSIngressHooks{}
+	if hooks != nil {
+		wrappedHooks = *hooks
+	}
+	wrappedHooks.responseBillingPolicy = func() BillingTokenPolicy {
+		policyMu.Lock()
+		defer policyMu.Unlock()
+		return currentPolicy
+	}
+	wrappedHooks.BeforeTurn = func(turn int) error {
+		if originalHooks != nil && originalHooks.BeforeTurn != nil {
+			if err := originalHooks.BeforeTurn(turn); err != nil {
+				return err
+			}
+		}
+		policyMu.Lock()
+		defer policyMu.Unlock()
+		if policy, ok := policies[turn]; ok {
+			currentPolicy = policy
+		} else {
+			policy, err := loadResponseBillingTokenPolicy(ctx, s.settingService)
+			if err != nil {
+				return NewOpenAIWSClientCloseError(coderws.StatusTryAgainLater, "billing configuration is temporarily unavailable", err)
+			}
+			currentPolicy = policy
+			policies[turn] = currentPolicy
+		}
+		delete(policies, turn-2)
+		return nil
+	}
+	wrappedHooks.AfterTurn = func(turn int, result *OpenAIForwardResult, turnErr error) {
+		policyMu.Lock()
+		policy, ok := policies[turn]
+		policyMu.Unlock()
+		if result != nil && ok {
+			result.ResponseBillingPolicy = &policy
+		}
+		if originalHooks != nil && originalHooks.AfterTurn != nil {
+			originalHooks.AfterTurn(turn, result, turnErr)
+		}
+	}
+	hooks = &wrappedHooks
 	// A handler may reuse the same gin context across account failover attempts.
 	// Never let an OAuth attempt's response aliases leak into the next account.
 	setCodexToolNameReverse(c, nil)
@@ -487,6 +538,10 @@ func (s *OpenAIGatewayService) ProxyResponsesWebSocketFromClient(
 		writeCtx, cancel := newOpenAIWSDownstreamWriteContext(ctx, hooks, s.openAIWSWriteTimeout())
 		defer cancel()
 		message = restoreCodexToolNamesFromContext(c, message)
+		message, err := billableOpenAIResponseUsage(message, hooks.responseBillingPolicy())
+		if err != nil {
+			return err
+		}
 		return clientConn.Write(writeCtx, coderws.MessageText, message)
 	}
 

@@ -73,6 +73,11 @@ func (s *OpenAIGatewayService) forwardAsChatCompletions(
 	defaultMappedModel string,
 	compatPromptCacheTenantIsolated bool,
 ) (*OpenAIForwardResult, error) {
+	policy, policyErr := prepareResponseBillingTokenPolicy(ctx, c, s.settingService)
+	if policyErr != nil {
+		return nil, policyErr
+	}
+	ctx = WithBillingTokenPolicy(ctx, policy)
 	rememberOpenCodeInboundBody(c, body)
 	beginUpstreamResponseModelObservation(c)
 	ClearActualOpenAIUpstreamEndpoint(c)
@@ -653,6 +658,32 @@ func openAICompatFailedResponseMessage(resp *apicompat.ResponsesResponse) string
 
 // handleChatCompletionsErrorResponse reads an upstream error and returns it in
 // OpenAI Chat Completions error format.
+func applyOpenAIChatBillableUsage(c *gin.Context, target *apicompat.ChatUsage, raw OpenAIUsage) *apicompat.ChatUsage {
+	if target == nil {
+		return nil
+	}
+	policy, _ := responseBillingPolicy(c)
+	if !policy.Enabled || normalizeBillableUsageMultiplier(policy.Multiplier) == 1 {
+		return target
+	}
+	copyUsage := *target
+	target = &copyUsage
+	billable := BuildBillableUsage(UsageTokens{
+		InputTokens:  max(raw.InputTokens-raw.CacheReadInputTokens-raw.CacheCreationInputTokens, 0),
+		OutputTokens: raw.OutputTokens, CacheReadTokens: raw.CacheReadInputTokens,
+		CacheCreationTokens: raw.CacheCreationInputTokens,
+	}, policy)
+	target.PromptTokens = billable.InputTokens + billable.CacheReadTokens + billable.CacheCreationTokens
+	target.CompletionTokens = billable.OutputTokens
+	target.TotalTokens = target.PromptTokens + target.CompletionTokens
+	if target.CompletionTokensDetails != nil {
+		details := *target.CompletionTokensDetails
+		target.CompletionTokensDetails = &details
+		target.CompletionTokensDetails.ReasoningTokens = min(multiplyBillableTokens(target.CompletionTokensDetails.ReasoningTokens, billable.BillingTokenMultiplier), target.CompletionTokens)
+	}
+	return target
+}
+
 func (s *OpenAIGatewayService) handleChatCompletionsErrorResponse(
 	resp *http.Response,
 	c *gin.Context,
@@ -746,6 +777,7 @@ func (s *OpenAIGatewayService) handleChatBufferedStreamingResponse(
 	acc.SupplementResponseOutput(finalResponse)
 
 	chatResp := apicompat.ResponsesToChatCompletions(finalResponse, originalModel)
+	chatResp.Usage = applyOpenAIChatBillableUsage(c, chatResp.Usage, usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -1014,6 +1046,7 @@ func (s *OpenAIGatewayService) handleChatStreamingResponse(
 		chunks := apicompat.ResponsesEventToChatChunks(&event, state)
 		if !clientDisconnected {
 			for _, chunk := range chunks {
+				chunk.Usage = applyOpenAIChatBillableUsage(c, chunk.Usage, usage)
 				refusalDetector.ObserveChatChunk(chunk)
 				sse, err := apicompat.ChatChunkToSSE(chunk)
 				if err != nil {
@@ -1071,6 +1104,7 @@ func (s *OpenAIGatewayService) handleChatStreamingResponse(
 		}
 		if finalChunks := apicompat.FinalizeResponsesChatStream(state); len(finalChunks) > 0 && !clientDisconnected {
 			for _, chunk := range finalChunks {
+				chunk.Usage = applyOpenAIChatBillableUsage(c, chunk.Usage, usage)
 				refusalDetector.ObserveChatChunk(chunk)
 				sse, err := apicompat.ChatChunkToSSE(chunk)
 				if err != nil {

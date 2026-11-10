@@ -289,6 +289,7 @@ func (s *OpenAIGatewayService) handleCCBufferedFromNativeAnthropic(
 
 	responsesResp := apicompat.AnthropicToResponsesResponse(finalResp)
 	ccResp := apicompat.ResponsesToChatCompletions(responsesResp, originalModel)
+	ccResp.Usage = billableClaudeChatUsage(c, ccResp.Usage, &usage)
 
 	if s.responseHeaderFilter != nil {
 		responseheaders.WriteFilteredHeaders(c.Writer.Header(), resp.Header, s.responseHeaderFilter)
@@ -406,6 +407,7 @@ func (s *OpenAIGatewayService) handleCCStreamingFromNativeAnthropic(
 		if clientDisconnected {
 			return false // 已断开：不再写客户端，只排水上游累计 usage
 		}
+		chunk.Usage = billableClaudeChatUsage(c, chunk.Usage, &usage)
 		sse, err := apicompat.ChatChunkToSSE(chunk)
 		if err != nil {
 			return false

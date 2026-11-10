@@ -3,9 +3,11 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -14,6 +16,22 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
 )
+
+type wsBillingSettingsRepo struct {
+	SettingRepository
+	multiplier atomic.Int64
+}
+
+func (r *wsBillingSettingsRepo) GetMultiple(context.Context, []string) (map[string]string, error) {
+	return map[string]string{
+		SettingKeyTokenMultiplierBillingEnabled: "true",
+		SettingKeyBillingTokenMultiplier:        fmt.Sprintf("%.1f", float64(r.multiplier.Load())/10),
+	}, nil
+}
+
+func (r *wsBillingSettingsRepo) GetValue(context.Context, string) (string, error) {
+	return "", ErrSettingNotFound
+}
 
 // startPassthroughHookRecordingServer 与 startPassthroughLifecycleServer 相同，
 // 但把一组会记录调用的 hooks 传给 ingress，用于观察透传路径的 turn 回调。
@@ -124,6 +142,52 @@ func TestPassthroughIngressFollowUpCallsBeforeTurnAfterBeforeRequest(t *testing.
 
 	require.Equal(t, []string{"before_request", "before_turn"}, gotCallbacks)
 	require.Equal(t, 2, gotAfter)
+}
+
+func TestPassthroughIngressReturnsBillableUsageAndRecordsRaw(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctx, cancel := context.WithCancelCause(context.Background())
+	defer cancel(context.Canceled)
+	upstream := newStagedPassthroughConn()
+	results := make(chan *OpenAIForwardResult, 2)
+	hooks := &OpenAIWSIngressHooks{AfterTurn: func(_ int, result *OpenAIForwardResult, err error) {
+		if err == nil && result != nil {
+			results <- result
+		}
+	}}
+	settings := &wsBillingSettingsRepo{}
+	settings.multiplier.Store(25)
+	svc := newPassthroughLifecycleService(passthroughLifecycleConfig(), upstream)
+	svc.settingService = &SettingService{settingRepo: settings, cfg: svc.cfg}
+	server, _ := startPassthroughHookRecordingServer(t, ctx, svc, passthroughLifecycleAccount(), hooks)
+	defer server.Close()
+	client := dialPassthroughLifecycleClient(t, server)
+	defer func() { _ = client.CloseNow() }()
+	for turn := 1; turn <= 2; turn++ {
+		if turn == 2 {
+			writeCtx, cancelWrite := context.WithTimeout(context.Background(), time.Second)
+			err := client.Write(writeCtx, coderws.MessageText, []byte(`{"type":"response.create","model":"gpt-5.1"}`))
+			cancelWrite()
+			require.NoError(t, err)
+		}
+		requirePassthroughUpstreamWrite(t, upstream, time.Second)
+		if turn == 1 {
+			settings.multiplier.Store(35)
+		}
+		upstream.Send(`{"type":"response.completed","response":{"id":"resp","usage":{"input_tokens":100,"output_tokens":21,"total_tokens":121,"input_tokens_details":{"cached_tokens":20}}}}`)
+		event, err := readPassthroughLifecycleFrame(t, client, 3*time.Second)
+		require.NoError(t, err)
+		wantInput, wantOutput, multiplier := int64(220), int64(53), 2.5
+		if turn == 2 {
+			wantInput, wantOutput, multiplier = 300, 74, 3.5
+		}
+		require.Equal(t, wantInput, gjson.GetBytes(event, "response.usage.input_tokens").Int())
+		require.Equal(t, wantOutput, gjson.GetBytes(event, "response.usage.output_tokens").Int())
+		result := <-results
+		require.Equal(t, 100, result.Usage.InputTokens)
+		require.Equal(t, 21, result.Usage.OutputTokens)
+		require.Equal(t, multiplier, result.ResponseBillingPolicy.Multiplier)
+	}
 }
 
 func TestPassthroughIngressBeforeTurnRejectionDoesNotForwardFollowUp(t *testing.T) {
