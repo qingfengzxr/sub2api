@@ -646,6 +646,22 @@ describe('admin UsageTable tooltip', () => {
     expect(text).not.toContain('$20.0000 / 1M tokens')
   })
 
+  it('does not present an inferred image input price as the user-facing standard price', async () => {
+    const row = {
+      ...baseImageRow, billing_mode: 'token', image_count: 0,
+      input_tokens: 100, image_input_tokens: 100, billable_image_input_tokens: 250,
+      image_input_cost: 0.005,
+    }
+    const wrapper = mount(UsageTable, {
+      props: { data: [row], loading: false, columns: [], showBillingAuditDetails: false },
+      global: { stubs: { DataTable: DataTableStub, EmptyState: true, Icon: true, Teleport: true } },
+    })
+    const triggers = wrapper.findAll('.group.relative')
+    await triggers[triggers.length - 1].trigger('mouseenter')
+    expect(wrapper.text()).toContain('- / 1M tokens')
+    expect(wrapper.text()).not.toContain('$50.0000 / 1M tokens')
+  })
+
   it('falls back to raw token details when admin billable fields are absent', async () => {
     const row = {
       request_id: 'req-admin-token-legacy',

@@ -71,6 +71,19 @@ func TestBuildBillableUsage_TotalCostCanBeRecomputedFromBillableTokens(t *testin
 	require.InDelta(t, 0.00062556, cost.ActualCost, 1e-12)
 }
 
+func TestBillableUsagePreservesImageInputForPricing(t *testing.T) {
+	billable := BuildBillableUsage(UsageTokens{
+		InputTokens: 100, ImageInputTokens: 40, CacheReadTokens: 20, ImageCacheReadTokens: 10,
+	}, BillingTokenPolicy{Enabled: true, Multiplier: 2})
+	cost := (&BillingService{}).computeTokenBreakdown(&ModelPricing{
+		InputPricePerToken: 1, ImageInputPricePerToken: 3,
+		CacheReadPricePerToken: 0.1, ImageCacheReadPricePerToken: 0.5,
+	}, billable.UsageTokens(), 1, "", LongContextPricingPolicy{})
+	require.Equal(t, float64(120), cost.InputCost)
+	require.Equal(t, float64(240), cost.ImageInputCost)
+	require.Equal(t, float64(6), cost.CacheReadCost)
+}
+
 func TestBuildBillableUsage_ZeroUsageKeepsZerosAndEnabledMultiplierSnapshot(t *testing.T) {
 	got := BuildBillableUsage(UsageTokens{}, BillingTokenPolicy{Enabled: true, Multiplier: 2.5})
 

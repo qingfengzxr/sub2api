@@ -20,6 +20,7 @@ type BillableUsage struct {
 	TextInputTokens        int
 	CachedTextInputTokens  int
 	ImageInputTokens       int
+	ImageCacheReadTokens   int
 	CachedImageInputTokens int
 	BillingTokenMultiplier float64
 }
@@ -45,6 +46,7 @@ func BuildBillableUsage(raw UsageTokens, policy BillingTokenPolicy) BillableUsag
 		TextInputTokens:        multiplyBillableTokens(raw.TextInputTokens, multiplier),
 		CachedTextInputTokens:  multiplyBillableTokens(raw.CachedTextInputTokens, 1),
 		ImageInputTokens:       multiplyBillableTokens(raw.ImageInputTokens, multiplier),
+		ImageCacheReadTokens:   multiplyBillableTokens(raw.ImageCacheReadTokens, 1),
 		CachedImageInputTokens: multiplyBillableTokens(raw.CachedImageInputTokens, 1),
 		BillingTokenMultiplier: multiplier,
 	}
@@ -61,6 +63,11 @@ func (u BillableUsage) UsageTokens() UsageTokens {
 		CacheCreation30mTokens: u.CacheCreation30mTokens,
 		CacheCreation12hTokens: u.CacheCreation12hTokens,
 		ImageOutputTokens:      u.ImageOutputTokens,
+		ImageInputTokens:       u.ImageInputTokens,
+		ImageCacheReadTokens:   u.ImageCacheReadTokens,
+		TextInputTokens:        u.TextInputTokens,
+		CachedTextInputTokens:  u.CachedTextInputTokens,
+		CachedImageInputTokens: u.CachedImageInputTokens,
 	}
 }
 

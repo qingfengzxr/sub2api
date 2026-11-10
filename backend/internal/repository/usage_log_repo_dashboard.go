@@ -15,12 +15,13 @@ import (
 // getPerformanceStats 获取 RPM 和 TPM（近5分钟平均值，可选按用户过滤）
 func (r *usageLogRepository) getPerformanceStats(ctx context.Context, userID int64) (rpm, tpm int64, err error) {
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
-	query := `
+	tokens := usageTokenSQLFor("", userID > 0)
+	query := fmt.Sprintf(`
 		SELECT
 			COUNT(*) as request_count,
-			COALESCE(SUM(input_tokens + output_tokens), 0) as token_count
+			COALESCE(SUM(%s + %s), 0) as token_count
 		FROM usage_logs
-		WHERE created_at >= $1`
+		WHERE created_at >= $1`, tokens.input, tokens.output)
 	args := []any{fiveMinutesAgo}
 	if userID > 0 {
 		query += " AND user_id = $2"
@@ -535,12 +536,13 @@ func (r *usageLogRepository) GetUserDashboardStats(ctx context.Context, userID i
 // getPerformanceStatsByAPIKey 获取指定 API Key 的 RPM 和 TPM（近5分钟平均值）
 func (r *usageLogRepository) getPerformanceStatsByAPIKey(ctx context.Context, apiKeyID int64) (rpm, tpm int64, err error) {
 	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
-	query := `
+	tokens := usageTokenSQLFor("", true)
+	query := fmt.Sprintf(`
 		SELECT
 			COUNT(*) as request_count,
-			COALESCE(SUM(input_tokens + output_tokens + cache_creation_tokens + cache_read_tokens), 0) as token_count
+			COALESCE(SUM(%s + %s + %s + %s), 0) as token_count
 		FROM usage_logs
-		WHERE created_at >= $1 AND api_key_id = $2`
+		WHERE created_at >= $1 AND api_key_id = $2`, tokens.input, tokens.output, tokens.cacheCreation, tokens.cacheRead)
 	args := []any{fiveMinutesAgo, apiKeyID}
 
 	var requestCount int64
