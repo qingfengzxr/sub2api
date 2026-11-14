@@ -30,8 +30,20 @@ WORKDIR /app/frontend
 # value configurable so smaller/larger builders can override it explicitly.
 ENV NODE_OPTIONS=--max-old-space-size=${NODE_MAX_OLD_SPACE_SIZE}
 
-# Install pnpm (pinned to v9 to match CI and keep builds reproducible)
-RUN corepack enable && corepack prepare pnpm@9 --activate
+# Pin the exact version to avoid resolving the full pnpm version list.
+# Corepack uses its own registry setting; share the dependency registry override
+# and retry transient network failures without disabling signature verification.
+RUN corepack enable && \
+    for attempt in 1 2 3; do \
+      if COREPACK_NPM_REGISTRY="${NPM_CONFIG_REGISTRY:-https://registry.npmjs.org}" \
+          corepack prepare pnpm@9.15.9 --activate; then \
+        break; \
+      fi; \
+      if [ "$attempt" -eq 3 ]; then exit 1; fi; \
+      echo "pnpm download failed; retrying in 5 seconds ($attempt/3)" >&2; \
+      sleep 5; \
+    done && \
+    pnpm --version
 
 # Install dependencies first (better caching)
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
